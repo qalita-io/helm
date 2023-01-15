@@ -1,4 +1,4 @@
-# QALITA Institute - Data Factory - Helm Charts Repository
+# QALITA - Helm Charts Repository
 
 ![https://qalita.io/wp-content/uploads/2022/05/logo-1024x388.png](https://qalita.io/wp-content/uploads/2022/05/logo-1024x388.png)
 
