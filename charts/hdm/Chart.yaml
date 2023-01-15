@@ -18,7 +18,7 @@ keywords:
 dependencies:
   - name: mysql
     repository: https://charts.bitnami.com/bitnami
-    version: 8.9.1
+    version: 9.4.6
   - name: elasticsearch
     repository: https://helm.elastic.co
     version: 7.16.1
