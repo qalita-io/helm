@@ -3,7 +3,7 @@
 ![https://qalita.io/wp-content/uploads/2022/05/logo-1024x388.png](https://qalita.io/wp-content/uploads/2022/05/logo-1024x388.png)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Badge](https://github.com/QALITA-data-factory/helm-charts/workflows/Release%20Charts/badge.svg?branch=master)](https://github.com//QALITA-data-factory/helm-charts/actions)
+[![Badge](https://github.com/QALITA-data-factory/helm-charts/workflows/Release%20Charts/badge.svg?branch=main)](https://github.com//QALITA-data-factory/helm-charts/actions)
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/qalita-helm)](https://artifacthub.io/packages/search?repo=qalita-helm)
 
 Welcome to QALITA's charts repository. All charts are in the charts directory.

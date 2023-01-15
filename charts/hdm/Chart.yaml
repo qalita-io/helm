@@ -4,7 +4,7 @@ description: Helm chart for HDM (Health Data Metrics) a Data Quality assesment A
 type: application
 appVersion: 2.3.0
 version: 2.4.5
-home: https://github.com/qalita-io/helm/tree/master/charts/hdm
+home: https://github.com/qalita-io/helm/tree/main/charts/hdm
 icon: https://i.ibb.co/fqWJSVV/logo-hdm.png
 sources:
   - https://github.com/qalita-io/health-data-metrics
