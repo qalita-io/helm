@@ -1,5 +1,0 @@
-chart-repos:
-  - stable=https://charts.helm.sh/stable/
-  - bitnami=https://charts.bitnami.com/bitnami/
-  - elastic=https://helm.elastic.co/
-helm-extra-args: --timeout 600s
