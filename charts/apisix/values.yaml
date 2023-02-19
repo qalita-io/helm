@@ -1,8 +1,9 @@
-ingress-controller:
-  enabled: true
-  config:
-    apisix:
-      serviceNamespace: apisix
+apisix:
+  ingress-controller:
+    enabled: true
+    config:
+      apisix:
+        serviceNamespace: apisix
 
-dashboard:
-  enabled: true
+  dashboard:
+    enabled: true
