@@ -1,0 +1,6 @@
+keycloak:
+  service:
+    type: ClusterIP
+  
+  proxyAddressForwarding: true
+  
