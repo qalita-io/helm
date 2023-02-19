@@ -27,9 +27,10 @@ jobs:
 
       - name: Set up Helm repos
         run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami/
+          helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo add elastic https://helm.elastic.co
           helm repo add apisix  https://charts.apiseven.com
+          helm repo add vault   https://helm.releases.hashicorp.com
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
