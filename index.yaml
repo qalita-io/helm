@@ -57,6 +57,35 @@ entries:
     urls:
     - https://github.com/qalita-io/helm/releases/download/apisix-1.0.0/apisix-1.0.0.tgz
     version: 1.0.0
+  argocd:
+  - annotations:
+      artifacthub.io/images: |
+        - name: argocd
+          image: argoproj/argocd:v2.3.17
+    apiVersion: v2
+    appVersion: v2.6.2
+    created: "2023-02-19T21:59:20.301761724Z"
+    dependencies:
+    - name: argo-cd
+      repository: https://argoproj.github.io/argo-helm
+      version: 5.22.1
+    description: Argoproj CD
+    digest: 939ede23e60d2d8ab5c61fb8c18b5c745d28f04f15e82d925ff4eb02b65c6a2c
+    home: https://github.com/qalita-io/helm/tree/main/charts/argocd
+    icon: https://avatars.githubusercontent.com/u/30269780?s=200&v=4
+    keywords:
+    - argocd
+    kubeVersion: '>= 1.14.0-0'
+    maintainers:
+    - email: armand.leopold@qalita.io
+      name: armandleopold
+    name: argocd
+    sources:
+    - https://github.com/argoproj/argo-cd
+    type: application
+    urls:
+    - https://github.com/qalita-io/helm/releases/download/argocd-5.22.1/argocd-5.22.1.tgz
+    version: 5.22.1
   certmanager:
   - annotations:
       artifacthub.io/images: |
@@ -178,4 +207,4 @@ entries:
     urls:
     - https://github.com/qalita-io/helm/releases/download/vault-0.23.0/vault-0.23.0.tgz
     version: 0.23.0
-generated: "2023-02-19T21:25:48.333931207Z"
+generated: "2023-02-19T21:59:20.301773024Z"
