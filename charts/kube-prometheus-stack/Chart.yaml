@@ -1,0 +1,20 @@
+apiVersion: v2
+name: kube-prometheus-stack
+description: kube-prometheus-stack
+type: application
+appVersion: v0.63.0
+version: 45.1.1
+home: https://github.com/qalita-io/helm/tree/main/charts/kube-prometheus-stack
+icon: https://artifacthub.io/image/0503add5-3fce-4b63-bbf3-b9f649512a86@1x
+sources:
+  - https://prometheus.io/
+maintainers:
+  - name: armandleopold
+    email: armand.leopold@qalita.io
+kubeVersion: ">= 1.14.0-0"
+keywords:
+  - kube-prometheus-stack
+dependencies:
+  - name: kube-prometheus-stack
+    repository: https://prometheus-community.github.io/helm-charts
+    version: 45.1.1
