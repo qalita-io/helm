@@ -1,5 +1,5 @@
 ingress-controller:
-  enabled: true 
+  enabled: true
   config:
     apisix:
       serviceNamespace: apisix
