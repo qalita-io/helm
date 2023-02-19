@@ -203,6 +203,27 @@ entries:
     urls:
     - https://github.com/qalita-io/helm/releases/download/nexus-1.2.5/nexus-1.2.5.tgz
     version: 1.2.5
+  qalita:
+  - apiVersion: v2
+    appVersion: 0.0.0
+    created: "2023-02-19T22:14:58.294947494Z"
+    description: Qalita
+    digest: 9439ce2c2ad4c7a56acf928fe1a3d0711ce6733d5ecff35fa3baf7862c66cb00
+    home: https://github.com/qalita-io/helm/tree/main/charts/Qalita
+    icon: https://qalita.io/wp-content/uploads/2022/05/logo-1024x388.png
+    keywords:
+    - qalita
+    kubeVersion: '>= 1.14.0-0'
+    maintainers:
+    - email: armand.leopold@qalita.io
+      name: armandleopold
+    name: qalita
+    sources:
+    - https://qalita.io/
+    type: application
+    urls:
+    - https://github.com/qalita-io/helm/releases/download/qalita-1.0.0/qalita-1.0.0.tgz
+    version: 1.0.0
   vault:
   - annotations:
       artifacthub.io/images: |
@@ -232,4 +253,4 @@ entries:
     urls:
     - https://github.com/qalita-io/helm/releases/download/vault-0.23.0/vault-0.23.0.tgz
     version: 0.23.0
-generated: "2023-02-19T22:11:55.122843761Z"
+generated: "2023-02-19T22:14:58.294956294Z"
