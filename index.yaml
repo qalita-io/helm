@@ -152,6 +152,31 @@ entries:
     urls:
     - https://github.com/qalita-io/helm/releases/download/hdm-2.4.6/hdm-2.4.6.tgz
     version: 2.4.6
+  kube-prometheus-stack:
+  - apiVersion: v2
+    appVersion: v0.63.0
+    created: "2023-02-19T22:11:55.122830461Z"
+    dependencies:
+    - name: kube-prometheus-stack
+      repository: https://prometheus-community.github.io/helm-charts
+      version: 45.1.1
+    description: kube-prometheus-stack
+    digest: 517a59bf07cfa50c28fd964f73b7e48cebbfdd071ca5a64ec3ef1b0cfe874fc0
+    home: https://github.com/qalita-io/helm/tree/main/charts/kube-prometheus-stack
+    icon: https://artifacthub.io/image/0503add5-3fce-4b63-bbf3-b9f649512a86@1x
+    keywords:
+    - kube-prometheus-stack
+    kubeVersion: '>= 1.14.0-0'
+    maintainers:
+    - email: armand.leopold@qalita.io
+      name: armandleopold
+    name: kube-prometheus-stack
+    sources:
+    - https://prometheus.io/
+    type: application
+    urls:
+    - https://github.com/qalita-io/helm/releases/download/kube-prometheus-stack-45.1.1/kube-prometheus-stack-45.1.1.tgz
+    version: 45.1.1
   nexus:
   - annotations:
       artifacthub.io/images: |
@@ -207,4 +232,4 @@ entries:
     urls:
     - https://github.com/qalita-io/helm/releases/download/vault-0.23.0/vault-0.23.0.tgz
     version: 0.23.0
-generated: "2023-02-19T21:59:20.301773024Z"
+generated: "2023-02-19T22:11:55.122843761Z"
