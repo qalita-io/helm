@@ -1,5 +1,6 @@
 chart-repos:
-  - bitnami=https://charts.bitnami.com/bitnami/
-  - elastic=https://helm.elastic.co/
+  - bitnami=https://charts.bitnami.com/bitnami
+  - elastic=https://helm.elastic.co
   - apisix=https://charts.apiseven.com
+  - vault=https://helm.releases.hashicorp.com
 helm-extra-args: --timeout 600s
