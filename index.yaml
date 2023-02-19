@@ -7,6 +7,34 @@ entries:
           image: apache/apisix:latest
     apiVersion: v2
     appVersion: 3.1.1
+    created: "2023-02-19T10:13:56.076198021Z"
+    dependencies:
+    - name: apisix
+      repository: https://charts.apiseven.com
+      version: 1.1.1
+    description: Apache APISIX
+    digest: 3880c98d855c254eba268981acb3549e48e522fec932a8f22ddef230cb4c779b
+    home: https://github.com/qalita-io/helm/tree/main/charts/apisix
+    icon: https://apisix.apache.org/img/logo.png
+    keywords:
+    - apisix
+    kubeVersion: '>= 1.14.0-0'
+    maintainers:
+    - email: armand.leopold@qalita.io
+      name: armandleopold
+    name: apisix
+    sources:
+    - https://apisix.apache.org/
+    type: application
+    urls:
+    - https://github.com/qalita-io/helm/releases/download/apisix-1.1.1/apisix-1.1.1.tgz
+    version: 1.1.1
+  - annotations:
+      artifacthub.io/images: |
+        - name: apisix
+          image: apache/apisix:latest
+    apiVersion: v2
+    appVersion: 3.1.1
     created: "2023-02-19T09:53:58.63543296Z"
     dependencies:
     - name: apisix
@@ -92,4 +120,4 @@ entries:
     urls:
     - https://github.com/qalita-io/helm/releases/download/nexus-1.2.5/nexus-1.2.5.tgz
     version: 1.2.5
-generated: "2023-02-19T09:53:58.63543856Z"
+generated: "2023-02-19T10:13:56.076211721Z"
