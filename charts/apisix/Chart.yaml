@@ -3,7 +3,7 @@ name: apisix
 description: Apache APISIX
 type: application
 appVersion: 3.1.1
-version: 1.0.0
+version: 1.1.1
 home: https://github.com/qalita-io/helm/tree/main/charts/apisix
 icon: https://apisix.apache.org/img/logo.png
 sources:
