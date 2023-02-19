@@ -3,7 +3,7 @@ name: keycloak
 description: Keycloak
 type: application
 appVersion: 20.0.3
-version: 13.0.6
+version: 13.0.7
 home: https://github.com/qalita-io/helm/tree/main/charts/keycloak
 icon: https://www.keycloak.org/resources/images/keycloak_logo_200px.svg
 sources:
