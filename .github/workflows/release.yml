@@ -27,10 +27,10 @@ jobs:
 
       - name: Set up Helm repos
         run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami/
+          helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo add elastic https://helm.elastic.co
           helm repo add apisix  https://charts.apiseven.com
-          helm repo add argocd  https://argoproj.github.io/argo-helm
+          helm repo add argo    https://argoproj.github.io/argo-helm
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
