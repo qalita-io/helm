@@ -3,4 +3,5 @@ chart-repos:
   - elastic=https://helm.elastic.co
   - apisix=https://charts.apiseven.com
   - vault=https://helm.releases.hashicorp.com
+  - jetstack=https://charts.jetstack.io
 helm-extra-args: --timeout 600s
