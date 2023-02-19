@@ -27,12 +27,14 @@ jobs:
 
       - name: Run chart-testing (list-changed)
         id: list-changed
+        env:
+          GIT_DEPTH: 0        
         run: |
           changed=$(ct list-changed)
           if [[ -n "$changed" ]]; then
             echo "::set-output name=changed::true"
           fi
-          
+
       - name: Run chart-testing (lint)
         run: ct lint --config ct.yaml
 
