@@ -33,7 +33,8 @@ jobs:
           helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
           helm repo add vault   https://helm.releases.hashicorp.com
           helm repo add jetstack https://charts.jetstack.io
-          
+          helm repo add argo    https://argoproj.github.io/argo-helm
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
         with:
