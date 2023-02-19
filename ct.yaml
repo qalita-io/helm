@@ -2,4 +2,5 @@ chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami/
   - elastic=https://helm.elastic.co/
   - apisix=https://charts.apiseven.com
+  - argocd=https://argoproj.github.io/argo-helm
 helm-extra-args: --timeout 600s
