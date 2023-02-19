@@ -11,7 +11,7 @@ Welcome to QALITA's charts repository. All charts are in the charts directory.
 ## Adding the chart Repository
 
 ```bash
-helm repo add qalita https://qalita-io.github.io/helm
+helm repo add qalita https://helm.qalita.io/
 helm repo update
 ```
 
