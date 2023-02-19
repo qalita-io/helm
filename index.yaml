@@ -57,6 +57,35 @@ entries:
     urls:
     - https://github.com/qalita-io/helm/releases/download/apisix-1.0.0/apisix-1.0.0.tgz
     version: 1.0.0
+  certmanager:
+  - annotations:
+      artifacthub.io/images: |
+        - name: cert-manager-controller
+          image: quay.io/jetstack/cert-manager-controller:v1.11.0
+    apiVersion: v2
+    appVersion: v1.11.0
+    created: "2023-02-19T21:22:22.448094158Z"
+    dependencies:
+    - name: cert-manager
+      repository: https://charts.jetstack.io
+      version: 1.11.0
+    description: certmanager
+    digest: 7cbf9bce252444a9594f41a9255f0ed1fb3f58462ca572c7c3fad25c4d121e51
+    home: https://github.com/qalita-io/helm/tree/main/charts/certmanager
+    icon: https://avatars.githubusercontent.com/u/39950598?s=280&v=4
+    keywords:
+    - certmanager
+    kubeVersion: '>= 1.14.0-0'
+    maintainers:
+    - email: armand.leopold@qalita.io
+      name: armandleopold
+    name: certmanager
+    sources:
+    - https://github.com/cert-manager/cert-manager
+    type: application
+    urls:
+    - https://github.com/qalita-io/helm/releases/download/certmanager-1.11.0/certmanager-1.11.0.tgz
+    version: 1.11.0
   hdm:
   - annotations:
       artifacthub.io/images: |
@@ -120,4 +149,4 @@ entries:
     urls:
     - https://github.com/qalita-io/helm/releases/download/nexus-1.2.5/nexus-1.2.5.tgz
     version: 1.2.5
-generated: "2023-02-19T10:13:56.076211721Z"
+generated: "2023-02-19T21:22:22.448108058Z"
