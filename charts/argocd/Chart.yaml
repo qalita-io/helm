@@ -11,14 +11,9 @@ sources:
 maintainers:
   - name: armandleopold
     email: armand.leopold@qalita.io
-kubeVersion: ">= 1.14.0-0"
 keywords:
   - argocd
 dependencies:
   - name: argo-cd
     repository: https://argoproj.github.io/argo-helm
     version: 5.22.1
-annotations:
-  artifacthub.io/images: |
-    - name: argocd
-      image: argoproj/argocd:v2.3.17

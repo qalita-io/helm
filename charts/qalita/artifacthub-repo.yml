@@ -10,6 +10,6 @@
 # NOT apply to ownership claim operations, which are processed immediately.
 #
 repositoryID: 850f6224-c342-4745-9507-d4589fea0f5f
-owners: # (optional, used to claim repository ownership)
+owners: 
   - name: armandleopold
     email: armand.leopold@qalita.io
