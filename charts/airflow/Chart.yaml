@@ -21,4 +21,4 @@ dependencies:
 annotations:
   artifacthub.io/images: |
     - name: airflow
-      image: docker.io/bitnami/airflow:2023.2.22-debian-11-r0
+      image: apache/airflow:2.5.1
