@@ -1,0 +1,24 @@
+apiVersion: v2
+name: minio
+description: Apache minio
+type: application
+appVersion: 2023.2.22
+version: 12.1.8
+home: https://github.com/qalita-io/helm/tree/main/charts/minio
+icon: https://min.io/resources/img/logo/MINIO_wordmark.png
+sources:
+  - https://min.io/
+maintainers:
+  - name: armandleopold
+    email: armand.leopold@qalita.io
+kubeVersion: ">= 1.14.0-0"
+keywords:
+  - minio
+dependencies:
+  - name: minio
+    repository: https://charts.bitnami.com/bitnami
+    version: 12.1.8
+annotations:
+  artifacthub.io/images: |
+    - name: minio
+      image: docker.io/bitnami/minio:2023.2.22-debian-11-r0
