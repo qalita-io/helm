@@ -1,0 +1,24 @@
+apiVersion: v2
+name: airflow
+description: Apache airflow
+type: application
+appVersion: 2.5.1
+version: 1.8.0
+home: https://github.com/qalita-io/helm/tree/main/charts/airflow
+icon: https://upload.wikimedia.org/wikipedia/commons/d/de/AirflowLogo.png
+sources:
+  - https://airflow.apache.org/
+maintainers:
+  - name: armandleopold
+    email: armand.leopold@qalita.io
+kubeVersion: ">= 1.14.0-0"
+keywords:
+  - airflow
+dependencies:
+  - name: airflow
+    repository: https://airflow.apache.org
+    version: 1.8.0
+annotations:
+  artifacthub.io/images: |
+    - name: airflow
+      image: apache/airflow:2.5.1
