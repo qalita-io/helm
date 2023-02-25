@@ -11,14 +11,9 @@ sources:
 maintainers:
   - name: armandleopold
     email: armand.leopold@qalita.io
-kubeVersion: ">= 1.14.0-0"
 keywords:
   - certmanager
 dependencies:
   - name: cert-manager
     repository: https://charts.jetstack.io
     version: 1.11.0
-annotations:
-  artifacthub.io/images: |
-    - name: cert-manager-controller
-      image: quay.io/jetstack/cert-manager-controller:v1.11.0

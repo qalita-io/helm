@@ -11,14 +11,9 @@ sources:
 maintainers:
   - name: armandleopold
     email: armand.leopold@qalita.io
-kubeVersion: ">= 1.14.0-0"
 keywords:
   - keycloak
 dependencies:
   - name: keycloak
     repository: https://charts.bitnami.com/bitnami
     version: 13.0.6
-annotations:
-  artifacthub.io/images: |
-    - name: keycloak
-      image: docker.io/bitnami/keycloak:latest
