@@ -3,7 +3,7 @@ name: airflow
 description: Apache airflow
 type: application
 appVersion: 2.5.1
-version: 1.8.0
+version: 1.8.1
 home: https://github.com/qalita-io/helm/tree/main/charts/airflow
 icon: https://upload.wikimedia.org/wikipedia/commons/d/de/AirflowLogo.png
 sources:
