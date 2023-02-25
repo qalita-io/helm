@@ -11,14 +11,9 @@ sources:
 maintainers:
   - name: armandleopold
     email: armand.leopold@qalita.io
-kubeVersion: ">= 1.14.0-0"
 keywords:
   - apisix
 dependencies:
   - name: apisix
     repository: https://charts.apiseven.com
     version: 1.1.1
-annotations:
-  artifacthub.io/images: |
-    - name: apisix
-      image: apache/apisix:latest

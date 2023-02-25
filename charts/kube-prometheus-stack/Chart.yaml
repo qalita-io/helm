@@ -11,7 +11,6 @@ sources:
 maintainers:
   - name: armandleopold
     email: armand.leopold@qalita.io
-kubeVersion: ">= 1.14.0-0"
 keywords:
   - kube-prometheus-stack
 dependencies:
