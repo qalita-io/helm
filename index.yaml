@@ -1,5 +1,34 @@
 apiVersion: v1
 entries:
+  airflow:
+  - annotations:
+      artifacthub.io/images: |
+        - name: airflow
+          image: apache/airflow:2.5.1
+    apiVersion: v2
+    appVersion: 2.5.1
+    created: "2023-02-25T13:28:42.584597932Z"
+    dependencies:
+    - name: airflow
+      repository: https://airflow.apache.org
+      version: 1.8.0
+    description: Apache airflow
+    digest: b4dcdf333c64e9671cdc36388750f85ccfa13e6505f052ba5b1caa1284506a94
+    home: https://github.com/qalita-io/helm/tree/main/charts/airflow
+    icon: https://upload.wikimedia.org/wikipedia/commons/d/de/AirflowLogo.png
+    keywords:
+    - airflow
+    kubeVersion: '>= 1.14.0-0'
+    maintainers:
+    - email: armand.leopold@qalita.io
+      name: armandleopold
+    name: airflow
+    sources:
+    - https://airflow.apache.org/
+    type: application
+    urls:
+    - https://github.com/qalita-io/helm/releases/download/airflow-1.8.0/airflow-1.8.0.tgz
+    version: 1.8.0
   apisix:
   - annotations:
       artifacthub.io/images: |
@@ -311,4 +340,4 @@ entries:
     urls:
     - https://github.com/qalita-io/helm/releases/download/vault-0.23.0/vault-0.23.0.tgz
     version: 0.23.0
-generated: "2023-02-25T13:14:07.611581255Z"
+generated: "2023-02-25T13:28:42.584609032Z"
