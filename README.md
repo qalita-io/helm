@@ -1,7 +1,3 @@
-<p align=center>
-<img src="https://qalita.io/wp-content/uploads/2022/05/logo-1024x388.png"  width="50%" height="auto">
-</p>
-
 # Helm Charts Repository
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
