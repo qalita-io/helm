@@ -1,4 +1,4 @@
-# QALITA - Helm Charts Repository
+# Helm Charts Repository
 
 [![Badge](https://github.com/qalita-io/helm/workflows/Release%20Charts/badge.svg?branch=main)](https://github.com//qalita-io/helm/actions)
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/qalita-helm)](https://artifacthub.io/packages/search?repo=qalita-helm)
@@ -8,7 +8,7 @@ Welcome to QALITA's charts repository. All charts are in the charts directory.
 ## Adding the chart Repository
 
 ```bash
-helm repo add qalita https://qalita-io.github.io/helm
+helm repo add qalita https://helm.qalita.io/
 helm repo update
 ```
 
