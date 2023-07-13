@@ -21,3 +21,6 @@
 .idea/
 *.tmproj
 .vscode/
+.github/
+.editorconfig
+ct.yaml
