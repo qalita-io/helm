@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Release.Name }}-frontend-service"
+spec:
+  type: {{ .Values.frontend.service.type }}
+  ports:
+    - name: {{ .Values.frontend.service.targetPort }}{{ .Values.frontend.service.protocol | lower }}
+      port: {{ .Values.frontend.service.targetPort }}
+      protocol: {{ .Values.frontend.service.protocol }}
+      targetPort: {{ .Values.frontend.service.targetPort }}{{ .Values.frontend.service.protocol | lower }}
+  selector:
+    app: "{{ .Release.Name }}-frontend"
+    release: {{ .Release.Name }}

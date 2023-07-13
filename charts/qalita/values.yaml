@@ -1,0 +1,93 @@
+cluster:
+  issuer: letsencrypt-prod
+  domain: company.com
+  name: clustername
+
+dockerregistry:
+  enabled: true
+  dataSecret: |-
+    {"auths":{"<registry-url>":{"password":"<password>","username":"<username>"}}}
+
+frontend:
+  image:
+    pullPolicy: IfNotPresent
+    repository: <registry>
+    tag: "1.0.0"
+
+  replicaCount: 1
+
+  service:
+    type: ClusterIP
+    targetPort: "3000"
+    protocol: TCP
+
+  ingress:
+    enabled: true
+    tls:
+      enabled: true
+
+  deployment:
+    env:
+      - name: QALITA_ENV
+        value: "PROD"
+      - name: NEXT_TELEMETRY_DISABLED
+        value: "1"
+      - name: NODE_ENV
+        value: "production"
+      - name: NEXT_WEBPACK_USEPOLLING
+        value: "false"
+
+backend:
+  image:
+    pullPolicy: IfNotPresent
+    repository: <registry>
+    tag: "1.0.0"
+
+  replicaCount: 1
+
+  service:
+    type: ClusterIP
+    targetPort: "3080"
+    protocol: TCP
+
+  ingress:
+    enabled: true
+    tls:
+      enabled: true
+
+  adminPassword: chageme
+  secretKey: chageme
+
+  deployment:
+    env:
+      - name: QALITA_ENV
+        value: "PROD"
+      - name: QALITA_API_PORT
+        value: "3080"
+      - name: QALITA_API_HOST
+        value: "0.0.0.0"
+      - name: QALITA_API_WORKER
+        value: "4"
+      - name: QALITA_ADMIN_USERNAME
+        value: "admin"
+      - name: QALITA_ALGORITHM
+        value: "HS256"
+      - name: QALITA_INIT_SLEEP
+        value: "3"
+      - name: QALITA_ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "30"
+
+postgresql:
+  image:
+    tag: "15.3.0"
+
+  global:
+    postgresql:
+      auth:
+        database: qalitadb
+        username: qalita
+        password: chageme
+
+seaweedfs:
+  global:
+    imageName: chrislusf/seaweedfs
