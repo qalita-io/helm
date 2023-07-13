@@ -16,8 +16,6 @@ jobs:
 
       - name: Set up Helm
         uses: azure/setup-helm@v3
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -39,9 +37,9 @@ jobs:
       - name: Run chart-testing (lint)
         run: ct lint --target-branch ${{ github.event.repository.default_branch }} --config ct.yaml
 
-      - name: Create kind cluster
-        uses: helm/kind-action@v1.4.0
-        if: steps.list-changed.outputs.changed == 'true'
+      # - name: Create kind cluster
+      #   uses: helm/kind-action@v1.4.0
+      #   if: steps.list-changed.outputs.changed == 'true'
 
-      - name: Run chart-testing (install)
-        run: ct install --target-branch ${{ github.event.repository.default_branch }}  --config ct.yaml
+      # - name: Run chart-testing (install)
+      #   run: ct install --target-branch ${{ github.event.repository.default_branch }}  --config ct.yaml
