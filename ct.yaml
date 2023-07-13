@@ -1,3 +1,4 @@
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
+  - seaweedfs=https://seaweedfs.github.io/seaweedfs/helm
 helm-extra-args: --timeout 600s
