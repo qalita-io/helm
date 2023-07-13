@@ -15,9 +15,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
-      - name: Fetch history
-        run: git fetch --prune --unshallow
+        with:
+          fetch-depth: 0
 
       - name: Configure Git
         run: |
@@ -38,7 +37,6 @@ jobs:
         uses: helm/chart-releaser-action@v1.5.0
         with:
           charts_dir: charts
-          charts_repo_url: https://helm.qalita.io
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
