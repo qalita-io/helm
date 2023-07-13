@@ -34,23 +34,11 @@ jobs:
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo add seaweedfs https://seaweedfs.github.io/seaweedfs/helm
 
-      # - name: Prepare keys for signing
-      #   env:
-      #     SIGNING_KEY_BASE64: ${{ secrets.HELM_SIGNING_PRIVATE_KEY }}
-      #     SIGNING_KEY_PASSPHRASE_BASE64: ${{ secrets.HELM_SIGNING_PRIVATE_KEY_PASSPHRASE }}
-      #     KEY_PATH: ".gnupg"
-      #     SIGNING_KEY_PATH: ".gnupg/secring.gpg"
-      #     SIGNING_KEY_PASSPHRASE_PATH: ".gnupg/passphrase"
-      #   run: |
-      #     mkdir "$KEY_PATH"
-      #     base64 -d <<< "$SIGNING_KEY_BASE64" > "$SIGNING_KEY_PATH"
-      #     base64 -d <<< "$SIGNING_KEY_PASSPHRASE_BASE64" > "$SIGNING_KEY_PASSPHRASE_PATH"
-      #     echo "CR_PASSPHRASE_FILE=$SIGNING_KEY_PASSPHRASE_PATH" >> "$GITHUB_ENV"
-      #     echo "CR_KEYRING=$SIGNING_KEY_PATH" >> "$GITHUB_ENV"
-
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
         with:
           charts_dir: charts
+          charts_repo_url: https://helm.qalita.io
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
