@@ -39,4 +39,4 @@ Testing is currently done with Helm3
 
 ## License
 
-[MIT License](./LICENSE).
+[Proprietary License](./LICENSE).
