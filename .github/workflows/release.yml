@@ -34,4 +34,4 @@ jobs:
         with:
           charts_repo_url: https://helm.qalita.io
         env:
-          CR_TOKEN: "${{ secrets.CR_TOKEN }}"
+          GITHUB_TOKEN: "${{ secrets.CR_TOKEN }}"
