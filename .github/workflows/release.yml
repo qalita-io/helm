@@ -37,7 +37,7 @@ jobs:
           SIGNING_KEY_BASE64: ${{ secrets.HELM_SIGNING_PRIVATE_KEY }}
           SIGNING_KEY_PASSPHRASE_BASE64: ${{ secrets.HELM_SIGNING_PRIVATE_KEY_PASSPHRASE }}
           KEY_PATH: ".gnupg"
-          SIGNING_KEY_PATH: ".gnupg/secring.gpg"
+          SIGNING_KEY_PATH: ".gnupg/secring.kbx"
           SIGNING_KEY_PASSPHRASE_PATH: ".gnupg/passphrase"
         run: |
           mkdir "$KEY_PATH"
