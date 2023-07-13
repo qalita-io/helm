@@ -1,0 +1,42 @@
+{{- if .Values.frontend.ingress.enabled -}}
+{{- $serviceName := print .Release.Name "-frontend-service" }}
+{{- $servicePort := print .Values.frontend.service.targetPort .Values.frontend.service.protocol | lower -}}
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "{{ .Release.Name }}-frontend-ingress"
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.allow-http: "false"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"  
+  labels:
+    app: "{{ .Release.Name }}-frontend"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+{{- if .Values.frontend.ingress.annotations }}
+  annotations:
+{{ toYaml .Values.frontend.ingress.annotations | indent 4 }}
+{{- end }}
+spec:
+{{- if .Values.frontend.ingress.tls.enabled }}
+  tls:
+  - hosts:
+    - app.{{ .Values.cluster.domain }}
+    secretName: app-cert
+{{- end }}
+  rules:
+  - host: app.{{ .Values.cluster.domain }}
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ $serviceName }}
+            port:
+              name: {{ $servicePort }}
+{{- end -}}

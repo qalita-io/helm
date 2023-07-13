@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-frontend"
+  labels:
+    app: "{{ .Release.Name }}-frontend"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+{{ include "qalita.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.frontend.replicaCount }}
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-frontend"
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: "{{ .Release.Name }}-frontend"
+        release: {{ .Release.Name }}
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+    spec:
+      containers:
+      - name: "frontend"
+        image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
+        imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+        env:
+          - name: QALITA_API_URL
+            value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
+          - name: NEXT_PUBLIC_QALITA_API_DOCS_URL
+            value: "https://api.{{ .Values.cluster.domain }}"
+{{- if .Values.frontend.deployment.env }}
+{{ toYaml .Values.frontend.deployment.env | indent 10 }}
+{{- end }}
+        ports:
+        - containerPort: {{ .Values.frontend.service.targetPort }}
+          name: {{ .Values.frontend.service.targetPort }}{{ .Values.frontend.service.protocol | lower }}
+          protocol: {{ .Values.frontend.service.protocol }}
+{{- if .Values.frontend.deployment.ressources }}
+        resources:
+{{ toYaml .Values.frontend.deployment.resources | indent 10 }}
+{{- end }}
+      {{- if .Values.dockerregistry.enabled }}
+      imagePullSecrets:
+      - name: "{{ .Release.Name }}-dockerregistry"
+      {{- end }}
