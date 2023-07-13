@@ -1,4 +1,15 @@
-repositoryID: 1264c3e0-9689-451d-99d3-925059761250
+repositoryID: 850f6224-c342-4745-9507-d4589fea0f5f
 owners:
   - name: qalita-io
     email: contact@qalita.io
+ignore:
+  - name: hdm
+  - name: airflow
+  - name: argocd
+  - name: apisix
+  - name: certmanager
+  - name: keycloak
+  - name: kube-promehteus-stack
+  - name: minio
+  - name: nexus
+  - name: vault
