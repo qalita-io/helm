@@ -9,7 +9,7 @@ ignore:
   - name: apisix
   - name: certmanager
   - name: keycloak
-  - name: kube-promehteus-stack
+  - name: kube-prometheus-stack
   - name: minio
   - name: nexus
   - name: vault
