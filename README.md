@@ -1,8 +1,5 @@
 # QALITA - Helm Charts Repository
 
-![https://qalita.io/wp-content/uploads/2022/05/logo-1024x388.png](https://qalita.io/wp-content/uploads/2022/05/logo-1024x388.png)
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Badge](https://github.com/qalita-io/helm/workflows/Release%20Charts/badge.svg?branch=main)](https://github.com//qalita-io/helm/actions)
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/qalita-helm)](https://artifacthub.io/packages/search?repo=qalita-helm)
 
@@ -42,4 +39,4 @@ Testing is currently done with Helm3
 
 ## License
 
-[MIT License](./LICENSE).
+[Proprietary License](./LICENSE).
