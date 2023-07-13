@@ -1,21 +1,31 @@
-MIT License
+QALITA SOFTWARE LICENSE AGREEMENT
 
-Copyright (c) 2023 QALITA
+THIS IS AN AGREEMENT BETWEEN YOU ("LICENSEE") AND QALITA SAS, A CORPORATION INCORPORATED UNDER THE LAWS OF FRANCE, COMPANY ID: 951 829 803 ("QALITA"). BY INSTALLING, COPYING, OR OTHERWISE USING THE QALITA SOFTWARE ("SOFTWARE"), YOU AGREE TO BE BOUND BY THE TERMS OF THIS LICENSE AGREEMENT.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+    Copyright (c) - 2023 - QALITA SAS - All Rights Reserved
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+    1. GRANT OF LICENSE. Subject to the terms and conditions of this License Agreement, QALITA grants to Licensee a non-exclusive, non-transferable license to use the Software solely for Licensee's internal business purposes.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+    2. RESTRICTIONS. Licensee may not rent, lease, distribute, sublicense, transfer, or sell the Software, or any portion thereof. Licensee may not modify, translate, reverse engineer, decompile, disassemble, or create derivative works based on the Software, except to the extent that enforcement of the foregoing restriction is prohibited by applicable law.
+
+    3. COPYRIGHT AND OWNERSHIP. The Software is owned by QALITA and is protected by French copyright laws and international treaty provisions. QALITA retains all rights not expressly granted to Licensee in this License Agreement.
+
+    4. SOFTWARE DEPENDENCIES. The Software may include or depend on other software components which are licensed under terms and conditions different from this License Agreement. The licenses for these dependencies are included below, or in the documentation or files accompanying the Software.
+
+    5. NO WARRANTIES. The Software is provided "AS IS" and QALITA makes no warranty as to its use or performance. QALITA AND ITS SUPPLIERS DO NOT AND CANNOT WARRANT THE PERFORMANCE OR RESULTS YOU MAY OBTAIN BY USING THE SOFTWARE.
+
+    6. LIMITATION OF LIABILITY. In no event will QALITA or its suppliers be liable for any loss, damages or costs, whether direct, indirect, incidental, special, consequential, or punitive, arising out of Licensee's use of, or inability to use, the Software, even if QALITA has been advised of the possibility of such damages.
+
+    7. TERMINATION. QALITA may terminate this License Agreement if Licensee fails to comply with the terms and conditions of this License Agreement. In such event, Licensee must destroy all copies of the Software.
+
+    8. GENERAL. This License Agreement is governed by the laws of France. If any provision of this License Agreement is held to be void, invalid, unenforceable or illegal, the other provisions shall continue in full force and effect.
+
+BY INSTALLING, COPYING, OR OTHERWISE USING THE SOFTWARE, LICENSEE AGREES TO BE BOUND BY THE TERMS OF THIS LICENSE AGREEMENT.
+
+**QALITA SAS**
+
+**IMPORTANT:**
+
+BEFORE USING THIS SOFTWARE, CAREFULLY READ THIS LICENSE AGREEMENT. BY USING THE SOFTWARE, YOU ARE AGREEING TO BE BOUND BY THE TERMS OF THIS LICENSE AGREEMENT. IF YOU DO NOT AGREE TO THE TERMS OF THIS LICENSE AGREEMENT, DO NOT USE THE SOFTWARE.
+
+This is a legal agreement and should be treated as such. If you have any questions regarding this agreement, please contact QALITA at **legal@qalita.io.**
