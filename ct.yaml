@@ -1,9 +1,1 @@
-chart-repos:
-  - bitnami=https://charts.bitnami.com/bitnami
-  - elastic=https://helm.elastic.co
-  - apisix=https://charts.apiseven.com
-  - prometheus-community=https://prometheus-community.github.io/helm-charts
-  - argo=https://argoproj.github.io/argo-helm
-  - vault=https://helm.releases.hashicorp.com
-  - jetstack=https://charts.jetstack.io
 helm-extra-args: --timeout 600s
