@@ -1,0 +1,114 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-backend"
+  labels:
+    app: "{{ .Release.Name }}-backend"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+{{ include "qalita.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.backend.replicaCount }}
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-backend"
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: "{{ .Release.Name }}-backend"
+        release: {{ .Release.Name }}
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
+    spec:
+      containers:
+      - name: "backend"
+        image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
+        imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+        readinessProbe:
+          httpGet:
+            path: /api/v1/healthcheck
+            port: {{ .Values.backend.service.targetPort }}
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 10
+          timeoutSeconds: 30
+        livenessProbe:
+          httpGet:
+            path: /api/v1/healthcheck
+            port: {{ .Values.backend.service.targetPort }}
+            scheme: HTTP
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 4
+          timeoutSeconds: 30
+        env:
+          - name: POSTGRESQL_SERVER
+            value: "{{ .Release.Name }}-postgresql"
+          - name: POSTGRESQL_DATABASE
+            value: "{{ .Values.postgresql.global.postgresql.auth.database }}"
+          - name: POSTGRESQL_USERNAME
+            value: "{{ .Values.postgresql.global.postgresql.auth.username }}"
+          - name: POSTGRESQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: "{{ .Release.Name }}-postgresql"
+                optional: false
+          - name: QALITA_S3_URL
+            value: "http://seaweedfs-s3:8333"
+          - name: QALITA_S3_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                key: admin_access_key_id
+                name: seaweedfs-s3-secret
+                optional: false
+          - name: QALITA_S3_KEY_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: admin_secret_access_key
+                name: seaweedfs-s3-secret
+                optional: false
+          - name: QALITA_S3_READER_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                key: read_access_key_id
+                name: seaweedfs-s3-secret
+                optional: false
+          - name: QALITA_S3_READER_KEY_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: read_secret_access_key
+                name: seaweedfs-s3-secret
+                optional: false
+          - name: QALITA_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: adminPassword
+                name: "{{ .Release.Name }}-qalita-secret"
+                optional: false
+          - name: QALITA_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                key: secretKey
+                name: "{{ .Release.Name }}-qalita-secret"
+                optional: false
+{{- if .Values.backend.deployment.env }}
+{{ toYaml .Values.backend.deployment.env | indent 10 }}
+{{- end }}
+        ports:
+          - containerPort: {{ .Values.backend.service.targetPort }}
+            name: {{ .Values.backend.service.targetPort }}{{ .Values.backend.service.protocol | lower }}
+            protocol: {{ .Values.backend.service.protocol }}
+{{- if .Values.backend.deployment.ressources }}
+        resources:
+{{ toYaml .Values.backend.deployment.resources | indent 10 }}
+{{- end }}
+      {{- if .Values.dockerregistry.enabled }}
+      imagePullSecrets:
+      - name: "{{ .Release.Name }}-dockerregistry"
+      {{- end }}
