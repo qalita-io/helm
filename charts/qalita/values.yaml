@@ -1,7 +1,7 @@
 cluster:
   issuer: letsencrypt-prod
   domain: example.com
-  name: 
+  name:
 
 dockerregistry:
   enabled: true
@@ -60,8 +60,8 @@ backend:
     tls:
       enabled: true
 
-  adminPassword: 
-  secretKey: 
+  adminPassword:
+  secretKey:
 
   deployment:
     resources:
