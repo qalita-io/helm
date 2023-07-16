@@ -1,7 +1,7 @@
 cluster:
   issuer: letsencrypt-prod
-  domain: company.com
-  name: clustername
+  domain: example.com
+  name: 
 
 dockerregistry:
   enabled: true
@@ -10,9 +10,9 @@ dockerregistry:
 
 frontend:
   image:
-    pullPolicy: IfNotPresent
-    repository: <registry>
+    repository: registry.qalita.io/qalita/frontend
     tag: "1.0.0"
+    pullPolicy: IfNotPresent
 
   replicaCount: 1
 
@@ -27,6 +27,11 @@ frontend:
       enabled: true
 
   deployment:
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "500m"
+
     env:
       - name: QALITA_ENV
         value: "PROD"
@@ -39,9 +44,9 @@ frontend:
 
 backend:
   image:
-    pullPolicy: IfNotPresent
-    repository: <registry>
+    repository: registry.qalita.io/qalita/backend
     tag: "1.0.0"
+    pullPolicy: IfNotPresent
 
   replicaCount: 1
 
@@ -55,10 +60,15 @@ backend:
     tls:
       enabled: true
 
-  adminPassword: chageme
-  secretKey: chageme
+  adminPassword: 
+  secretKey: 
 
   deployment:
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "500m"
+
     env:
       - name: QALITA_ENV
         value: "PROD"
@@ -86,7 +96,6 @@ postgresql:
       auth:
         database: qalitadb
         username: qalita
-        password: chageme
 
 seaweedfs:
   global:
