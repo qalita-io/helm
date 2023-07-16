@@ -1,0 +1,9 @@
+{
+    "python.linting.enabled": true,
+    "files.eol": "\n",
+    "files.trimTrailingWhitespace": true,
+    "editor.renderWhitespace": "boundary",
+    "editor.renderControlCharacters": true,
+    "editor.guides.indentation": true,
+    "python.analysis.typeCheckingMode": "off"
+}
