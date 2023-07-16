@@ -10,7 +10,7 @@ dockerregistry:
 
 frontend:
   image:
-    repository: registry.qalita.io/qalita/frontend
+    repository: qalita.azurecr.io/qalita/frontend
     tag: "1.0.0"
     pullPolicy: IfNotPresent
 
@@ -44,7 +44,7 @@ frontend:
 
 backend:
   image:
-    repository: registry.qalita.io/qalita/backend
+    repository: qalita.azurecr.io/qalita/backend
     tag: "1.0.0"
     pullPolicy: IfNotPresent
 
