@@ -29,6 +29,8 @@ spec:
         env:
           - name: QALITA_API_URL
             value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
+          - name: NEXT_PUBLIC_QALITA_API_URL
+            value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
           - name: NEXT_PUBLIC_QALITA_API_DOCS_URL
             value: "https://api.{{ .Values.cluster.domain }}"
 {{- if .Values.frontend.deployment.env }}
