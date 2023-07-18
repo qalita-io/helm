@@ -101,4 +101,5 @@ postgresql:
 seaweedfs:
   enabled: true
   global:
+    createClusterRole: true
     imageName: chrislusf/seaweedfs
