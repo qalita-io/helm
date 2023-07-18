@@ -46,7 +46,9 @@ spec:
       imagePullSecrets:
         - name: {{ .Values.global.imagePullSecrets }}
       {{- end }}
+      {{- if .Values.global.createClusterRole }}
       serviceAccountName: seaweedfs-rw-sa #hack for delete pod master after migration
+      {{- end }}
       terminationGracePeriodSeconds: 60
       {{- if .Values.filer.priorityClassName }}
       priorityClassName: {{ .Values.filer.priorityClassName | quote }}
@@ -107,11 +109,11 @@ spec:
             - name: {{ $key }}
               valueFrom: {{ toYaml $value | nindent 16 }}
             {{- end }}
-            {{- end }}             
+            {{- end }}
           command:
             - "/bin/sh"
             - "-ec"
-            - | 
+            - |
               exec /usr/bin/weed \
               {{- if eq .Values.filer.logs.type "hostPath" }}
               -logdir=/logs \
