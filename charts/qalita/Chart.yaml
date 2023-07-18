@@ -17,7 +17,7 @@ dependencies:
     condition: postgresql.enabled
   - name: seaweedfs
     repository: https://helm.qalita.io
-    version: 3.54.1
+    version: 3.54.2
     condition: seaweedfs.enabled
 maintainers:
   - name: qalita
