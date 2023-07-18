@@ -255,4 +255,14 @@ entries:
     urls:
     - https://github.com/qalita-io/helm/releases/download/qalita-1.0.12/qalita-1.0.12.tgz
     version: 1.0.12
-generated: "2023-07-18T10:58:38.692081676Z"
+  seaweedfs:
+  - apiVersion: v1
+    appVersion: "3.54"
+    created: "2023-07-18T14:41:59.213347745Z"
+    description: SeaweedFS
+    digest: 68bb2e8c127c122af0be6f89d4c8069fa559b3d0360afe5b55df9b86f03d25a4
+    name: seaweedfs
+    urls:
+    - https://github.com/qalita-io/helm/releases/download/seaweedfs-3.54.1/seaweedfs-3.54.1.tgz
+    version: 3.54.1
+generated: "2023-07-18T14:41:59.213403645Z"
