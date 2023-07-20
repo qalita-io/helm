@@ -46,9 +46,9 @@ The chart will deploy the following resources:
 - QALITA Postgresql Database
 - QALITA Seaweedfs File Storage
 
-Creates the following endpoints:
+With `cluster.domain`=**example.com**  Creates the following endpoints:
 
-- https://app.example.com
+- https://example.com
 - https://api.example.com
 
 
