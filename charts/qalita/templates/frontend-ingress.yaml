@@ -11,7 +11,7 @@ metadata:
     ingress.kubernetes.io/ssl-redirect: "true"
     kubernetes.io/ingress.allow-http: "false"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"  
+    traefik.ingress.kubernetes.io/router.tls: "true"
   labels:
     app: "{{ .Release.Name }}-frontend"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
@@ -25,11 +25,11 @@ spec:
 {{- if .Values.frontend.ingress.tls.enabled }}
   tls:
   - hosts:
-    - app.{{ .Values.cluster.domain }}
+    - {{ .Values.cluster.domain }}
     secretName: app-cert
 {{- end }}
   rules:
-  - host: app.{{ .Values.cluster.domain }}
+  - host: {{ .Values.cluster.domain }}
     http:
       paths:
       - path: /
