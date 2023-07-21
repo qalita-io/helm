@@ -106,7 +106,7 @@ spec:
           - containerPort: {{ .Values.backend.service.targetPort }}
             name: {{ .Values.backend.service.targetPort }}{{ .Values.backend.service.protocol | lower }}
             protocol: {{ .Values.backend.service.protocol }}
-{{- if .Values.backend.deployment.ressources }}
+{{- if .Values.backend.deployment.resources }}
         resources:
 {{ toYaml .Values.backend.deployment.resources | indent 10 }}
 {{- end }}

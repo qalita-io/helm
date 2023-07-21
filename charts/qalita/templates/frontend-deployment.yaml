@@ -38,7 +38,7 @@ spec:
         - containerPort: {{ .Values.frontend.service.targetPort }}
           name: {{ .Values.frontend.service.targetPort }}{{ .Values.frontend.service.protocol | lower }}
           protocol: {{ .Values.frontend.service.protocol }}
-{{- if .Values.frontend.deployment.ressources }}
+{{- if .Values.frontend.deployment.resources }}
         resources:
 {{ toYaml .Values.frontend.deployment.resources | indent 10 }}
 {{- end }}
