@@ -59,6 +59,8 @@ spec:
                 key: password
                 name: "{{ .Release.Name }}-postgresql"
                 optional: false
+          - name: QALITA_FRONTEND_URL
+            value: "https://{{ .Values.cluster.domain }}"
           - name: QALITA_S3_URL
             value: "http://seaweedfs-s3:8333"
           - name: QALITA_S3_KEY_ID
