@@ -1,8 +1,5 @@
 # QALITA Helm Chart
 
-
-![logo](https://app.prod.qalita.io/logo.svg)
-
 This chart deploys QALITA on a Kubernetes cluster using the Helm package manager.
 
 # Quick Start
@@ -77,8 +74,8 @@ Creates the following endpoints:
 | frontend.service.protocol | string | `TCP` | QALITA Frontend Service Protocol |
 | frontend.ingress.enabled | bool | `true` | QALITA Frontend Ingress Enabled |
 | frontend.ingress.tls.enabled | bool | `true` | QALITA Frontend Ingress TLS Enabled |
-| frontend.deployment.ressources.requests.cpu | string | `500m` | QALITA Frontend Deployment CPU Request |
-| frontend.deployment.ressources.requests.memory | string | `256Mi` | QALITA Frontend Deployment Memory Request |
+| frontend.deployment.resources.requests.cpu | string | `500m` | QALITA Frontend Deployment CPU Request |
+| frontend.deployment.resources.requests.memory | string | `256Mi` | QALITA Frontend Deployment Memory Request |
 | frontend.deployment.env | list | `[]` | QALITA Frontend Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
 
 ## Backend
@@ -96,8 +93,8 @@ Creates the following endpoints:
 | backend.service.protocol | string | `TCP` | QALITA Backend Service Protocol |
 | backend.ingress.enabled | bool | `true` | QALITA Backend Ingress Enabled |
 | backend.ingress.tls.enabled | bool | `true` | QALITA Backend Ingress TLS Enabled |
-| backend.deployment.ressources.requests.cpu | string | `500m` | QALITA Backend Deployment CPU Request |
-| backend.deployment.ressources.requests.memory | string | `256Mi` | QALITA Backend Deployment Memory Request |
+| backend.deployment.resources.requests.cpu | string | `500m` | QALITA Backend Deployment CPU Request |
+| backend.deployment.resources.requests.memory | string | `256Mi` | QALITA Backend Deployment Memory Request |
 | backend.deployment.env | list | `[]` | QALITA Backend Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
 
 ## Database (Postgresql)
@@ -106,6 +103,7 @@ For more detailed configuration, please refer to [Bitnami Postgresql Chart](http
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| postgresql.enabled | bool | true | Enable deploy local postgresql, disable if you use external Postgresql Database |
 | postgresql.image.tag | string | `15.3.0` | Postgresql Image Tag |
 | postgresql.global.potgresql.auth.database | string | `qalitadb` | Postgresql Database Name |
 | postgresql.global.potgresql.auth.username | string | `qalita` | Postgresql Database Username |
@@ -117,4 +115,5 @@ For more detailed configuration, please refer to [Seaweedfs Chart](https://artif
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| seaweedfs.enabled | bool | true | Enable deploy local s3 file storage, disable if you use external S3 storage System |
 | seaweedfs.global.imageName | string | `chrislusf/seaweedfs` | Seaweedfs Image Name |
