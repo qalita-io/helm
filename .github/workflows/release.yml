@@ -29,6 +29,20 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Prepare GPG key
+        run: |
+          gpg_dir=.cr-gpg
+          mkdir "$gpg_dir"
+          keyring="$gpg_dir/secring.gpg"
+          base64 -d <<< "$HELM_SIGN_GPG_SECRING" > "$keyring"
+          passphrase_file="$gpg_dir/passphrase"
+          echo "$HELM_SIGNING_PRIVATE_KEY_PASSPHRASE" > "$passphrase_file"
+          echo "CR_PASSPHRASE_FILE=$passphrase_file" >> "$GITHUB_ENV"
+          echo "CR_KEYRING=$keyring" >> "$GITHUB_ENV"
+        env:
+          HELM_SIGN_GPG_SECRING: "${{ secrets.HELM_SIGN_GPG_SECRING }}"
+          HELM_SIGNING_PRIVATE_KEY_PASSPHRASE: "${{ secrets.HELM_SIGNING_PRIVATE_KEY_PASSPHRASE }}"
+
       - name: Set up Helm repos
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -36,6 +50,8 @@ jobs:
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.5.0
+        with:
+          config: cr.yaml
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
