@@ -468,6 +468,15 @@ entries:
   seaweedfs:
   - apiVersion: v1
     appVersion: "3.54"
+    created: "2023-07-24T20:16:19.241673731Z"
+    description: SeaweedFS
+    digest: 3f012f9f607c014a1410d8252b55e18a66980d807a1422848bfd0acadf99dbb0
+    name: seaweedfs
+    urls:
+    - https://github.com/qalita-io/helm/releases/download/seaweedfs-3.54.3/seaweedfs-3.54.3.tgz
+    version: 3.54.3
+  - apiVersion: v1
+    appVersion: "3.54"
     created: "2023-07-18T15:15:22.458412747Z"
     description: SeaweedFS
     digest: f2879d349fa385b4d8928c787b04463a33856229feb160e19f203b3433c8f4b0
@@ -484,4 +493,4 @@ entries:
     urls:
     - https://github.com/qalita-io/helm/releases/download/seaweedfs-3.54.1/seaweedfs-3.54.1.tgz
     version: 3.54.1
-generated: "2023-07-24T19:49:13.74877943Z"
+generated: "2023-07-24T20:16:19.241726834Z"
