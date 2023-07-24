@@ -103,3 +103,21 @@ seaweedfs:
   global:
     createClusterRole: true
     imageName: chrislusf/seaweedfs
+
+  filer:
+    resources: |
+      requests:
+        memory: "256Mi"
+        cpu: "50m"
+
+  volume:
+    resources: |
+      requests:
+        memory: "100Mi"
+        cpu: "50m"
+
+  master:
+    resources: |
+      requests:
+        memory: "64Mi"
+        cpu: "50m"
