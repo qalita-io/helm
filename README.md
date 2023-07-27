@@ -5,7 +5,7 @@
 </div>
 
 [![Badge](https://github.com/qalita-io/helm/workflows/Release%20Charts/badge.svg?branch=main)](https://github.com//qalita-io/helm/actions)
-[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/qalita-helm)](https://artifacthub.io/packages/search?repo=qalita-helm)
+[![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/qalita)](https://artifacthub.io/packages/search?repo=qalita)
 
 Welcome to QALITA's charts repository. All charts are in the charts directory.
 
