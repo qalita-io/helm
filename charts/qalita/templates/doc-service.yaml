@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Release.Name }}-doc-service"
+spec:
+  type: {{ .Values.doc.service.type }}
+  ports:
+    - name: {{ .Values.doc.service.targetPort }}{{ .Values.doc.service.protocol | lower }}
+      port: {{ .Values.doc.service.targetPort }}
+      protocol: {{ .Values.doc.service.protocol }}
+      targetPort: {{ .Values.doc.service.targetPort }}{{ .Values.doc.service.protocol | lower }}
+  selector:
+    app: "{{ .Release.Name }}-doc"
+    release: {{ .Release.Name }}

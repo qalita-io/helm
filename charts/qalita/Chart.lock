@@ -1,0 +1,9 @@
+dependencies:
+- name: postgresql
+  repository: https://charts.bitnami.com/bitnami
+  version: 12.5.8
+- name: seaweedfs
+  repository: https://seaweedfs.github.io/seaweedfs/helm
+  version: "3.55"
+digest: sha256:fcb29682b74b34f1d62aed162b5348d2ce4efcb73e8b82156c5f2a116b47dd62
+generated: "2023-07-29T11:30:04.260376205+02:00"

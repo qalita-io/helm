@@ -42,6 +42,30 @@ frontend:
       - name: NEXT_WEBPACK_USEPOLLING
         value: "false"
 
+doc:
+  image:
+    repository: qalita.azurecr.io/qalita/doc
+    tag: "1.0.0"
+    pullPolicy: IfNotPresent
+
+  replicaCount: 1
+
+  service:
+    type: ClusterIP
+    targetPort: "80"
+    protocol: TCP
+
+  ingress:
+    enabled: true
+    tls:
+      enabled: true
+
+  deployment:
+    resources:
+      requests:
+        memory: "50mi"
+        cpu: "50m"
+
 backend:
   image:
     repository: qalita.azurecr.io/qalita/backend
