@@ -1,6 +1,10 @@
-# QALITA Helm Chart
+# QALITA Platform Helm Chart
 
-This chart deploys QALITA on a Kubernetes cluster using the Helm package manager.
+<div style="text-align:center;">
+<img width="250px" height="auto" src="https://platform.qalita.io/logo.svg" style="max-width:250px;"/>
+</div>
+
+This chart deploys QALITA Platform on a Kubernetes cluster using the Helm package manager.
 
 # Quick Start
 
