@@ -31,6 +31,8 @@ spec:
             value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
           - name: QALITA_PUBLIC_API_URL
             value: "https://api.{{ .Values.cluster.domain }}"
+          - name: QALITA_PUBLIC_DOC_URL
+            value: "https://doc.{{ .Values.cluster.domain }}"
 {{- if .Values.frontend.deployment.env }}
 {{ toYaml .Values.frontend.deployment.env | indent 10 }}
 {{- end }}
