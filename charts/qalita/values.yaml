@@ -63,7 +63,7 @@ doc:
   deployment:
     resources:
       requests:
-        memory: "50mi"
+        memory: "50Mi"
         cpu: "50m"
 
 backend:
