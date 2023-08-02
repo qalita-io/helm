@@ -69,6 +69,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| frontend.mode | string | `PROD` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | frontend.image.repository | string | `qalita.azurecr.io/qalita/frontend` | QALITA Frontend Image Repository |
 | frontend.image.tag | string | `1.0.0` | QALITA Frontend Image Tag |
 | frontend.image.pullPolicy | string | `Always` | QALITA Frontend Image Pull Policy |
@@ -86,6 +87,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| backend.mode | string | `PROD` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | backend.adminPassword | string | randAlphaNum 25 char long string | Admin Account password |
 | backend.secretKey | string | randAlphaNum 512 char long string | Key seed to generate JWT Tokens |
 | backend.image.repository | string | `qalita.azurecr.io/qalita/backend` | QALITA Backend Image Repository |
