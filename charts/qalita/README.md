@@ -71,7 +71,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 |-----|------|---------|-------------|
 | frontend.mode | string | `PROD` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | frontend.image.repository | string | `qalita.azurecr.io/qalita/frontend` | QALITA Frontend Image Repository |
-| frontend.image.tag | string | `1.0.0` | QALITA Frontend Image Tag |
+| frontend.image.tag | string | `1.0.5` | QALITA Frontend Image Tag |
 | frontend.image.pullPolicy | string | `Always` | QALITA Frontend Image Pull Policy |
 | frontend.replicaCount | int | `1` | QALITA Frontend Replica Count |
 | frontend.service.type | string | `ClusterIP` | QALITA Frontend Service Type |
@@ -91,7 +91,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.adminPassword | string | randAlphaNum 25 char long string | Admin Account password |
 | backend.secretKey | string | randAlphaNum 512 char long string | Key seed to generate JWT Tokens |
 | backend.image.repository | string | `qalita.azurecr.io/qalita/backend` | QALITA Backend Image Repository |
-| backend.image.tag | string | `1.0.0` | QALITA Backend Image Tag |
+| backend.image.tag | string | `1.0.6` | QALITA Backend Image Tag |
 | backend.image.pullPolicy | string | `Always` | QALITA Backend Image Pull Policy |
 | backend.replicaCount | int | `1` | QALITA Backend Replica Count |
 | backend.service.type | string | `ClusterIP` | QALITA Backend Service Type |
