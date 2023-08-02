@@ -9,6 +9,7 @@ dockerregistry:
     {"auths":{"<registry-url>":{"password":"<password>","username":"<username>"}}}
 
 frontend:
+  mode: "PROD"
   image:
     repository: qalita.azurecr.io/qalita/frontend
     tag: "1.0.4"
@@ -33,8 +34,6 @@ frontend:
         cpu: "500m"
 
     env:
-      - name: QALITA_ENV
-        value: "PROD"
       - name: NEXT_TELEMETRY_DISABLED
         value: "1"
       - name: NODE_ENV
@@ -67,6 +66,7 @@ doc:
         cpu: "50m"
 
 backend:
+  mode: "PROD"
   image:
     repository: qalita.azurecr.io/qalita/backend
     tag: "1.0.5"
@@ -94,8 +94,6 @@ backend:
         cpu: "500m"
 
     env:
-      - name: QALITA_ENV
-        value: "PROD"
       - name: QALITA_API_PORT
         value: "3080"
       - name: QALITA_API_HOST

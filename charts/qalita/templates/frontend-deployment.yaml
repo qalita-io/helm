@@ -27,6 +27,8 @@ spec:
         image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
         imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
         env:
+          - name: QALITA_ENV
+            value: "{{ .Values.frontend.mode }}"
           - name: QALITA_API_URL
             value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
           - name: QALITA_PUBLIC_API_URL
