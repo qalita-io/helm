@@ -12,7 +12,7 @@ frontend:
   mode: "PROD"
   image:
     repository: qalita.azurecr.io/qalita/frontend
-    tag: "1.0.4"
+    tag: "1.0.5"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -69,7 +69,7 @@ backend:
   mode: "PROD"
   image:
     repository: qalita.azurecr.io/qalita/backend
-    tag: "1.0.5"
+    tag: "1.0.6"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
