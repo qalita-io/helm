@@ -44,6 +44,7 @@ The chart will deploy the following resources:
 
 - QALITA App
 - QALITA API
+- QALITA Doc
 - QALITA Postgresql Database
 - QALITA Seaweedfs File Storage
 
@@ -51,6 +52,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 
 - https://example.com
 - https://api.example.com
+- https://doc.example.com
 
 
 # Values
@@ -71,7 +73,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 |-----|------|---------|-------------|
 | frontend.mode | string | `PROD` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | frontend.image.repository | string | `qalita.azurecr.io/qalita/frontend` | QALITA Frontend Image Repository |
-| frontend.image.tag | string | `1.0.5` | QALITA Frontend Image Tag |
+| frontend.image.tag | string | `1.1.0` | QALITA Frontend Image Tag |
 | frontend.image.pullPolicy | string | `Always` | QALITA Frontend Image Pull Policy |
 | frontend.replicaCount | int | `1` | QALITA Frontend Replica Count |
 | frontend.service.type | string | `ClusterIP` | QALITA Frontend Service Type |
@@ -87,11 +89,12 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| backend.tokenExpireMinutes | int | `60` | Set the user session timeout, it is configured in the JWT exp value |
 | backend.mode | string | `PROD` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | backend.adminPassword | string | randAlphaNum 25 char long string | Admin Account password |
 | backend.secretKey | string | randAlphaNum 512 char long string | Key seed to generate JWT Tokens |
 | backend.image.repository | string | `qalita.azurecr.io/qalita/backend` | QALITA Backend Image Repository |
-| backend.image.tag | string | `1.0.6` | QALITA Backend Image Tag |
+| backend.image.tag | string | `1.1.0` | QALITA Backend Image Tag |
 | backend.image.pullPolicy | string | `Always` | QALITA Backend Image Pull Policy |
 | backend.replicaCount | int | `1` | QALITA Backend Replica Count |
 | backend.service.type | string | `ClusterIP` | QALITA Backend Service Type |
@@ -102,6 +105,22 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.deployment.resources.requests.cpu | string | `500m` | QALITA Backend Deployment CPU Request |
 | backend.deployment.resources.requests.memory | string | `256Mi` | QALITA Backend Deployment Memory Request |
 | backend.deployment.env | list | `[]` | QALITA Backend Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
+
+## Doc
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| doc.image.repository | string | `qalita.azurecr.io/qalita/doc` | QALITA Doc Image Repository |
+| doc.image.tag | string | `1.1.0` | QALITA Doc Image Tag |
+| doc.image.pullPolicy | string | `Always` | QALITA Doc Image Pull Policy |
+| doc.replicaCount | int | `1` | QALITA Doc Replica Count |
+| doc.service.type | string | `ClusterIP` | QALITA Doc Service Type |
+| doc.service.targetPort | int | `80` | QALITA Doc Service Port |
+| doc.service.protocol | string | `TCP` | QALITA Doc Service Protocol |
+| doc.ingress.enabled | bool | `true` | QALITA Doc Ingress Enabled |
+| doc.ingress.tls.enabled | bool | `true` | QALITA Doc Ingress TLS Enabled |
+| doc.deployment.resources.requests.cpu | string | `50m` | QALITA Doc Deployment CPU Request |
+| doc.deployment.resources.requests.memory | string | `50Mi` | QALITA Doc Deployment Memory Request |
 
 ## Database (Postgresql)
 
