@@ -118,6 +118,7 @@ postgresql:
       auth:
         database: qalitadb
         username: qalita
+        password:
 
 seaweedfs:
   enabled: true
