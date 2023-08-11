@@ -89,6 +89,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| backend.organization.name | string | `local` | Set the organization Name |
 | backend.tokenExpireMinutes | int | `60` | Set the user session timeout, it is configured in the JWT exp value |
 | backend.mode | string | `PROD` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | backend.adminPassword | string | randAlphaNum 25 char long string | Admin Account password |

@@ -63,6 +63,8 @@ spec:
             value: "{{ .Values.backend.mode }}"
           - name: QALITA_ACCESS_TOKEN_EXPIRE_MINUTES
             value: "{{ .Values.backend.tokenExpireMinutes }}"
+          - name: QALITA_ORGANIZATION_NAME
+            value: "{{ .Values.backend.organization.name }}"
           - name: QALITA_FRONTEND_URL
             value: "https://{{ .Values.cluster.domain }}"
           - name: QALITA_S3_URL
