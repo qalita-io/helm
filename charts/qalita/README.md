@@ -63,7 +63,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 |-----|------|---------|-------------|
 | cluster.issuer | string | `letsencrypt-prod` | Cluster Issuer for Cert-Manager, you can get your cluster issuer name by running `kubectl get clusterissuer` |
 | cluster.domain | string | `example.com` | DNS Domain or Sub domain for QALITA app and api endpoints |
-| cluster.name | string | ```''``` | Cluster name for QALITA app and api endpoints, it is concatenated with cluster.domain  |
+| cluster.name | string | `local` | Cluster name for QALITA app and api endpoints, it is concatenated with cluster.domain  |
 | dockerregistry.enabled | bool | `true` | Enable Private Docker Registry, qalita's container images are private, you need to setup the registry in order to pull the images |
 | dockerregistry.dataSecret | string | `{"auths":{"<registry-url>":{"password":"<password>","username":"<username>"}}}` | Docker Registry Secret, you need to configure it to pull the private registry images |
 
@@ -71,7 +71,9 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| frontend.mode | string | `PROD` | The running mode of the platform, can be <DEV/PROD/DEMO> |
+| frontend.telemetryDisabled | string | `1` | Prevent NextJS framework to send telemetry data to Vercel Servers |
+| frontend.webPackPolling | bool | `false` | Prevent webpack to update its compiled content, used only in dev mode |
+| frontend.mode | string | `production` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | frontend.image.repository | string | `qalita.azurecr.io/qalita/frontend` | QALITA Frontend Image Repository |
 | frontend.image.tag | string | `1.1.0` | QALITA Frontend Image Tag |
 | frontend.image.pullPolicy | string | `Always` | QALITA Frontend Image Pull Policy |
@@ -83,17 +85,23 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | frontend.ingress.tls.enabled | bool | `true` | QALITA Frontend Ingress TLS Enabled |
 | frontend.deployment.resources.requests.cpu | string | `500m` | QALITA Frontend Deployment CPU Request |
 | frontend.deployment.resources.requests.memory | string | `256Mi` | QALITA Frontend Deployment Memory Request |
-| frontend.deployment.env | list | `[]` | QALITA Frontend Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
+| frontend.deployment.extraEnv | list | `[]` | QALITA Frontend Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
 
 ## Backend
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | backend.organization.name | string | `local` | Set the organization Name |
-| backend.tokenExpireMinutes | int | `60` | Set the user session timeout, it is configured in the JWT exp value |
+| backend.tokenExpireMinutes | int | `240` | Set the user session timeout, it is configured in the JWT exp value |
 | backend.mode | string | `PROD` | The running mode of the platform, can be <DEV/PROD/DEMO> |
+| backend.iniSleep | int | `3` | The amount of seconds the backend waits to connect to the backend database (postgresql) before retrying |
+| backend.adminUsername | string | `admin` | The admin user name |
 | backend.adminPassword | string | randAlphaNum 25 char long string | Admin Account password |
 | backend.secretKey | string | randAlphaNum 512 char long string | Key seed to generate JWT Tokens |
+| backend.secretKeyAlgorithm | string | `HS256` | Algorithm Type used to issue JWT |
+| backend.api.port | int | `3080` | Backend API exposed Port |
+| backend.api.host | string | `0.0.0.0` | Ip address Backend is exposed to |
+| backend.api.worker | int | `4` | Number of process bootstrapped  |
 | backend.image.repository | string | `qalita.azurecr.io/qalita/backend` | QALITA Backend Image Repository |
 | backend.image.tag | string | `1.1.0` | QALITA Backend Image Tag |
 | backend.image.pullPolicy | string | `Always` | QALITA Backend Image Pull Policy |
@@ -105,7 +113,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.ingress.tls.enabled | bool | `true` | QALITA Backend Ingress TLS Enabled |
 | backend.deployment.resources.requests.cpu | string | `500m` | QALITA Backend Deployment CPU Request |
 | backend.deployment.resources.requests.memory | string | `256Mi` | QALITA Backend Deployment Memory Request |
-| backend.deployment.env | list | `[]` | QALITA Backend Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
+| backend.deployment.extraEnv | list | `[]` | QALITA Backend Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
 
 ## Doc
 
@@ -134,6 +142,7 @@ For more detailed configuration, please refer to [Bitnami Postgresql Chart](http
 | postgresql.global.potgresql.auth.database | string | `qalitadb` | Postgresql Database Name |
 | postgresql.global.potgresql.auth.username | string | `qalita` | Postgresql Database Username |
 | postgresql.global.potgresql.auth.password | string | randAlphaNum 25 char long string | Postgresql Database Password |
+| postgresql.primary.persistence.size | string | `8Gi` | PVC Size for persisting data |
 
 ## File Storage (Seaweedfs)
 
@@ -143,3 +152,4 @@ For more detailed configuration, please refer to [Seaweedfs Chart](https://artif
 |-----|------|---------|-------------|
 | seaweedfs.enabled | bool | true | Enable deploy local s3 file storage, disable if you use external S3 storage System |
 | seaweedfs.global.imageName | string | `chrislusf/seaweedfs` | Seaweedfs Image Name |
+| seaweedfs.global.createClusterRole | bool | `true` | Creates Service Accounts and Role and Role Binding  for seaweedfs |
