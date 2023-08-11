@@ -131,18 +131,31 @@ seaweedfs:
     imageName: chrislusf/seaweedfs
 
   filer:
+    enablePVC: true
+    data:
+      type: "persistentVolumeClaim"
+      size: "25Gi"
+
     resources: |
       requests:
         memory: "256Mi"
         cpu: "50m"
 
   volume:
+    data:
+      type: "persistentVolumeClaim"
+      size: "25Gi"
+
     resources: |
       requests:
         memory: "100Mi"
         cpu: "50m"
 
   master:
+    data:
+      type: "persistentVolumeClaim"
+      size: "25Gi"
+
     resources: |
       requests:
         memory: "64Mi"
