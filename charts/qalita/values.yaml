@@ -12,7 +12,7 @@ frontend:
   mode: "PROD"
   image:
     repository: qalita.azurecr.io/qalita/frontend
-    tag: "1.1.0"
+    tag: "1.1.1"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -44,7 +44,7 @@ frontend:
 doc:
   image:
     repository: qalita.azurecr.io/qalita/doc
-    tag: "1.1.0"
+    tag: "1.1.1"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -66,11 +66,15 @@ doc:
         cpu: "50m"
 
 backend:
+
+  organization:
+    name: "local"
+
   tokenExpireMinutes: 60
   mode: "PROD"
   image:
     repository: qalita.azurecr.io/qalita/backend
-    tag: "1.1.0"
+    tag: "1.1.1"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
