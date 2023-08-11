@@ -124,6 +124,11 @@ postgresql:
     persistence:
       size: 8Gi
 
+  backup:
+    enabled: true
+    cronjob:
+      storage:
+        resourcePolicy: "keep"
 
 seaweedfs:
   enabled: true
