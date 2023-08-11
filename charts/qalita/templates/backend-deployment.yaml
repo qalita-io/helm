@@ -31,21 +31,21 @@ spec:
             path: /api/v1/healthcheck
             port: {{ .Values.backend.service.targetPort }}
             scheme: HTTP
-          initialDelaySeconds: 10
-          periodSeconds: 10
+          initialDelaySeconds: 15
+          periodSeconds: 5
           successThreshold: 1
-          failureThreshold: 10
-          timeoutSeconds: 30
+          failureThreshold: 3
+          timeoutSeconds: 5
         livenessProbe:
           httpGet:
             path: /api/v1/healthcheck
             port: {{ .Values.backend.service.targetPort }}
             scheme: HTTP
-          initialDelaySeconds: 10
-          periodSeconds: 10
+          initialDelaySeconds: 0
+          periodSeconds: 30
           successThreshold: 1
-          failureThreshold: 4
-          timeoutSeconds: 30
+          failureThreshold: 3
+          timeoutSeconds: 5
         env:
           - name: POSTGRESQL_SERVER
             value: "{{ .Release.Name }}-postgresql"
@@ -65,6 +65,18 @@ spec:
             value: "{{ .Values.backend.tokenExpireMinutes }}"
           - name: QALITA_ORGANIZATION_NAME
             value: "{{ .Values.backend.organization.name }}"
+          - name: QALITA_API_PORT
+            value: "{{ .Values.backend.api.port }}"
+          - name: QALITA_API_HOST
+            value: "{{ .Values.backend.api.host }}"
+          - name: QALITA_API_WORKER
+            value: "{{ .Values.backend.api.worker }}"
+          - name: QALITA_ADMIN_USERNAME
+            value: "{{ .Values.backend.adminUsername }}"
+          - name: QALITA_ALGORITHM
+            value: "{{ .Values.backend.secretKeyAlgorithm }}"
+          - name: QALITA_INIT_SLEEP
+            value: "{{ .Values.backend.iniSleep }}"
           - name: QALITA_FRONTEND_URL
             value: "https://{{ .Values.cluster.domain }}"
           - name: QALITA_S3_URL
