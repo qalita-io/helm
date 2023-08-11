@@ -1,7 +1,7 @@
 cluster:
   issuer: letsencrypt-prod
   domain: example.com
-  name:
+  name: local
 
 dockerregistry:
   enabled: true
@@ -9,7 +9,11 @@ dockerregistry:
     {"auths":{"<registry-url>":{"password":"<password>","username":"<username>"}}}
 
 frontend:
-  mode: "PROD"
+
+  telemetryDisabled: "1"
+  webPackPolling: "false"
+  mode: "production"
+
   image:
     repository: qalita.azurecr.io/qalita/frontend
     tag: "1.1.1"
@@ -33,13 +37,7 @@ frontend:
         memory: "256Mi"
         cpu: "500m"
 
-    env:
-      - name: NEXT_TELEMETRY_DISABLED
-        value: "1"
-      - name: NODE_ENV
-        value: "production"
-      - name: NEXT_WEBPACK_USEPOLLING
-        value: "false"
+    extraEnv:
 
 doc:
   image:
@@ -70,8 +68,20 @@ backend:
   organization:
     name: "local"
 
-  tokenExpireMinutes: 60
+  tokenExpireMinutes: 240
   mode: "PROD"
+  iniSleep: "3"
+
+  adminUsername: "admin"
+  adminPassword:
+  secretKey:
+  secretKeyAlgorithm: "HS256"
+
+  api:
+    port: "3080"
+    host: "0.0.0.0"
+    worker: 4
+
   image:
     repository: qalita.azurecr.io/qalita/backend
     tag: "1.1.1"
@@ -89,28 +99,14 @@ backend:
     tls:
       enabled: true
 
-  adminPassword:
-  secretKey:
-
   deployment:
     resources:
       requests:
         memory: "1024Mi"
         cpu: "500m"
 
-    env:
-      - name: QALITA_API_PORT
-        value: "3080"
-      - name: QALITA_API_HOST
-        value: "0.0.0.0"
-      - name: QALITA_API_WORKER
-        value: "4"
-      - name: QALITA_ADMIN_USERNAME
-        value: "admin"
-      - name: QALITA_ALGORITHM
-        value: "HS256"
-      - name: QALITA_INIT_SLEEP
-        value: "3"
+    extraEnv:
+
 
 postgresql:
   enabled: true
@@ -124,6 +120,11 @@ postgresql:
         username: qalita
         password:
 
+  primary:
+    persistence:
+      size: 8Gi
+
+
 seaweedfs:
   enabled: true
   global:
@@ -131,11 +132,6 @@ seaweedfs:
     imageName: chrislusf/seaweedfs
 
   filer:
-    enablePVC: true
-    data:
-      type: "persistentVolumeClaim"
-      size: "25Gi"
-
     resources: |
       requests:
         memory: "256Mi"
@@ -144,7 +140,7 @@ seaweedfs:
   volume:
     data:
       type: "persistentVolumeClaim"
-      size: "25Gi"
+      size: "21Gi"
 
     resources: |
       requests:
@@ -152,10 +148,6 @@ seaweedfs:
         cpu: "50m"
 
   master:
-    data:
-      type: "persistentVolumeClaim"
-      size: "25Gi"
-
     resources: |
       requests:
         memory: "64Mi"
