@@ -16,7 +16,7 @@ frontend:
 
   image:
     repository: qalita.azurecr.io/qalita/frontend
-    tag: "1.1.2"
+    tag: "1.1.4"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -84,7 +84,7 @@ backend:
 
   image:
     repository: qalita.azurecr.io/qalita/backend
-    tag: "1.1.2"
+    tag: "1.1.4"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
