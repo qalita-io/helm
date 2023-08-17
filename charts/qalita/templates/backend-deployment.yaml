@@ -117,8 +117,8 @@ spec:
                 key: secretKey
                 name: "{{ .Release.Name }}-qalita-secret"
                 optional: false
-{{- if .Values.backend.deployment.env }}
-{{ toYaml .Values.backend.deployment.env | indent 10 }}
+{{- if .Values.backend.deployment.extraEnv }}
+{{ toYaml .Values.backend.deployment.extraEnv | indent 10 }}
 {{- end }}
         ports:
           - containerPort: {{ .Values.backend.service.targetPort }}
