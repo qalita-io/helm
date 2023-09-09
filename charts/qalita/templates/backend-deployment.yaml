@@ -80,30 +80,30 @@ spec:
           - name: QALITA_FRONTEND_URL
             value: "https://{{ .Values.cluster.domain }}"
           - name: QALITA_S3_URL
-            value: "http://seaweedfs-s3:8333"
+            value: "{{ .Values.backend.s3.url }}"
           - name: QALITA_S3_KEY_ID
             valueFrom:
               secretKeyRef:
                 key: admin_access_key_id
-                name: seaweedfs-s3-secret
+                name: {{ .Values.backend.s3.secretName }}
                 optional: false
           - name: QALITA_S3_KEY_SECRET
             valueFrom:
               secretKeyRef:
                 key: admin_secret_access_key
-                name: seaweedfs-s3-secret
+                name: {{ .Values.backend.s3.secretName }}
                 optional: false
           - name: QALITA_S3_READER_KEY_ID
             valueFrom:
               secretKeyRef:
                 key: read_access_key_id
-                name: seaweedfs-s3-secret
+                name: {{ .Values.backend.s3.secretName }}
                 optional: false
           - name: QALITA_S3_READER_KEY_SECRET
             valueFrom:
               secretKeyRef:
                 key: read_secret_access_key
-                name: seaweedfs-s3-secret
+                name: {{ .Values.backend.s3.secretName }}
                 optional: false
           - name: QALITA_ADMIN_PASSWORD
             valueFrom:
