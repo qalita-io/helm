@@ -34,7 +34,7 @@ spec:
           initialDelaySeconds: 5
           periodSeconds: 5
           successThreshold: 1
-          failureThreshold: 3
+          failureThreshold: 50
           timeoutSeconds: 5
         livenessProbe:
           httpGet:
@@ -44,7 +44,7 @@ spec:
           initialDelaySeconds: 0
           periodSeconds: 30
           successThreshold: 1
-          failureThreshold: 3
+          failureThreshold: 50
           timeoutSeconds: 5
         env:
           - name: NODE_ENV
