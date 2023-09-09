@@ -9,17 +9,16 @@ dockerregistry:
     {"auths":{"<registry-url>":{"password":"<password>","username":"<username>"}}}
 
 frontend:
+  image:
+    repository: qalita.azurecr.io/qalita/frontend
+    tag: "1.2.1"
+    pullPolicy: IfNotPresent
+
+  replicaCount: 1
 
   telemetryDisabled: "1"
   webPackPolling: "false"
   mode: "production"
-
-  image:
-    repository: qalita.azurecr.io/qalita/frontend
-    tag: "1.1.4"
-    pullPolicy: IfNotPresent
-
-  replicaCount: 1
 
   service:
     type: ClusterIP
@@ -64,6 +63,12 @@ doc:
         cpu: "50m"
 
 backend:
+  image:
+    repository: qalita.azurecr.io/qalita/backend
+    tag: "1.2.1"
+    pullPolicy: IfNotPresent
+
+  replicaCount: 1
 
   organization:
     name: "local"
@@ -81,13 +86,6 @@ backend:
     port: "3080"
     host: "0.0.0.0"
     worker: 4
-
-  image:
-    repository: qalita.azurecr.io/qalita/backend
-    tag: "1.1.5"
-    pullPolicy: IfNotPresent
-
-  replicaCount: 1
 
   service:
     type: ClusterIP
@@ -125,7 +123,7 @@ postgresql:
       size: 8Gi
 
   backup:
-    enabled: true
+    enabled: false
     cronjob:
       storage:
         resourcePolicy: "keep"
