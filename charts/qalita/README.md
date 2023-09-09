@@ -114,6 +114,12 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.deployment.resources.requests.cpu | string | `500m` | QALITA Backend Deployment CPU Request |
 | backend.deployment.resources.requests.memory | string | `256Mi` | QALITA Backend Deployment Memory Request |
 | backend.deployment.extraEnv | list | `[]` | QALITA Backend Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
+| backend.s3.url | string | `http://seaweedfs-s3:8333` | S3 Store Url Endpoint |
+| backend.s3.secretName | string | `seaweedfs-s3-secret` | Secret containing read / write credentials for the s3 store |
+| backend.s3.admin_access_key_id | string | `` | S3 Write user access key |
+| backend.s3.admin_secret_access_key | string | `` | S3 Write user secret key |
+| backend.s3.read_access_key_id | string | `` | S3 read user access key |
+| backend.s3.read_secret_access_key | string | `` | S3 read user secret key |
 
 ## Doc
 
