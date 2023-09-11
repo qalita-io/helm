@@ -11,7 +11,7 @@ dockerregistry:
 frontend:
   image:
     repository: qalita.azurecr.io/qalita/frontend
-    tag: "1.2.1"
+    tag: "1.2.2"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -65,7 +65,7 @@ doc:
 backend:
   image:
     repository: qalita.azurecr.io/qalita/backend
-    tag: "1.2.1"
+    tag: "1.2.2"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
