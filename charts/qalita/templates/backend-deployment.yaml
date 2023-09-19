@@ -50,7 +50,7 @@ spec:
           - name: POSTGRESQL_SERVER
             value: "{{ .Release.Name }}-postgresql"
           - name: POSTGRESQL_PORT
-            value: "{{ .Values.posthresql.primary.service.ports.postgresql }}"
+            value: "{{ .Values.postgresql.primary.service.ports.postgresql }}"
           - name: POSTGRESQL_DATABASE
             value: "{{ .Values.postgresql.global.postgresql.auth.database }}"
           - name: POSTGRESQL_USERNAME
@@ -64,7 +64,7 @@ spec:
           - name: REDIS_SERVER
             value: "{{ .Release.Name }}-redis"
           - name: REDIS_PORT
-            value: "{{ .Values.redis.master.containerPorts.redis }}"
+            value: "{{ .Values.redis.service.main.ports.main.targetPort }}"
           - name: QALITA_ENV
             value: "{{ .Values.backend.mode }}"
           - name: QALITA_ACCESS_TOKEN_EXPIRE_MINUTES
