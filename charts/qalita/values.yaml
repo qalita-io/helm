@@ -156,7 +156,7 @@ seaweedfs:
       type: "persistentVolumeClaim"
       size: "21Gi"
 
-    resources: |
+    resources:
       requests:
         memory: "100Mi"
         cpu: "50m"
