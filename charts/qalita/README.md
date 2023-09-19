@@ -168,3 +168,4 @@ For more detailed configuration, please refer to [Truecharts Redis Chart](https:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | redis.enabled | bool | true | Enable deploy local redis, disable if you use external Redis Database |
+| redis.password | string | randAlphaNum 25 char long string | Redis Database Password |
