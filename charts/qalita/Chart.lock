@@ -3,10 +3,10 @@ dependencies:
   repository: https://charts.bitnami.com/bitnami
   version: 12.8.2
 - name: redis
-  repository: https://charts.bitnami.com/bitnami
-  version: 18.0.4
+  repository: https://charts.truecharts.org/
+  version: 8.0.23
 - name: seaweedfs
   repository: https://seaweedfs.github.io/seaweedfs/helm
   version: "3.55"
-digest: sha256:03106d0291677dcae0f4e570ec6b40d61e7b66054690dd8c157a1be7ad9dfa6c
-generated: "2023-09-19T16:10:35.053326928+02:00"
+digest: sha256:b6faf3879dcbe15f534f0dd47b1080a323390386d623ef5c141d77405e45d6f2
+generated: "2023-09-19T16:59:42.588540066+02:00"
