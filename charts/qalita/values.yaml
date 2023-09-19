@@ -136,6 +136,9 @@ postgresql:
       storage:
         resourcePolicy: "keep"
 
+redis:
+  enabled: true
+
 seaweedfs:
   enabled: true
   global:

@@ -37,18 +37,16 @@ spec:
           failureThreshold: 50
           timeoutSeconds: 5
         livenessProbe:
-          httpGet:
-            path: /api/v1/healthcheck
-            port: {{ .Values.backend.service.targetPort }}
-            scheme: HTTP
-          initialDelaySeconds: 0
-          periodSeconds: 30
-          successThreshold: 1
-          failureThreshold: 50
-          timeoutSeconds: 5
+          exec:
+            command:
+            - /app/liveness_check.sh
+          initialDelaySeconds: 30
+          periodSeconds: 10
         env:
           - name: POSTGRESQL_SERVER
             value: "{{ .Release.Name }}-postgresql"
+          - name: POSTGRESQL_PORT
+            value: "{{ .Values.postgresql.primary.service.ports.postgresql }}"
           - name: POSTGRESQL_DATABASE
             value: "{{ .Values.postgresql.global.postgresql.auth.database }}"
           - name: POSTGRESQL_USERNAME
@@ -59,6 +57,10 @@ spec:
                 key: password
                 name: "{{ .Release.Name }}-postgresql"
                 optional: false
+          - name: REDIS_SERVER
+            value: "{{ .Release.Name }}-redis"
+          - name: REDIS_PORT
+            value: "{{ .Values.redis.service.main.ports.main.targetPort }}"
           - name: QALITA_ENV
             value: "{{ .Values.backend.mode }}"
           - name: QALITA_ACCESS_TOKEN_EXPIRE_MINUTES
