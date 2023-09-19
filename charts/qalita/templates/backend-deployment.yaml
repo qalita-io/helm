@@ -37,15 +37,11 @@ spec:
           failureThreshold: 50
           timeoutSeconds: 5
         livenessProbe:
-          httpGet:
-            path: /api/v1/healthcheck
-            port: {{ .Values.backend.service.targetPort }}
-            scheme: HTTP
-          initialDelaySeconds: 0
-          periodSeconds: 30
-          successThreshold: 1
-          failureThreshold: 50
-          timeoutSeconds: 5
+          exec:
+            command:
+            - /app/liveness_check.sh
+          initialDelaySeconds: 30
+          periodSeconds: 10
         env:
           - name: POSTGRESQL_SERVER
             value: "{{ .Release.Name }}-postgresql"
