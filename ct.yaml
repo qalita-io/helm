@@ -1,6 +1,6 @@
 chart-repos:
   - bitnami=https://charts.bitnami.com/bitnami
   - seaweedfs=https://seaweedfs.github.io/seaweedfs/helm
-  - truecharts=https://charts.truecharts.org/
+  - truecharts=https://charts.truecharts.org
 helm-extra-args: --timeout 600s
 validate-maintainers: false
