@@ -18,6 +18,7 @@ This chart deploys QALITA Platform on a Kubernetes cluster using the Helm packag
 
 - [seaweedfs](https://artifacthub.io/packages/helm/seaweedfs/seaweedfs)
 - [postgresql](https://artifacthub.io/packages/helm/bitnami/postgresql)
+- [redis](https://artifacthub.io/packages/helm/truecharts/redis)
 
 ## 1. Adding the chart Repository
 
@@ -159,3 +160,11 @@ For more detailed configuration, please refer to [Seaweedfs Chart](https://artif
 | seaweedfs.enabled | bool | true | Enable deploy local s3 file storage, disable if you use external S3 storage System |
 | seaweedfs.global.imageName | string | `chrislusf/seaweedfs` | Seaweedfs Image Name |
 | seaweedfs.global.createClusterRole | bool | `true` | Creates Service Accounts and Role and Role Binding  for seaweedfs |
+
+## Redis
+
+For more detailed configuration, please refer to [Truecharts Redis Chart](https://artifacthub.io/packages/helm/truecharts/redis)
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| redis.enabled | bool | true | Enable deploy local redis, disable if you use external Redis Database |
