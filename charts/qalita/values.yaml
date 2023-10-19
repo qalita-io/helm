@@ -138,9 +138,9 @@ postgresql:
 
 redis:
   enabled: true
-  common:
-    fallbackDefaults:
-      pvcSize: 1Gi
+  volumeClaimTemplates:
+    data:
+      enabled: false
 
 seaweedfs:
   enabled: true
