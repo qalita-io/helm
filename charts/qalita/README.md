@@ -122,7 +122,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.s3.read_access_key_id | string | `` | S3 read user access key |
 | backend.s3.read_secret_access_key | string | `` | S3 read user secret key |
 
-## Doc
+## Documentation
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
@@ -151,7 +151,7 @@ For more detailed configuration, please refer to [Bitnami Postgresql Chart](http
 | postgresql.global.potgresql.auth.password | string | randAlphaNum 25 char long string | Postgresql Database Password |
 | postgresql.primary.persistence.size | string | `8Gi` | PVC Size for persisting data |
 
-## File Storage (Seaweedfs)
+## S3 Object Storage (Seaweedfs)
 
 For more detailed configuration, please refer to [Seaweedfs Chart](https://artifacthub.io/packages/helm/seaweedfs/seaweedfs)
 
@@ -161,7 +161,7 @@ For more detailed configuration, please refer to [Seaweedfs Chart](https://artif
 | seaweedfs.global.imageName | string | `chrislusf/seaweedfs` | Seaweedfs Image Name |
 | seaweedfs.global.createClusterRole | bool | `true` | Creates Service Accounts and Role and Role Binding  for seaweedfs |
 
-## Redis
+## Cache (Redis)
 
 For more detailed configuration, please refer to [Truecharts Redis Chart](https://artifacthub.io/packages/helm/truecharts/redis)
 
