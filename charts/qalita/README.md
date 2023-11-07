@@ -76,7 +76,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | frontend.webPackPolling | bool | `false` | Prevent webpack to update its compiled content, used only in dev mode |
 | frontend.mode | string | `production` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | frontend.image.repository | string | `qalita.azurecr.io/qalita/frontend` | QALITA Frontend Image Repository |
-| frontend.image.tag | string | `1.1.0` | QALITA Frontend Image Tag |
+| frontend.image.tag | string | `1.4.0` | QALITA Frontend Image Tag |
 | frontend.image.pullPolicy | string | `Always` | QALITA Frontend Image Pull Policy |
 | frontend.replicaCount | int | `1` | QALITA Frontend Replica Count |
 | frontend.service.type | string | `ClusterIP` | QALITA Frontend Service Type |
@@ -104,7 +104,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.api.host | string | `0.0.0.0` | Ip address Backend is exposed to |
 | backend.api.worker | int | `4` | Number of process bootstrapped  |
 | backend.image.repository | string | `qalita.azurecr.io/qalita/backend` | QALITA Backend Image Repository |
-| backend.image.tag | string | `1.1.0` | QALITA Backend Image Tag |
+| backend.image.tag | string | `1.4.0` | QALITA Backend Image Tag |
 | backend.image.pullPolicy | string | `Always` | QALITA Backend Image Pull Policy |
 | backend.replicaCount | int | `1` | QALITA Backend Replica Count |
 | backend.service.type | string | `ClusterIP` | QALITA Backend Service Type |
@@ -122,12 +122,12 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.s3.read_access_key_id | string | `` | S3 read user access key |
 | backend.s3.read_secret_access_key | string | `` | S3 read user secret key |
 
-## Doc
+## Documentation
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | doc.image.repository | string | `qalita.azurecr.io/qalita/doc` | QALITA Doc Image Repository |
-| doc.image.tag | string | `1.1.0` | QALITA Doc Image Tag |
+| doc.image.tag | string | `1.4.0` | QALITA Doc Image Tag |
 | doc.image.pullPolicy | string | `Always` | QALITA Doc Image Pull Policy |
 | doc.replicaCount | int | `1` | QALITA Doc Replica Count |
 | doc.service.type | string | `ClusterIP` | QALITA Doc Service Type |
@@ -151,7 +151,7 @@ For more detailed configuration, please refer to [Bitnami Postgresql Chart](http
 | postgresql.global.potgresql.auth.password | string | randAlphaNum 25 char long string | Postgresql Database Password |
 | postgresql.primary.persistence.size | string | `8Gi` | PVC Size for persisting data |
 
-## File Storage (Seaweedfs)
+## S3 Object Storage (Seaweedfs)
 
 For more detailed configuration, please refer to [Seaweedfs Chart](https://artifacthub.io/packages/helm/seaweedfs/seaweedfs)
 
@@ -161,7 +161,7 @@ For more detailed configuration, please refer to [Seaweedfs Chart](https://artif
 | seaweedfs.global.imageName | string | `chrislusf/seaweedfs` | Seaweedfs Image Name |
 | seaweedfs.global.createClusterRole | bool | `true` | Creates Service Accounts and Role and Role Binding  for seaweedfs |
 
-## Redis
+## Cache (Redis)
 
 For more detailed configuration, please refer to [Truecharts Redis Chart](https://artifacthub.io/packages/helm/truecharts/redis)
 
