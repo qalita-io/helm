@@ -26,22 +26,22 @@ spec:
       - name: "backend"
         image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
         imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
-        readinessProbe:
-          httpGet:
-            path: /api/v1/healthcheck
-            port: {{ .Values.backend.service.targetPort }}
-            scheme: HTTP
-          initialDelaySeconds: 15
-          periodSeconds: 5
-          successThreshold: 1
-          failureThreshold: 50
+        startupProbe:
+          exec:
+            command:
+            - /app/liveness_check.sh
+          initialDelaySeconds: 10
+          periodSeconds: 60
+          failureThreshold: 10
           timeoutSeconds: 5
         livenessProbe:
           exec:
             command:
             - /app/liveness_check.sh
-          initialDelaySeconds: 30
-          periodSeconds: 10
+          initialDelaySeconds: 10
+          periodSeconds: 60
+          failureThreshold: 3
+          timeoutSeconds: 5
         env:
           - name: POSTGRESQL_SERVER
             value: "{{ .Release.Name }}-postgresql"
