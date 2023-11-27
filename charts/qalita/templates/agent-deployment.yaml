@@ -1,0 +1,46 @@
+{{ if .Values.agent.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: qalita-agent
+spec:
+  replicas: {{ .Values.agent.replicaCount }}
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-agent"
+      release: {{ .Release.Name }}
+  template:
+    spec:
+      containers:
+        - args:
+            - agent
+            - run
+          command:
+            - /app/qalita/main.py
+          env:
+            - name: QALITA_AGENT_NAME
+              value: {{ .Values.agent.name }}
+            - name: QALITA_AGENT_MODE
+              value: {{ .Values.agent.mode }}
+            - name: QALITA_AGENT_ENDPOINT
+              value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
+            - name: QALITA_AGENT_TOKEN
+              value: >-
+                {{- if .Values.agent.token }}
+                {{ .Values.agent.token }}
+                {{- else }}
+                {{ randAlphaNum 32 }}
+                {{- end }}
+          image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
+          name: agent
+          volumeMounts:
+            - mountPath: /data
+              name: agent-store
+            - mountPath: /root/.qalita/
+              name: agent-store
+              subPath: ./qalita
+      volumes:
+        - name: agent-store
+          persistentVolumeClaim:
+            claimName: qalita-agent-store
+{{ end }}

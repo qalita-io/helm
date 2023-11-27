@@ -113,6 +113,26 @@ backend:
 
     extraEnv:
 
+agent:
+  enabled: true
+  name: "local-agent"
+  mode: "worker"
+  token:
+
+  image:
+    repository: qalita.azurecr.io/qalita/agent
+    tag: "1.4.2"
+    pullPolicy: IfNotPresent
+
+  replicaCount: 1
+
+  deployment:
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "200m"
+
+    extraEnv:
 
 postgresql:
   enabled: true
@@ -169,3 +189,31 @@ seaweedfs:
       requests:
         memory: "64Mi"
         cpu: "50m"
+
+helmsync:
+  enabled: false
+  image:
+    repository: alpine/helm
+
+  kubeconfig: |-
+    apiVersion: v1
+    kind: Config
+    clusters:
+    - name: "<kubernetes_cluster_name>"
+      cluster:
+        server: "<kubernetes_api_server_url>"
+    users:
+    - name: "<kubernetes_cluster_name>-user"
+      user:
+        token: "<kubernetes_cluster_token>"
+    contexts:
+    - name: "<kubernetes_cluster_name>-context"
+      context:
+        user: "<kubernetes_cluster_name>-user"
+        cluster: "<kubernetes_cluster_name>"
+    current-context: "<kubernetes_cluster_name>-context"
+
+  resources: |
+    requests:
+      memory: "20Mi"
+      cpu: "10m"

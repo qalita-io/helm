@@ -1,0 +1,37 @@
+{{ if .Values.helmsync.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: helmsync
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: "{{ .Release.Name }}-helmsync"
+      release: {{ .Release.Name }}
+  template:
+    spec:
+      containers:
+        - args:
+            - '3600'
+          command:
+            - sleep
+          env:
+            - name: KUBECONFIG
+              value: /root/kubeconfig/kubeconfig.yaml
+          image: {{ .Values.helmsync.image.repository }}
+          name: helmsync
+          volumeMounts:
+            - mountPath: /root/kubeconfig
+              name: helmsync-kubeconfig
+              readOnly: true
+{{- if .Values.helmsync.resources }}
+        resources:
+{{ toYaml .Values.helmsync.resources | indent 10 }}
+{{- end }}
+      volumes:
+        - name: helmsync-kubeconfig
+          secret:
+            defaultMode: 420
+            secretName: helmsync-kubeconfig
+{{ end }}
