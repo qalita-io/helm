@@ -76,7 +76,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | frontend.webPackPolling | bool | `false` | Prevent webpack to update its compiled content, used only in dev mode |
 | frontend.mode | string | `production` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | frontend.image.repository | string | `qalita.azurecr.io/qalita/frontend` | QALITA Frontend Image Repository |
-| frontend.image.tag | string | `1.4.1` | QALITA Frontend Image Tag |
+| frontend.image.tag | string | `1.4.2` | QALITA Frontend Image Tag |
 | frontend.image.pullPolicy | string | `Always` | QALITA Frontend Image Pull Policy |
 | frontend.replicaCount | int | `1` | QALITA Frontend Replica Count |
 | frontend.service.type | string | `ClusterIP` | QALITA Frontend Service Type |
@@ -104,7 +104,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.api.host | string | `0.0.0.0` | Ip address Backend is exposed to |
 | backend.api.worker | int | `4` | Number of process bootstrapped  |
 | backend.image.repository | string | `qalita.azurecr.io/qalita/backend` | QALITA Backend Image Repository |
-| backend.image.tag | string | `1.4.1` | QALITA Backend Image Tag |
+| backend.image.tag | string | `1.4.2` | QALITA Backend Image Tag |
 | backend.image.pullPolicy | string | `Always` | QALITA Backend Image Pull Policy |
 | backend.replicaCount | int | `1` | QALITA Backend Replica Count |
 | backend.service.type | string | `ClusterIP` | QALITA Backend Service Type |
@@ -122,12 +122,27 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.s3.read_access_key_id | string | `` | S3 read user access key |
 | backend.s3.read_secret_access_key | string | `` | S3 read user secret key |
 
+## Agent
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| agent.enabled | bool | `true` | Enabling agent deployment |
+| agent.name | string | `local-agent` | Qalita Agent Name |
+| agent.mode | string | `worker` | Qalita Agent mode <job/worker> |
+| agent.token | string | `randalphanum32` | Qalita Agent API Token |
+| agent.image.repository | string | `qalita.azurecr.io/qalita/agent` | QALITA Agent Image Repository |
+| agent.image.tag | string | `1.4.2` | QALITA Agent Image Tag |
+| agent.image.pullPolicy | string | `Always` | QALITA Agent Image Pull Policy |
+| agent.replicaCount | int | `1` | QALITA Agent Replica Count |
+| agent.deployment.resources.requests.memory | string | `256Mi` | QALITA Agent Memory Request |
+| agent.deployment.resources.requests.cpu | string | `500m` | QALITA Agent CPU Request |
+
 ## Documentation
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | doc.image.repository | string | `qalita.azurecr.io/qalita/doc` | QALITA Doc Image Repository |
-| doc.image.tag | string | `1.4.1` | QALITA Doc Image Tag |
+| doc.image.tag | string | `1.4.2` | QALITA Doc Image Tag |
 | doc.image.pullPolicy | string | `Always` | QALITA Doc Image Pull Policy |
 | doc.replicaCount | int | `1` | QALITA Doc Replica Count |
 | doc.service.type | string | `ClusterIP` | QALITA Doc Service Type |
@@ -169,3 +184,15 @@ For more detailed configuration, please refer to [Truecharts Redis Chart](https:
 |-----|------|---------|-------------|
 | redis.enabled | bool | true | Enable deploy local redis, disable if you use external Redis Database |
 | redis.password | string | randAlphaNum 25 char long string | Redis Database Password |
+
+## Helm Sync
+
+For more detailed configuration, please refer to [alpine/helm](https://hub.docker.com/r/alpine/helm)
+
+| Key | Type | Default | Description |
+|-----|------|---------|-------------|
+| helmSync.enabled | bool | false | Enable Helm Sync |
+| helmSync.image.repository | string | `alpine/helm` | Helm Sync Image Repository |
+| helmSync.kubeconfig | yaml | `` | Kubeconfig yaml formatted, see default values to have a template |
+| helmSync.resources.requests.cpu | string | `500m` | QALITA helmsync Deployment CPU Request |
+| helmSync.resources.requests.memory | string | `256Mi` | QALITA helmsync Deployment Memory Request |
