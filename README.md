@@ -1,8 +1,8 @@
 # Helm Charts Repository
 
-<div style="text-align:center;">
-<img width="250px" height="auto" src="https://platform.qalita.io/logo.svg" style="max-width:250px;"/>
-</div>
+<p align="center">
+  <img width="250px" height="auto" src="https://platform.qalita.io/logo.svg" style="max-width:250px;"/>
+</p>
 
 [![Badge](https://github.com/qalita-io/helm/workflows/Release%20Charts/badge.svg?branch=main)](https://github.com//qalita-io/helm/actions)
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/qalita)](https://artifacthub.io/packages/search?repo=qalita)
