@@ -120,7 +120,7 @@ agent:
   token:
 
   image:
-    repository: qalita.azurecr.io/qalita/agent
+    repository: qalita/agent
     tag: "1.4.2"
     pullPolicy: IfNotPresent
 
