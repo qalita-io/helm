@@ -130,7 +130,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | agent.name | string | `local-agent` | Qalita Agent Name |
 | agent.mode | string | `worker` | Qalita Agent mode <job/worker> |
 | agent.token | string | `randalphanum32` | Qalita Agent API Token |
-| agent.image.repository | string | `qalita.azurecr.io/qalita/agent` | QALITA Agent Image Repository |
+| agent.image.repository | string | `qalita/agent` | QALITA Agent Image Repository |
 | agent.image.tag | string | `1.4.2` | QALITA Agent Image Tag |
 | agent.image.pullPolicy | string | `Always` | QALITA Agent Image Pull Policy |
 | agent.replicaCount | int | `1` | QALITA Agent Replica Count |
