@@ -10,6 +10,10 @@ spec:
       app: "{{ .Release.Name }}-helmsync"
       release: {{ .Release.Name }}
   template:
+    metadata:
+      labels:
+        app: "{{ .Release.Name }}-helmsync"
+        release: {{ .Release.Name }}
     spec:
       containers:
         - args:
