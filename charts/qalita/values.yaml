@@ -126,6 +126,10 @@ agent:
 
   replicaCount: 1
 
+  pvc:
+    enabled: false
+    storageSize: "10Gi"
+
   deployment:
     resources:
       requests:

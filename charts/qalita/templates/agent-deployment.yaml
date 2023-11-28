@@ -42,6 +42,7 @@ spec:
                 {{- end }}
           image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
           name: agent
+{{- if .Values.agent.pvc.enabled }}
           volumeMounts:
             - mountPath: /data
               name: agent-store
@@ -52,4 +53,5 @@ spec:
         - name: agent-store
           persistentVolumeClaim:
             claimName: qalita-agent-store
+{{- end }}
 {{ end }}
