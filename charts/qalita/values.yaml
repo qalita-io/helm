@@ -114,7 +114,7 @@ backend:
     extraEnv:
 
 agent:
-  enabled: true
+  enabled: false
   name: "local-agent"
   mode: "worker"
   token:

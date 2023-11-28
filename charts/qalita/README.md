@@ -126,16 +126,18 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| agent.enabled | bool | `true` | Enabling agent deployment |
+| agent.enabled | bool | `false` | Enabling agent deployment |
 | agent.name | string | `local-agent` | Qalita Agent Name |
 | agent.mode | string | `worker` | Qalita Agent mode <job/worker> |
 | agent.token | string | `randalphanum32` | Qalita Agent API Token |
-| agent.image.repository | string | `qalita/agent` | QALITA Agent Image Repository |
+| agent.image.repository | string | `qalita/agent` | [QALITA Agent Image Repository](https://hub.docker.com/r/qalita/agent) |
 | agent.image.tag | string | `1.4.2` | QALITA Agent Image Tag |
 | agent.image.pullPolicy | string | `Always` | QALITA Agent Image Pull Policy |
 | agent.replicaCount | int | `1` | QALITA Agent Replica Count |
 | agent.deployment.resources.requests.memory | string | `256Mi` | QALITA Agent Memory Request |
 | agent.deployment.resources.requests.cpu | string | `500m` | QALITA Agent CPU Request |
+| agent.pvc.enabled | bool | `false` | Enable persistence for agent data |
+| agent.pvc.storageSize | string | `10Gi` | PVC Size for persisting data |
 
 ## Documentation
 
