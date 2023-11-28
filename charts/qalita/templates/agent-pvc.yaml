@@ -1,0 +1,12 @@
+{{- if .Values.agent.pvc.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: qalita-agent-store
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.agent.pvc.storageSize }}
+{{- end }}
