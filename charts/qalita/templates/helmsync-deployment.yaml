@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - args:
-            - '3600'
+            - 'infinity'
           command:
             - sleep
           env:
@@ -32,15 +32,15 @@ spec:
           name: helmsync
           volumeMounts:
             - mountPath: /root/kubeconfig
-              name: helmsync-kubeconfig
+              name: "helmsync-kubeconfig"
               readOnly: true
 {{- if .Values.helmsync.resources }}
         resources:
 {{ toYaml .Values.helmsync.resources | indent 10 }}
 {{- end }}
       volumes:
-        - name: helmsync-kubeconfig
+        - name: "helmsync-kubeconfig"
           secret:
             defaultMode: 420
-            secretName: helmsync-kubeconfig
+            secretName: "helmsync-kubeconfig"
 {{ end }}
