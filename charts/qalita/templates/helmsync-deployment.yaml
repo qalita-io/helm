@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
         - args:
-            - '3600'
+            - 'infinity'
           command:
             - sleep
           env:
