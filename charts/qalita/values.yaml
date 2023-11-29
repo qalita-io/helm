@@ -217,7 +217,7 @@ helmsync:
         cluster: "<kubernetes_cluster_name>"
     current-context: "<kubernetes_cluster_name>-context"
 
-  resources: |
+  resources:
     requests:
-      memory: "20Mi"
-      cpu: "10m"
+      memory: "100Mi"
+      cpu: "100m"
