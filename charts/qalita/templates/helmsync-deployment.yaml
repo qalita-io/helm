@@ -32,15 +32,15 @@ spec:
           name: helmsync
           volumeMounts:
             - mountPath: /root/kubeconfig
-              name: "helmsync-kubeconfig"
+              name: helmsynckubeconfig
               readOnly: true
 {{- if .Values.helmsync.resources }}
         resources:
 {{ toYaml .Values.helmsync.resources | indent 10 }}
 {{- end }}
       volumes:
-        - name: "helmsync-kubeconfig"
+        - name: helmsynckubeconfig
           secret:
             defaultMode: 420
-            secretName: "helmsync-kubeconfig"
+            secretName: helmsynckubeconfig
 {{ end }}
