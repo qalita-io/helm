@@ -32,7 +32,7 @@ spec:
             port: {{ .Values.frontend.service.targetPort }}
             scheme: HTTP
           initialDelaySeconds: 5
-          periodSeconds: 60
+          periodSeconds: 10
           failureThreshold: 5
           timeoutSeconds: 5
         livenessProbe:
