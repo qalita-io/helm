@@ -76,7 +76,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | frontend.webPackPolling | bool | `false` | Prevent webpack to update its compiled content, used only in dev mode |
 | frontend.mode | string | `production` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | frontend.image.repository | string | `qalita.azurecr.io/qalita/frontend` | QALITA Frontend Image Repository |
-| frontend.image.tag | string | `1.4.2` | QALITA Frontend Image Tag |
+| frontend.image.tag | string | `1.4.3` | QALITA Frontend Image Tag |
 | frontend.image.pullPolicy | string | `Always` | QALITA Frontend Image Pull Policy |
 | frontend.replicaCount | int | `1` | QALITA Frontend Replica Count |
 | frontend.service.type | string | `ClusterIP` | QALITA Frontend Service Type |
@@ -104,7 +104,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.api.host | string | `0.0.0.0` | Ip address Backend is exposed to |
 | backend.api.worker | int | `4` | Number of process bootstrapped  |
 | backend.image.repository | string | `qalita.azurecr.io/qalita/backend` | QALITA Backend Image Repository |
-| backend.image.tag | string | `1.4.2` | QALITA Backend Image Tag |
+| backend.image.tag | string | `1.4.3` | QALITA Backend Image Tag |
 | backend.image.pullPolicy | string | `Always` | QALITA Backend Image Pull Policy |
 | backend.replicaCount | int | `1` | QALITA Backend Replica Count |
 | backend.service.type | string | `ClusterIP` | QALITA Backend Service Type |
@@ -128,14 +128,15 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 |-----|------|---------|-------------|
 | agent.enabled | bool | `false` | Enabling agent deployment |
 | agent.name | string | `local-agent` | Qalita Agent Name |
+| agent.initscript | string | `echo hello world` | Qalita Agent init script helps add custom instructions before launching agent, can be used to mount cifs remote path or other actions |
 | agent.mode | string | `worker` | Qalita Agent mode <job/worker> |
 | agent.token | string | `randalphanum32` | Qalita Agent API Token |
 | agent.image.repository | string | `qalita/agent` | [QALITA Agent Image Repository](https://hub.docker.com/r/qalita/agent) |
-| agent.image.tag | string | `1.4.2` | QALITA Agent Image Tag |
+| agent.image.tag | string | `1.4.3` | QALITA Agent Image Tag |
 | agent.image.pullPolicy | string | `Always` | QALITA Agent Image Pull Policy |
 | agent.replicaCount | int | `1` | QALITA Agent Replica Count |
 | agent.deployment.resources.requests.memory | string | `256Mi` | QALITA Agent Memory Request |
-| agent.deployment.resources.requests.cpu | string | `500m` | QALITA Agent CPU Request |
+| agent.deployment.resources.requests.cpu | string | `200m` | QALITA Agent CPU Request |
 | agent.pvc.enabled | bool | `false` | Enable persistence for agent data |
 | agent.pvc.storageSize | string | `10Gi` | PVC Size for persisting data |
 
@@ -144,7 +145,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | doc.image.repository | string | `qalita.azurecr.io/qalita/doc` | QALITA Doc Image Repository |
-| doc.image.tag | string | `1.4.2` | QALITA Doc Image Tag |
+| doc.image.tag | string | `1.4.1` | QALITA Doc Image Tag |
 | doc.image.pullPolicy | string | `Always` | QALITA Doc Image Pull Policy |
 | doc.replicaCount | int | `1` | QALITA Doc Replica Count |
 | doc.service.type | string | `ClusterIP` | QALITA Doc Service Type |
