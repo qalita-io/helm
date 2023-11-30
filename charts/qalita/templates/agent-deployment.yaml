@@ -22,6 +22,34 @@ spec:
     spec:
       containers:
         - args:
+            - 'infinity'
+          command:
+            - sleep
+          env:
+            - name: QALITA_AGENT_NAME
+              value: {{ .Values.agent.name }}
+            - name: QALITA_AGENT_MODE
+              value: {{ .Values.agent.mode }}
+            - name: QALITA_AGENT_ENDPOINT
+              value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
+            - name: QALITA_AGENT_TOKEN
+              value: >-
+                {{- if .Values.agent.token }}
+                {{ .Values.agent.token }}
+                {{- else }}
+                {{ randAlphaNum 32 }}
+                {{- end }}
+          image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
+          name: cli
+{{- if .Values.agent.pvc.enabled }}
+          volumeMounts:
+            - mountPath: /data
+              name: agent-store
+            - mountPath: /root/.qalita/
+              name: agent-store
+              subPath: ./qalita
+{{- end }}
+        - args:
             - agent
             - run
           command:
@@ -37,7 +65,7 @@ spec:
               value: >-
                 {{- if .Values.agent.token }}
                 {{ .Values.agent.token }}
-                {{- else }}
+                {{- else }} n
                 {{ randAlphaNum 32 }}
                 {{- end }}
           image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
