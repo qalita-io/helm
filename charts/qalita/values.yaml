@@ -130,6 +130,10 @@ agent:
     enabled: false
     storageSize: "10Gi"
 
+  initscript: |
+    #!/bin/bash
+    echo "Hello World"
+
   deployment:
     resources:
       requests:

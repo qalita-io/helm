@@ -21,10 +21,10 @@ spec:
         release: {{ .Release.Name }}
     spec:
       containers:
-        - args:
-            - 'infinity'
-          command:
-            - sleep
+        - name: cli
+          image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
+          command: ["/bin/sh", "-c"]
+          args: ["cat /etc/config/init.sh | /bin/sh; sleep infinity"]
           env:
             - name: QALITA_AGENT_NAME
               value: {{ .Values.agent.name }}
@@ -39,21 +39,20 @@ spec:
                 {{- else }}
                 {{ randAlphaNum 32 }}
                 {{- end }}
-          image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
-          name: cli
-{{- if .Values.agent.pvc.enabled }}
           volumeMounts:
+            - name: init-script
+              mountPath: /etc/config
+{{- if .Values.agent.pvc.enabled }}
             - mountPath: /data
               name: agent-store
             - mountPath: /root/.qalita/
               name: agent-store
               subPath: ./qalita
 {{- end }}
-        - args:
-            - agent
-            - run
-          command:
-            - /app/qalita/main.py
+        - name: agent
+          image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
+          command: ["/bin/sh", "-c"]
+          args: ["cat /etc/config/init.sh | /bin/sh; /app/qalita/main.py agent run"]
           env:
             - name: QALITA_AGENT_NAME
               value: {{ .Values.agent.name }}
@@ -68,16 +67,19 @@ spec:
                 {{- else }} n
                 {{ randAlphaNum 32 }}
                 {{- end }}
-          image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
-          name: agent
-{{- if .Values.agent.pvc.enabled }}
           volumeMounts:
+            - name: init-script
+              mountPath: /etc/config
+      volumes:
+        - name: init-script
+          configMap:
+            name: "qalita-agent-initscript"
+{{- if .Values.agent.pvc.enabled }}
             - mountPath: /data
               name: agent-store
             - mountPath: /root/.qalita/
               name: agent-store
               subPath: ./qalita
-      volumes:
         - name: agent-store
           persistentVolumeClaim:
             claimName: qalita-agent-store
