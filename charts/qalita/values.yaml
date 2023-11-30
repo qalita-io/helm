@@ -11,7 +11,7 @@ dockerregistry:
 frontend:
   image:
     repository: qalita.azurecr.io/qalita/frontend
-    tag: "1.4.2"
+    tag: "1.4.3"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -65,7 +65,7 @@ doc:
 backend:
   image:
     repository: qalita.azurecr.io/qalita/backend
-    tag: "1.4.2"
+    tag: "1.4.3"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -121,7 +121,7 @@ agent:
 
   image:
     repository: qalita/agent
-    tag: "1.4.2"
+    tag: "1.4.3"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -129,6 +129,10 @@ agent:
   pvc:
     enabled: false
     storageSize: "10Gi"
+
+  initscript: |
+    #!/bin/bash
+    echo "Hello World"
 
   deployment:
     resources:
