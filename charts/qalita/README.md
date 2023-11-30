@@ -128,6 +128,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 |-----|------|---------|-------------|
 | agent.enabled | bool | `false` | Enabling agent deployment |
 | agent.name | string | `local-agent` | Qalita Agent Name |
+| agent.initscript | string | `echo hello world` | Qalita Agent init script helps add custom instructions before launching agent, can be used to mount cifs remote path or other actions |
 | agent.mode | string | `worker` | Qalita Agent mode <job/worker> |
 | agent.token | string | `randalphanum32` | Qalita Agent API Token |
 | agent.image.repository | string | `qalita/agent` | [QALITA Agent Image Repository](https://hub.docker.com/r/qalita/agent) |
