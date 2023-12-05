@@ -64,7 +64,7 @@ spec:
               value: >-
                 {{- if .Values.agent.token }}
                 {{ .Values.agent.token }}
-                {{- else }} n
+                {{- else }}
                 {{ randAlphaNum 32 }}
                 {{- end }}
           volumeMounts:
