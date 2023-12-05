@@ -61,12 +61,11 @@ spec:
             - name: QALITA_AGENT_ENDPOINT
               value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
             - name: QALITA_AGENT_TOKEN
-              value: >-
-                {{- if .Values.agent.token }}
-                {{ .Values.agent.token }}
-                {{- else }}
-                {{ randAlphaNum 32 }}
-                {{- end }}
+              {{- if .Values.agent.token }}
+              value: {{ .Values.agent.token }}
+              {{- else }}
+              value: {{ randAlphaNum 32 }}
+              {{- end }}
           volumeMounts:
             - name: init-script
               mountPath: /etc/config
