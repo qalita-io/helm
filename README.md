@@ -20,6 +20,17 @@ helm repo update
 
 Feel free to fork our repo and create a pull request with any new features or bug fixes.
 
+To dev the helm charts you can use a docker image :
+
+```bash
+docker run -d --rm -v $(pwd):/apps -w /apps \
+    -v ~/.kube:/root/.kube -v ~/.helm:/root/.helm -v ~/.config/helm:/root/.config/helm \
+    -v ~/.cache/helm:/root/.cache/helm \
+    -v ~/helm/:/root/helm \
+    --entrypoint sh \
+    alpine/helm -c "sleep infinity"
+```
+
 ## Contacting us
 
 For issues or concerns, please fill out an issue or email us at contact@qalita.io

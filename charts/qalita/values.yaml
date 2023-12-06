@@ -117,7 +117,7 @@ agent:
   enabled: false
   name: "local-agent"
   mode: "worker"
-  token:
+  token: "changeme"
 
   image:
     repository: qalita/agent
