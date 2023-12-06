@@ -26,14 +26,17 @@ spec:
           command: ["/bin/sh", "-c"]
           args: ["cat /etc/config/init.sh | /bin/sh; sleep infinity"]
           env:
-            - name: QALITA_AGENT_NAME
-              value: {{ .Values.agent.name }}
-            - name: QALITA_AGENT_MODE
-              value: {{ .Values.agent.mode }}
-            - name: QALITA_AGENT_ENDPOINT
-              value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
-            - name: QALITA_AGENT_TOKEN
-              value: {{ .Values.agent.token }}
+          - name: QALITA_AGENT_NAME
+            value: {{ .Values.agent.name }}
+          - name: QALITA_AGENT_MODE
+            value: {{ .Values.agent.mode }}
+          - name: QALITA_AGENT_ENDPOINT
+            value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
+          - name: QALITA_AGENT_TOKEN
+            value: {{ .Values.agent.token }}
+{{- if .Values.agent.deployment.extraEnv }}
+{{ toYaml .Values.agent.deployment.extraEnv | indent 10 }}
+{{- end }}
           volumeMounts:
             - name: init-script
               mountPath: /etc/config
@@ -49,14 +52,17 @@ spec:
           command: ["/bin/sh", "-c"]
           args: ["cat /etc/config/init.sh | /bin/sh; /app/qalita/main.py agent run"]
           env:
-            - name: QALITA_AGENT_NAME
-              value: {{ .Values.agent.name }}
-            - name: QALITA_AGENT_MODE
-              value: {{ .Values.agent.mode }}
-            - name: QALITA_AGENT_ENDPOINT
-              value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
-            - name: QALITA_AGENT_TOKEN
-              value: {{ .Values.agent.token }}
+          - name: QALITA_AGENT_NAME
+            value: {{ .Values.agent.name }}
+          - name: QALITA_AGENT_MODE
+            value: {{ .Values.agent.mode }}
+          - name: QALITA_AGENT_ENDPOINT
+            value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
+          - name: QALITA_AGENT_TOKEN
+            value: {{ .Values.agent.token }}
+{{- if .Values.agent.deployment.extraEnv }}
+{{ toYaml .Values.agent.deployment.extraEnv | indent 10 }}
+{{- end }}
           volumeMounts:
             - name: init-script
               mountPath: /etc/config
