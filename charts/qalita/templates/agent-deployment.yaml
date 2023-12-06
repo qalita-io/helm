@@ -56,11 +56,7 @@ spec:
             - name: QALITA_AGENT_ENDPOINT
               value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
             - name: QALITA_AGENT_TOKEN
-              {{- if .Values.agent.token }}
               value: {{ .Values.agent.token }}
-              {{- else }}
-              value: {{ randAlphaNum 32 }}
-              {{- end }}
           volumeMounts:
             - name: init-script
               mountPath: /etc/config
@@ -69,11 +65,11 @@ spec:
           configMap:
             name: "qalita-agent-initscript"
 {{- if .Values.agent.pvc.enabled }}
-            - mountPath: /data
-              name: agent-store
-            - mountPath: /root/.qalita/
-              name: agent-store
-              subPath: ./qalita
+        - name: agent-store
+          mountPath: /data
+        - name: agent-store
+          mountPath: /root/.qalita/
+          subPath: ./qalita
         - name: agent-store
           persistentVolumeClaim:
             claimName: qalita-agent-store
