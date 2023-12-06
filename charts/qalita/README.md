@@ -135,6 +135,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | agent.image.tag | string | `1.4.4` | QALITA Agent Image Tag |
 | agent.image.pullPolicy | string | `Always` | QALITA Agent Image Pull Policy |
 | agent.replicaCount | int | `1` | QALITA Agent Replica Count |
+| agent.deployment.extraEnv | list | `[]` | QALITA Agent Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
 | agent.deployment.resources.requests.memory | string | `256Mi` | QALITA Agent Memory Request |
 | agent.deployment.resources.requests.cpu | string | `200m` | QALITA Agent CPU Request |
 | agent.pvc.enabled | bool | `false` | Enable persistence for agent data |
