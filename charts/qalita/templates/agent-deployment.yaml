@@ -38,10 +38,10 @@ spec:
             - name: init-script
               mountPath: /etc/config
 {{- if .Values.agent.pvc.enabled }}
-            - mountPath: /data
-              name: agent-store
-            - mountPath: /root/.qalita/
-              name: agent-store
+            - name: agent-store-pvc
+              mountPath: /data
+            - name: agent-store-pvc
+              mountPath: /root/.qalita/
               subPath: ./qalita
 {{- end }}
         - name: agent
@@ -60,17 +60,19 @@ spec:
           volumeMounts:
             - name: init-script
               mountPath: /etc/config
+{{- if .Values.agent.pvc.enabled }}
+            - name: agent-store-pvc
+              mountPath: /data
+            - name: agent-store-pvc
+              mountPath: /root/.qalita/
+              subPath: ./qalita
+{{- end }}
       volumes:
         - name: init-script
           configMap:
             name: "qalita-agent-initscript"
 {{- if .Values.agent.pvc.enabled }}
-        - name: agent-store
-          mountPath: /data
-        - name: agent-store
-          mountPath: /root/.qalita/
-          subPath: ./qalita
-        - name: agent-store
+        - name: agent-store-pvc
           persistentVolumeClaim:
             claimName: qalita-agent-store
 {{- end }}
