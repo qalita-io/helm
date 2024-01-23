@@ -47,6 +47,11 @@ spec:
               mountPath: /root/.qalita/
               subPath: ./qalita
 {{- end }}
+{{- if .Values.agent.privileged }}
+          securityContext:
+            allowPrivilegeEscalation: true
+            privileged: true
+{{- end }}
         - name: agent
           image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
           command: ["/bin/sh", "-c"]
@@ -81,5 +86,10 @@ spec:
         - name: agent-store-pvc
           persistentVolumeClaim:
             claimName: qalita-agent-store
+{{- end }}
+{{- if .Values.agent.privileged }}
+          securityContext:
+            allowPrivilegeEscalation: true
+            privileged: true
 {{- end }}
 {{ end }}
