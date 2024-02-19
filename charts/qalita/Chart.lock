@@ -1,12 +1,12 @@
 dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
-  version: 12.8.2
+  version: 12.12.10
 - name: redis
   repository: https://charts.truecharts.org
-  version: 11.1.4
+  version: 11.2.0
 - name: seaweedfs
   repository: https://seaweedfs.github.io/seaweedfs/helm
-  version: "3.55"
-digest: sha256:6586c3043d18c6fc3bd3faeefa1175050003480cca0cbceff25ac4fb7195b2d6
-generated: "2024-01-02T10:23:35.361205278Z"
+  version: 3.62.0
+digest: sha256:424952791920c38b9323db64c6ee33c41db47b3d5c6b32a6de2af469276de957
+generated: "2024-02-19T18:02:28.251358467Z"
