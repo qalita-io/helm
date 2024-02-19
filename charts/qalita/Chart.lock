@@ -3,7 +3,7 @@ dependencies:
   repository: https://charts.bitnami.com/bitnami
   version: 12.8.2
 - name: redis
-  repository: https://deps.truecharts.org
+  repository: https://charts.truecharts.org
   version: 11.1.4
 - name: seaweedfs
   repository: https://seaweedfs.github.io/seaweedfs/helm
