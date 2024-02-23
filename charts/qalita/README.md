@@ -93,7 +93,8 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | backend.organization.name | string | `local` | Set the organization Name |
-| backend.tokenExpireMinutes | int | `240` | Set the user session timeout, it is configured in the JWT exp value |
+| backend.AUTHokenExpireMinutes | int | `240` | Set the user session timeout, it is configured in the JWT exp value, default to 4 hours |
+| backend.APItokenExpireMinutes | int | `525600` | Set the user API token expiration time, this api token is used for agent connection and partner synchronisation, it is configured in the JWT exp value. Default to 1 Year |
 | backend.mode | string | `PROD` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | backend.iniSleep | int | `3` | The amount of seconds the backend waits to connect to the backend database (postgresql) before retrying |
 | backend.authMode | string | `table` | Authentication mode: `table/ldap/saml` |
