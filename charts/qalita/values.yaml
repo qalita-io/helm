@@ -77,6 +77,7 @@ backend:
   mode: "PROD"
   iniSleep: "3"
 
+  authMode: "table"
   adminUsername: "admin"
   adminPassword:
   secretKey:
