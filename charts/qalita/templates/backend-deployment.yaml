@@ -70,7 +70,9 @@ spec:
           - name: QALITA_ENV
             value: "{{ .Values.backend.mode }}"
           - name: QALITA_ACCESS_TOKEN_EXPIRE_MINUTES
-            value: "{{ .Values.backend.tokenExpireMinutes }}"
+            value: "{{ .Values.backend.AUTHokenExpireMinutes }}"
+          - name: QALITA_API_TOKEN_EXPIRE_MINUTES
+            value: "{{ .Values.backend.APItokenExpireMinutes }}"
           - name: QALITA_ORGANIZATION_NAME
             value: "{{ .Values.backend.organization.name }}"
           - name: QALITA_API_PORT
