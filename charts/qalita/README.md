@@ -52,10 +52,9 @@ The chart will deploy the following resources:
 
 With `cluster.domain`=**example.com**  Creates the following endpoints:
 
-- https://example.com
-- https://api.example.com
-- https://doc.example.com
-
+- <https://example.com>
+- <https://api.example.com>
+- <https://doc.example.com>
 
 # Values
 
@@ -97,6 +96,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.tokenExpireMinutes | int | `240` | Set the user session timeout, it is configured in the JWT exp value |
 | backend.mode | string | `PROD` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | backend.iniSleep | int | `3` | The amount of seconds the backend waits to connect to the backend database (postgresql) before retrying |
+| backend.authMode | string | `table` | Authentication mode: `table/ldap/saml` |
 | backend.adminUsername | string | `admin` | The admin user name |
 | backend.adminPassword | string | randAlphaNum 25 char long string | Admin Account password |
 | backend.secretKey | string | randAlphaNum 512 char long string | Key seed to generate JWT Tokens |
