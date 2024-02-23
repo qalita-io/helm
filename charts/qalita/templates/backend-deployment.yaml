@@ -89,6 +89,8 @@ spec:
             value: "https://{{ .Values.cluster.domain }}"
           - name: QALITA_S3_URL
             value: "{{ .Values.backend.s3.url }}"
+          - name: QALITA_AUTH_MODE
+            value: "{{ .Values.backend.authMode }}"
           - name: QALITA_S3_KEY_ID
             valueFrom:
               secretKeyRef:
