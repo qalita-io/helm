@@ -60,12 +60,12 @@ spec:
           - name: REDIS_SERVER
             value: "{{ .Release.Name }}-redis"
           - name: REDIS_PORT
-            value: "{{ .Values.redis.service.main.ports.main.targetPort }}"
+            value: "{{ .Values.redis.master.containerPorts.redis }}"
           - name: REDIS_PASSWORD
             valueFrom:
               secretKeyRef:
                 key: redis-password
-                name: "{{ .Release.Name }}-rediscreds"
+                name: "qalita-rediscreds"
                 optional: false
           - name: QALITA_ENV
             value: "{{ .Values.backend.mode }}"

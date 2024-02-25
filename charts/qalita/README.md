@@ -18,7 +18,7 @@ This chart deploys QALITA Platform on a Kubernetes cluster using the Helm packag
 
 - [seaweedfs](https://artifacthub.io/packages/helm/seaweedfs/seaweedfs)
 - [postgresql](https://artifacthub.io/packages/helm/bitnami/postgresql)
-- [redis](https://artifacthub.io/packages/helm/truecharts/redis)
+- [redis](https://artifacthub.io/packages/helm/bitnami/redis)
 
 ## 1. Adding the chart Repository
 
@@ -185,12 +185,12 @@ For more detailed configuration, please refer to [Seaweedfs Chart](https://artif
 
 ## Cache (Redis)
 
-For more detailed configuration, please refer to [Truecharts Redis Chart](https://artifacthub.io/packages/helm/truecharts/redis)
+For more detailed configuration, please refer to [Bitnami Redis Chart](https://artifacthub.io/packages/helm/bitnami/redis)
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | redis.enabled | bool | true | Enable deploy local redis, disable if you use external Redis Database |
-| redis.password | string | randAlphaNum 25 char long string | Redis Database Password |
+| redis.auth.password | string | randAlphaNum 25 char long string | Redis Database Password |
 
 ## Helm Sync
 
