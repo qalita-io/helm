@@ -58,7 +58,7 @@ spec:
                 name: "{{ .Release.Name }}-postgresql"
                 optional: false
           - name: REDIS_SERVER
-            value: "{{ .Release.Name }}-redis"
+            value: "{{ .Release.Name }}-redis-master"
           - name: REDIS_PORT
             value: "{{ .Values.redis.master.containerPorts.redis }}"
           - name: REDIS_PASSWORD
