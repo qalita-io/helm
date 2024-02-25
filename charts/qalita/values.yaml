@@ -169,8 +169,13 @@ postgresql:
 
 redis:
   enabled: true
-  volumeClaimTemplates:
-    data:
+  architecture: standalone
+  auth:
+    usePasswordFiles: true
+    existingSecret: "qalita-rediscreds"
+
+  master:
+    persistence:
       enabled: false
 
 seaweedfs:
