@@ -182,6 +182,7 @@ seaweedfs:
   enabled: true
   global:
     createClusterRole: true
+    serviceAccountName: "seaweedfs"
     imageName: chrislusf/seaweedfs
 
   filer:
@@ -191,7 +192,8 @@ seaweedfs:
         cpu: "50m"
 
   volume:
-    data:
+    dataDirs:
+    - name: data1
       type: "persistentVolumeClaim"
       size: "21Gi"
 
