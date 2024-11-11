@@ -87,10 +87,10 @@ backend:
   s3:
     url: "http://seaweedfs-s3:8333"
     secretName: seaweedfs-s3-secret
-    admin_access_key_id:
-    admin_secret_access_key:
-    read_access_key_id:
-    read_secret_access_key:
+    admin_access_key_id: ""
+    admin_secret_access_key: ""
+    read_access_key_id: ""
+    read_secret_access_key: ""
 
   api:
     port: "3080"
