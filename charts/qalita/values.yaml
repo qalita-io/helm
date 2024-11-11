@@ -186,24 +186,24 @@ seaweedfs:
     imageName: chrislusf/seaweedfs
 
   filer:
-    resources: |
+    resources:
       requests:
         memory: "256Mi"
         cpu: "50m"
 
   volume:
     dataDirs:
-    - name: data1
-      type: "persistentVolumeClaim"
-      size: "21Gi"
+      - name: data1
+        type: "persistentVolumeClaim"
+        size: "21Gi"
 
-    resources: |
+    resources:
       requests:
         memory: "100Mi"
         cpu: "50m"
 
   master:
-    resources: |
+    resources:
       requests:
         memory: "64Mi"
         cpu: "50m"
