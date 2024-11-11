@@ -180,6 +180,10 @@ redis:
 
 seaweedfs:
   enabled: true
+
+  s3:
+    enabled: true
+    
   global:
     createClusterRole: true
     serviceAccountName: "seaweedfs"
