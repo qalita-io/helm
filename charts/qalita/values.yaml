@@ -192,6 +192,11 @@ seaweedfs:
     imageName: chrislusf/seaweedfs
 
   filer:
+    s3:
+      enabled: true
+      enableAuth: true
+      existingConfigSecret: "seaweedfs-s3-secret"
+
     resources:
       requests:
         memory: "256Mi"
