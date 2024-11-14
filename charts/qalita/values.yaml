@@ -207,6 +207,7 @@ seaweedfs:
       - name: data1
         type: "persistentVolumeClaim"
         size: "21Gi"
+        maxVolumes: 0
 
     resources:
       requests:
