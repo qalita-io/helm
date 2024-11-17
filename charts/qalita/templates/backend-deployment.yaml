@@ -129,6 +129,14 @@ spec:
                 key: secretKey
                 name: "{{ .Release.Name }}-qalita-secret"
                 optional: false
+          - name: QALITA_LICENSE_KEY
+            valueFrom:
+              secretKeyRef:
+                key: licenseKey
+                name: "{{ .Release.Name }}-qalita-secret"
+                optional: false
+          - name: QALITA_LICENSE_USER
+            value: "{{ .Values.licenseUser }}"
 {{- if .Values.backend.deployment.extraEnv }}
 {{ toYaml .Values.backend.deployment.extraEnv | indent 10 }}
 {{- end }}
