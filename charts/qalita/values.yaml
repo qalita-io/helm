@@ -1,3 +1,7 @@
+licenseUser: ""
+licenseKey: ""
+licenseUrl: qalita.azurecr.io
+
 cluster:
   issuer: letsencrypt-prod
   domain: example.com
@@ -5,8 +9,6 @@ cluster:
 
 dockerregistry:
   enabled: true
-  dataSecret: |-
-    {"auths":{"<registry-url>":{"password":"<password>","username":"<username>"}}}
 
 frontend:
   image:
