@@ -194,6 +194,10 @@ seaweedfs:
     imageName: chrislusf/seaweedfs
 
   filer:
+    data:
+      type: "persistentVolumeClaim"
+      size: "4Gi"  
+
     s3:
       enabled: true
       enableAuth: true
@@ -208,7 +212,7 @@ seaweedfs:
     dataDirs:
       - name: data1
         type: "persistentVolumeClaim"
-        size: "21Gi"
+        size: "32Gi"
         maxVolumes: 0
 
     resources:
