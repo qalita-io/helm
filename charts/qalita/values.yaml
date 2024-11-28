@@ -1,5 +1,5 @@
-licenseUser: ""
-licenseKey: ""
+licenseUser: "unlicenced"
+licenseKey: "unlicenced"
 licenseUrl: qalita.azurecr.io
 
 cluster:
