@@ -196,7 +196,7 @@ seaweedfs:
   filer:
     data:
       type: "persistentVolumeClaim"
-      size: "4Gi"  
+      size: "4Gi"
 
     s3:
       enabled: true
