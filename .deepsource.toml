@@ -1,0 +1,8 @@
+version = 1
+
+[[analyzers]]
+name = "kube-linter"
+type = "community"
+
+[[analyzers]]
+name = "secrets"
