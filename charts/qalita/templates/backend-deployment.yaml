@@ -80,13 +80,13 @@ spec:
           - name: MAIL_FROM_NAME
             value: "{{ .Values.backend.mail.from_name }}"            
           - name: MAIL_PORT
-            value: {{ .Values.backend.mail.port }}
+            value: "{{ .Values.backend.mail.port }}"
           - name: MAIL_SERVER
             value: "{{ .Values.backend.mail.server }}"
           - name: MAIL_STARTTLS
-            value: {{ .Values.backend.mail.starttls }}
+            value: "{{ .Values.backend.mail.starttls }}"
           - name: MAIL_SSL_TLS
-            value: {{ .Values.backend.mail.ssl_tls }}
+            value: "{{ .Values.backend.mail.ssl_tls }}"
           - name: QALITA_ENV
             value: "{{ .Values.backend.mode }}"
           - name: QALITA_ACCESS_TOKEN_EXPIRE_MINUTES
