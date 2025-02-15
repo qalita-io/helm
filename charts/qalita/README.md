@@ -76,7 +76,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | frontend.webPackPolling | bool | `false` | Prevent webpack to update its compiled content, used only in dev mode |
 | frontend.mode | string | `production` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | frontend.image.repository | string | `qalita.azurecr.io/qalita/frontend` | QALITA Frontend Image Repository |
-| frontend.image.tag | string | `1.8.0` | QALITA Frontend Image Tag |
+| frontend.image.tag | string | `1.9.0` | QALITA Frontend Image Tag |
 | frontend.image.pullPolicy | string | `Always` | QALITA Frontend Image Pull Policy |
 | frontend.replicaCount | int | `1` | QALITA Frontend Replica Count |
 | frontend.service.type | string | `ClusterIP` | QALITA Frontend Service Type |
@@ -93,7 +93,8 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | backend.organization.name | string | `local` | Set the organization Name |
-| backend.AUTHokenExpireMinutes | int | `240` | Set the user session timeout, it is configured in the JWT exp value, default to 4 hours |
+| backend.RetentionLogsHours | int | `720` | Set the log retention in hours |
+| backend.AUTHTokenExpireMinutes | int | `240` | Set the user session timeout, it is configured in the JWT exp value, default to 4 hours |
 | backend.APItokenExpireMinutes | int | `525600` | Set the user API token expiration time, this api token is used for agent connection and partner synchronisation, it is configured in the JWT exp value. Default to 1 Year |
 | backend.mode | string | `PROD` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | backend.iniSleep | int | `3` | The amount of seconds the backend waits to connect to the backend database (postgresql) before retrying |
@@ -106,7 +107,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.api.host | string | `0.0.0.0` | Ip address Backend is exposed to |
 | backend.api.worker | int | `4` | Number of process bootstrapped  |
 | backend.image.repository | string | `qalita.azurecr.io/qalita/backend` | QALITA Backend Image Repository |
-| backend.image.tag | string | `1.8.0` | QALITA Backend Image Tag |
+| backend.image.tag | string | `1.9.0` | QALITA Backend Image Tag |
 | backend.image.pullPolicy | string | `Always` | QALITA Backend Image Pull Policy |
 | backend.replicaCount | int | `1` | QALITA Backend Replica Count |
 | backend.service.type | string | `ClusterIP` | QALITA Backend Service Type |
@@ -123,6 +124,15 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.s3.admin_secret_access_key | string | `` | S3 Write user secret key |
 | backend.s3.read_access_key_id | string | `` | S3 read user access key |
 | backend.s3.read_secret_access_key | string | `` | S3 read user secret key |
+| backend.mail.enabled | bool | `false` | Enable Mail Features |
+| backend.mail.username | string | `` | SMTP Mail Account Username |
+| backend.mail.password | string | `` | SMTP Mail Account Password |
+| backend.mail.from | string | `no-reply@example.com` | Mail Address |
+| backend.mail.from_name | string | `QALITA Platform` | Mail Name |
+| backend.mail.port | int | `1025` | SMTP Mail Server Port |
+| backend.mail.server | string | `` | SMTP Mail Server Host |
+| backend.mail.starttls | bool | `false` | SMTP Mail Server STARTTLS |
+| backend.mail.ssl_tls | bool | `false` | SMTP Mail Server SSL_TLS Protocol |
 
 ## Agent
 
@@ -135,7 +145,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | agent.mode | string | `worker` | Qalita Agent mode <job/worker> |
 | agent.token | string | `changeme` | Qalita Agent API Token |
 | agent.image.repository | string | `qalita/agent` | [QALITA Agent Image Repository](https://hub.docker.com/r/qalita/agent) |
-| agent.image.tag | string | `1.8.0-db` | QALITA Agent Image Tag |
+| agent.image.tag | string | `1.9.0-db` | QALITA Agent Image Tag |
 | agent.image.pullPolicy | string | `Always` | QALITA Agent Image Pull Policy |
 | agent.replicaCount | int | `1` | QALITA Agent Replica Count |
 | agent.deployment.extraEnv | list | `[]` | QALITA Agent Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
@@ -149,7 +159,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | doc.image.repository | string | `qalita.azurecr.io/qalita/doc` | QALITA Doc Image Repository |
-| doc.image.tag | string | `1.8.0` | QALITA Doc Image Tag |
+| doc.image.tag | string | `1.9.0` | QALITA Doc Image Tag |
 | doc.image.pullPolicy | string | `Always` | QALITA Doc Image Pull Policy |
 | doc.replicaCount | int | `1` | QALITA Doc Replica Count |
 | doc.service.type | string | `ClusterIP` | QALITA Doc Service Type |
