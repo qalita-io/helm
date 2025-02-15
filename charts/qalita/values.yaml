@@ -13,7 +13,7 @@ dockerregistry:
 frontend:
   image:
     repository: qalita.azurecr.io/qalita/frontend
-    tag: "1.8.0"
+    tag: "1.9.0"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -43,7 +43,7 @@ frontend:
 doc:
   image:
     repository: qalita.azurecr.io/qalita/doc
-    tag: "1.8.0"
+    tag: "1.9.0"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -67,7 +67,7 @@ doc:
 backend:
   image:
     repository: qalita.azurecr.io/qalita/backend
-    tag: "1.8.0"
+    tag: "1.9.0"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -75,7 +75,8 @@ backend:
   organization:
     name: "local"
 
-  AUTHokenExpireMinutes: 240
+  RetentionLogsHours: 720
+  AUTHTokenExpireMinutes: 240
   APItokenExpireMinutes: 525600
   mode: "PROD"
   iniSleep: "3"
@@ -85,6 +86,17 @@ backend:
   adminPassword:
   secretKey:
   secretKeyAlgorithm: "HS256"
+
+  mail:
+    enabled: false
+    username: ""
+    password: ""
+    from: "no-reply@example.com"
+    from_name: "QALITA Platform"
+    port: 1025
+    server: ""
+    starttls: false
+    ssl_tls: false
 
   s3:
     url: "http://seaweedfs-s3:8333"
@@ -126,7 +138,7 @@ agent:
 
   image:
     repository: qalita/agent
-    tag: "1.8.0-db"
+    tag: "1.9.0-db"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
