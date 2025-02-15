@@ -67,6 +67,7 @@ spec:
                 key: redis-password
                 name: "qalita-rediscreds"
                 optional: false
+        {{- if .Values.backend.mail.enabled }}
           - name: MAIL_USERNAME
             value: "{{ .Values.backend.mail }}"
           - name: MAIL_PASSWORD
@@ -78,7 +79,7 @@ spec:
           - name: MAIL_FROM
             value: "{{ .Values.backend.mail.from }}"
           - name: MAIL_FROM_NAME
-            value: "{{ .Values.backend.mail.from_name }}"            
+            value: "{{ .Values.backend.mail.from_name }}"
           - name: MAIL_PORT
             value: "{{ .Values.backend.mail.port }}"
           - name: MAIL_SERVER
@@ -87,6 +88,7 @@ spec:
             value: "{{ .Values.backend.mail.starttls }}"
           - name: MAIL_SSL_TLS
             value: "{{ .Values.backend.mail.ssl_tls }}"
+        {{- end }}
           - name: QALITA_ENV
             value: "{{ .Values.backend.mode }}"
           - name: QALITA_ACCESS_TOKEN_EXPIRE_MINUTES
