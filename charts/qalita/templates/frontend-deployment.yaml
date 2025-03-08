@@ -48,7 +48,7 @@ spec:
           - name: NODE_ENV
             value: "{{ .Values.frontend.mode }}"
           - name: QALITA_API_URL
-            value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
+            value: "http://{{ .Release.Name }}-backend-service:3080"
           - name: QALITA_PUBLIC_API_URL
             value: "https://api.{{ .Values.cluster.domain }}"
           - name: QALITA_PUBLIC_DOC_URL
