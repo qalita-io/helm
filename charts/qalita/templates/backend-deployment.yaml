@@ -69,7 +69,7 @@ spec:
                 optional: false
         {{- if .Values.backend.mail.enabled }}
           - name: MAIL_USERNAME
-            value: "{{ .Values.backend.mail }}"
+            value: "{{ .Values.backend.mail.username }}"
           - name: MAIL_PASSWORD
             valueFrom:
               secretKeyRef:
