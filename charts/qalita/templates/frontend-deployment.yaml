@@ -49,9 +49,9 @@ spec:
             value: "{{ .Values.frontend.mode }}"
           - name: QALITA_API_URL
             value: "http://{{ .Release.Name }}-backend-service:3080"
-          - name: QALITA_PUBLIC_API_URL
+          - name: NEXT_PUBLIC_QALITA_API_URL
             value: "https://api.{{ .Values.cluster.domain }}"
-          - name: QALITA_PUBLIC_DOC_URL
+          - name: NEXT_PUBLIC_QALITA_DOC_URL
             value: "https://doc.{{ .Values.cluster.domain }}"
           - name: NEXT_TELEMETRY_DISABLED
             value: "{{ .Values.frontend.telemetryDisabled }}"
