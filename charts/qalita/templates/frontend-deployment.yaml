@@ -28,7 +28,7 @@ spec:
         imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
         startupProbe:
           httpGet:
-            path: /api/cfg
+            path: /signin
             port: {{ .Values.frontend.service.targetPort }}
             scheme: HTTP
           initialDelaySeconds: 5
@@ -37,7 +37,7 @@ spec:
           timeoutSeconds: 5
         livenessProbe:
           httpGet:
-            path: /api/cfg
+            path: /signin
             port: {{ .Values.frontend.service.targetPort }}
             scheme: HTTP
           initialDelaySeconds: 5
@@ -49,10 +49,6 @@ spec:
             value: "{{ .Values.frontend.mode }}"
           - name: QALITA_API_URL
             value: "http://{{ .Release.Name }}-backend-service:3080"
-          - name: QALITA_PUBLIC_API_URL
-            value: "https://api.{{ .Values.cluster.domain }}"
-          - name: QALITA_PUBLIC_DOC_URL
-            value: "https://doc.{{ .Values.cluster.domain }}"
           - name: NEXT_TELEMETRY_DISABLED
             value: "{{ .Values.frontend.telemetryDisabled }}"
           - name: NEXT_WEBPACK_USEPOLLING

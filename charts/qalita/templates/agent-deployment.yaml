@@ -33,7 +33,7 @@ spec:
           - name: QALITA_AGENT_MODE
             value: {{ .Values.agent.mode }}
           - name: QALITA_AGENT_ENDPOINT
-            value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
+            value: "http://{{ .Release.Name }}-backend-service:3080"
           - name: QALITA_AGENT_TOKEN
             value: {{ .Values.agent.token }}
 {{- if .Values.agent.deployment.extraEnv }}
@@ -64,7 +64,7 @@ spec:
           - name: QALITA_AGENT_MODE
             value: {{ .Values.agent.mode }}
           - name: QALITA_AGENT_ENDPOINT
-            value: "http://{{ .Release.Name }}-backend-service:3080/api/v1"
+            value: "http://{{ .Release.Name }}-backend-service:3080"
           - name: QALITA_AGENT_TOKEN
             value: {{ .Values.agent.token }}
 {{- if .Values.agent.deployment.extraEnv }}
