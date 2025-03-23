@@ -28,7 +28,7 @@ spec:
         imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
         startupProbe:
           httpGet:
-            path: /api/cfg
+            path: /signin
             port: {{ .Values.frontend.service.targetPort }}
             scheme: HTTP
           initialDelaySeconds: 5
@@ -37,7 +37,7 @@ spec:
           timeoutSeconds: 5
         livenessProbe:
           httpGet:
-            path: /api/cfg
+            path: /signin
             port: {{ .Values.frontend.service.targetPort }}
             scheme: HTTP
           initialDelaySeconds: 5
