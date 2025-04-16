@@ -43,7 +43,7 @@ frontend:
 doc:
   image:
     repository: qalita.azurecr.io/qalita/doc
-    tag: "2.0.0"
+    tag: "2.1.0"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
