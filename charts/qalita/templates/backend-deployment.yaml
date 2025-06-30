@@ -178,5 +178,5 @@ spec:
 {{- end }}
       {{- if .Values.dockerregistry.enabled }}
       imagePullSecrets:
-      - name: "{{ .Release.Name }}-dockerregistry"
+      - name: qalita-platform-dockerregistry
       {{- end }}

@@ -162,6 +162,10 @@ agent:
 postgresql:
   enabled: true
   image:
+    registry: qalita.azurecr.io
+    repository: postgresql
+    pullSecrets: 
+      - "qalita-platform-dockerregistry"
     tag: "15.4.0"
 
   global:
@@ -183,6 +187,12 @@ postgresql:
 
 redis:
   enabled: true
+  image:
+    registry: qalita.azurecr.io
+    repository: redis
+    tag: "7.4.2"
+    pullSecrets: 
+      - "qalita-platform-dockerregistry"
   architecture: standalone
   auth:
     usePasswordFiles: true
@@ -195,15 +205,18 @@ redis:
 seaweedfs:
   enabled: true
 
+  global:
+    createClusterRole: true
+    serviceAccountName: "seaweedfs"
+    registry: qalita.azurecr.io
+    repository: qalita.azurecr.io/seaweedfs
+    imagePullSecrets: "qalita-platform-dockerregistry"
+    imageName: seaweedfs
+
   s3:
     enabled: true
     enableAuth: true
     existingConfigSecret: "seaweedfs-s3-secret"
-
-  global:
-    createClusterRole: true
-    serviceAccountName: "seaweedfs"
-    imageName: chrislusf/seaweedfs
 
   filer:
     data:
