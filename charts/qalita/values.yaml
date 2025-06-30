@@ -164,7 +164,7 @@ postgresql:
   image:
     registry: qalita.azurecr.io
     repository: postgresql
-    pullSecrets: 
+    pullSecrets:
       - "qalita-platform-dockerregistry"
     tag: "15.4.0"
 
@@ -191,7 +191,7 @@ redis:
     registry: qalita.azurecr.io
     repository: redis
     tag: "7.4.2"
-    pullSecrets: 
+    pullSecrets:
       - "qalita-platform-dockerregistry"
   architecture: standalone
   auth:
