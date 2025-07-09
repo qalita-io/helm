@@ -35,8 +35,8 @@ frontend:
   deployment:
     resources:
       requests:
-        memory: "256Mi"
-        cpu: "200m"
+        memory: "50Mi"
+        cpu: "50m"
 
     extraEnv:
 
@@ -124,8 +124,8 @@ backend:
   deployment:
     resources:
       requests:
-        memory: "1024Mi"
-        cpu: "200m"
+        memory: "256Mi"
+        cpu: "100m"
 
     extraEnv:
 
@@ -154,8 +154,8 @@ agent:
   deployment:
     resources:
       requests:
-        memory: "256Mi"
-        cpu: "200m"
+        memory: "50Mi"
+        cpu: "10m"
 
     extraEnv:
 
@@ -230,7 +230,7 @@ seaweedfs:
 
     resources:
       requests:
-        memory: "256Mi"
+        memory: "100Mi"
         cpu: "50m"
 
   volume:
@@ -276,5 +276,5 @@ helmsync:
 
   resources:
     requests:
-      memory: "100Mi"
-      cpu: "100m"
+      memory: "50Mi"
+      cpu: "10m"
