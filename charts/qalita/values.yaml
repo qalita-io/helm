@@ -138,7 +138,7 @@ agent:
 
   image:
     repository: qalita/agent
-    tag: "2.0.0-db"
+    tag: "2.1.4"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
