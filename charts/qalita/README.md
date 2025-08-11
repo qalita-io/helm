@@ -158,6 +158,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| doc.enabled | bool | `true` | Enabling doc deployment |
 | doc.image.repository | string | `qalita.azurecr.io/qalita/doc` | QALITA Doc Image Repository |
 | doc.image.tag | string | `1.9.0` | QALITA Doc Image Tag |
 | doc.image.pullPolicy | string | `Always` | QALITA Doc Image Pull Policy |
