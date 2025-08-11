@@ -41,6 +41,7 @@ frontend:
     extraEnv:
 
 doc:
+  enabled: true
   image:
     repository: qalita.azurecr.io/qalita/doc
     tag: "2.1.3"
