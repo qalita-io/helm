@@ -1,3 +1,4 @@
+{{ if .Values.doc.enabled }}
 {{- if .Values.doc.ingress.enabled -}}
 {{- $serviceName := print .Release.Name "-doc-service" }}
 {{- $servicePort := print .Values.doc.service.targetPort .Values.doc.service.protocol | lower -}}
@@ -39,4 +40,5 @@ spec:
             name: {{ $serviceName }}
             port:
               name: {{ $servicePort }}
-{{- end -}}
+{{ end -}}
+{{ end }}
