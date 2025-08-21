@@ -68,7 +68,7 @@ doc:
 backend:
   image:
     repository: qalita.azurecr.io/qalita/backend
-    tag: "2.1.7"
+    tag: "2.1.8"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -139,7 +139,7 @@ agent:
 
   image:
     repository: qalita/agent
-    tag: "2.1.9"
+    tag: "2.1.10"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
