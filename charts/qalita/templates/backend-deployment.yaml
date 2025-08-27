@@ -111,7 +111,7 @@ spec:
             value: "{{ .Values.backend.secretKeyAlgorithm }}"
           - name: QALITA_INIT_SLEEP
             value: "{{ .Values.backend.iniSleep }}"
-          - name: QALITA_FRONTEND_URL
+          - name: QALITA_PUBLIC_PLATFORM_URL
             value: "https://{{ .Values.cluster.domain }}"
           - name: QALITA_PUBLIC_API_URL
             value: "https://api.{{ .Values.cluster.domain }}"
