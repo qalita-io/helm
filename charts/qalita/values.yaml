@@ -38,7 +38,7 @@ frontend:
         memory: "50Mi"
         cpu: "50m"
 
-    extraEnv:
+    extraEnv: []
 
 doc:
   enabled: true
@@ -128,7 +128,7 @@ backend:
         memory: "256Mi"
         cpu: "100m"
 
-    extraEnv:
+    extraEnv: []
 
 agent:
   enabled: false
