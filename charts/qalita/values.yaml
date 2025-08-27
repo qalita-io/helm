@@ -158,7 +158,7 @@ agent:
         memory: "50Mi"
         cpu: "10m"
 
-    extraEnv:
+    extraEnv: []
 
 postgresql:
   enabled: true
