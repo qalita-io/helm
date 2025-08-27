@@ -1,0 +1,515 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "title": "QALITA Helm Chart Values Schema",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "licenseUser": {
+      "type": "string",
+      "default": "unlicenced",
+      "description": "License user name used by QALITA."
+    },
+    "licenseKey": {
+      "type": "string",
+      "default": "unlicenced",
+      "description": "License key used by QALITA."
+    },
+    "licenseUrl": {
+      "type": "string",
+      "default": "qalita.azurecr.io",
+      "description": "Private registry host used for licensing/registry access."
+    },
+
+    "cluster": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "issuer": { "type": "string", "default": "letsencrypt-prod", "description": "Cert-Manager ClusterIssuer name." },
+        "domain": { "type": "string", "default": "example.com", "description": "Base domain used for ingress hosts." },
+        "name": { "type": "string", "default": "local", "description": "Cluster name used in endpoints." }
+      }
+    },
+
+    "dockerregistry": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean", "default": true, "description": "Enable private Docker registry secret management." },
+        "dataSecret": { "type": ["string", "object"], "description": "Docker config JSON payload used to create imagePullSecret." }
+      }
+    },
+
+    "frontend": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": { "type": "string", "default": "qalita.azurecr.io/qalita/frontend" },
+            "tag": { "type": "string", "default": "2.1.8" },
+            "pullPolicy": { "type": "string", "default": "IfNotPresent" }
+          }
+        },
+        "replicaCount": { "type": "integer", "default": 1 },
+        "telemetryDisabled": { "type": "string", "default": "1", "description": "Disable Next.js telemetry (as string)." },
+        "webPackPolling": { "type": "string", "default": "false", "description": "Enable webpack polling (dev only), string form." },
+        "mode": { "type": "string", "default": "production", "enum": ["DEV", "PROD", "DEMO", "production"], "description": "Frontend run mode." },
+        "service": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "default": "ClusterIP" },
+            "targetPort": { "type": ["integer", "string"], "default": "3000" },
+            "protocol": { "type": "string", "default": "TCP" }
+          }
+        },
+        "ingress": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "tls": {
+              "type": "object",
+              "properties": { "enabled": { "type": "boolean", "default": true } }
+            }
+          }
+        },
+        "deployment": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "type": "object",
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "memory": { "type": "string", "default": "50Mi" },
+                    "cpu": { "type": "string", "default": "50m" }
+                  }
+                }
+              }
+            },
+            "extraEnv": { "type": "array", "items": { "type": "object" }, "default": [] }
+          }
+        }
+      }
+    },
+
+    "doc": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": { "type": "string", "default": "qalita.azurecr.io/qalita/doc" },
+            "tag": { "type": "string", "default": "2.1.7" },
+            "pullPolicy": { "type": "string", "default": "IfNotPresent" }
+          }
+        },
+        "replicaCount": { "type": "integer", "default": 1 },
+        "service": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "default": "ClusterIP" },
+            "targetPort": { "type": ["integer", "string"], "default": "80" },
+            "protocol": { "type": "string", "default": "TCP" }
+          }
+        },
+        "ingress": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "tls": { "type": "object", "properties": { "enabled": { "type": "boolean", "default": true } } }
+          }
+        },
+        "deployment": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "type": "object",
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "memory": { "type": "string", "default": "50Mi" },
+                    "cpu": { "type": "string", "default": "50m" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "backend": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": { "type": "string", "default": "qalita.azurecr.io/qalita/backend" },
+            "tag": { "type": "string", "default": "2.1.8" },
+            "pullPolicy": { "type": "string", "default": "IfNotPresent" }
+          }
+        },
+        "replicaCount": { "type": "integer", "default": 1 },
+        "organization": { "type": "object", "properties": { "name": { "type": "string", "default": "local" } } },
+        "RetentionLogsHours": { "type": "integer", "default": 720 },
+        "AUTHTokenExpireMinutes": { "type": "integer", "default": 240 },
+        "APItokenExpireMinutes": { "type": "integer", "default": 525600 },
+        "mode": { "type": "string", "default": "PROD", "enum": ["DEV", "PROD", "DEMO"] },
+        "iniSleep": { "type": ["integer", "string"], "default": "3" },
+        "authMode": { "type": "string", "default": "table", "enum": ["table", "ldap", "saml"] },
+        "adminUsername": { "type": "string", "default": "admin" },
+        "adminPassword": { "type": ["string", "null"], "default": null },
+        "secretKey": { "type": ["string", "null"], "default": null },
+        "secretKeyAlgorithm": { "type": "string", "default": "HS256" },
+        "mail": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "username": { "type": "string", "default": "" },
+            "password": { "type": "string", "default": "" },
+            "from": { "type": "string", "default": "no-reply@example.com" },
+            "from_name": { "type": "string", "default": "QALITA Platform" },
+            "port": { "type": "integer", "default": 1025 },
+            "server": { "type": "string", "default": "" },
+            "starttls": { "type": "boolean", "default": false },
+            "ssl_tls": { "type": "boolean", "default": false }
+          }
+        },
+        "s3": {
+          "type": "object",
+          "properties": {
+            "url": { "type": "string", "default": "http://seaweedfs-s3:8333" },
+            "secretName": { "type": "string", "default": "seaweedfs-s3-secret" },
+            "admin_access_key_id": { "type": "string", "default": "" },
+            "admin_secret_access_key": { "type": "string", "default": "" },
+            "read_access_key_id": { "type": "string", "default": "" },
+            "read_secret_access_key": { "type": "string", "default": "" }
+          }
+        },
+        "api": {
+          "type": "object",
+          "properties": {
+            "port": { "type": ["integer", "string"], "default": "3080" },
+            "host": { "type": "string", "default": "0.0.0.0" },
+            "worker": { "type": "integer", "default": 4 }
+          }
+        },
+        "service": {
+          "type": "object",
+          "properties": {
+            "type": { "type": "string", "default": "ClusterIP" },
+            "targetPort": { "type": ["integer", "string"], "default": "3080" },
+            "protocol": { "type": "string", "default": "TCP" }
+          }
+        },
+        "ingress": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "tls": { "type": "object", "properties": { "enabled": { "type": "boolean", "default": true } } }
+          }
+        },
+        "deployment": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "type": "object",
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "memory": { "type": "string", "default": "256Mi" },
+                    "cpu": { "type": "string", "default": "100m" }
+                  }
+                }
+              }
+            },
+            "extraEnv": { "type": "array", "items": { "type": "object" }, "default": [] }
+          }
+        }
+      }
+    },
+
+    "agent": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "privileged": { "type": "boolean", "default": false },
+        "name": { "type": "string", "default": "local-agent" },
+        "mode": { "type": "string", "default": "worker", "enum": ["job", "worker"] },
+        "token": { "type": "string", "default": "changeme" },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": { "type": "string", "default": "qalita/agent" },
+            "tag": { "type": "string", "default": "2.1.10" },
+            "pullPolicy": { "type": "string", "default": "IfNotPresent" }
+          }
+        },
+        "replicaCount": { "type": "integer", "default": 1 },
+        "pvc": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "storageSize": { "type": "string", "default": "10Gi" }
+          }
+        },
+        "initscript": { "type": "string", "default": "#!/bin/bash\necho \"Hello World\"\n" },
+        "deployment": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "type": "object",
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "memory": { "type": "string", "default": "50Mi" },
+                    "cpu": { "type": "string", "default": "10m" }
+                  }
+                }
+              }
+            },
+            "extraEnv": { "type": "array", "items": { "type": "object" }, "default": [] }
+          }
+        }
+      }
+    },
+
+    "postgresql": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "image": {
+          "type": "object",
+          "properties": {
+            "registry": { "type": "string", "default": "qalita.azurecr.io" },
+            "repository": { "type": "string", "default": "postgresql" },
+            "pullSecrets": { "type": "array", "items": { "type": "string" }, "default": ["qalita-platform-dockerregistry"] },
+            "tag": { "type": "string", "default": "15.4.0" }
+          }
+        },
+        "global": {
+          "type": "object",
+          "properties": {
+            "postgresql": {
+              "type": "object",
+              "properties": {
+                "auth": {
+                  "type": "object",
+                  "properties": {
+                    "database": { "type": "string", "default": "qalitadb" },
+                    "username": { "type": "string", "default": "qalita" },
+                    "password": { "type": ["string", "null"], "default": null }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "primary": {
+          "type": "object",
+          "properties": {
+            "persistence": {
+              "type": "object",
+              "properties": {
+                "size": { "type": "string", "default": "8Gi" }
+              }
+            }
+          }
+        },
+        "backup": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": false },
+            "cronjob": {
+              "type": "object",
+              "properties": {
+                "storage": {
+                  "type": "object",
+                  "properties": {
+                    "resourcePolicy": { "type": "string", "default": "keep" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "redis": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "image": {
+          "type": "object",
+          "properties": {
+            "registry": { "type": "string", "default": "qalita.azurecr.io" },
+            "repository": { "type": "string", "default": "redis" },
+            "tag": { "type": "string", "default": "7.4.2" },
+            "pullSecrets": { "type": "array", "items": { "type": "string" }, "default": ["qalita-platform-dockerregistry"] }
+          }
+        },
+        "architecture": { "type": "string", "default": "standalone" },
+        "auth": {
+          "type": "object",
+          "properties": {
+            "usePasswordFiles": { "type": "boolean", "default": true },
+            "existingSecret": { "type": "string", "default": "qalita-rediscreds" }
+          }
+        },
+        "master": {
+          "type": "object",
+          "properties": {
+            "persistence": { "type": "object", "properties": { "enabled": { "type": "boolean", "default": false } } }
+          }
+        }
+      }
+    },
+
+    "seaweedfs": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "global": {
+          "type": "object",
+          "properties": {
+            "createClusterRole": { "type": "boolean", "default": true },
+            "serviceAccountName": { "type": "string", "default": "seaweedfs" },
+            "registry": { "type": "string", "default": "qalita.azurecr.io" },
+            "repository": { "type": "string", "default": "qalita.azurecr.io/seaweedfs" },
+            "imagePullSecrets": { "type": ["string", "array"], "default": "qalita-platform-dockerregistry" },
+            "imageName": { "type": "string", "default": "seaweedfs" }
+          }
+        },
+        "s3": {
+          "type": "object",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true },
+            "enableAuth": { "type": "boolean", "default": true },
+            "existingConfigSecret": { "type": "string", "default": "seaweedfs-s3-secret" }
+          }
+        },
+        "filer": {
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "type": { "type": "string", "default": "persistentVolumeClaim" },
+                "size": { "type": "string", "default": "4Gi" }
+              }
+            },
+            "s3": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": true },
+                "enableAuth": { "type": "boolean", "default": true },
+                "existingConfigSecret": { "type": "string", "default": "seaweedfs-s3-secret" }
+              }
+            },
+            "resources": {
+              "type": "object",
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "memory": { "type": "string", "default": "100Mi" },
+                    "cpu": { "type": "string", "default": "50m" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "volume": {
+          "type": "object",
+          "properties": {
+            "dataDirs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": { "type": "string", "default": "data1" },
+                  "type": { "type": "string", "default": "persistentVolumeClaim" },
+                  "size": { "type": "string", "default": "32Gi" },
+                  "maxVolumes": { "type": "integer", "default": 0 }
+                }
+              },
+              "default": [ { "name": "data1", "type": "persistentVolumeClaim", "size": "32Gi", "maxVolumes": 0 } ]
+            },
+            "resources": {
+              "type": "object",
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "memory": { "type": "string", "default": "100Mi" },
+                    "cpu": { "type": "string", "default": "50m" }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "master": {
+          "type": "object",
+          "properties": {
+            "resources": {
+              "type": "object",
+              "properties": {
+                "requests": {
+                  "type": "object",
+                  "properties": {
+                    "memory": { "type": "string", "default": "64Mi" },
+                    "cpu": { "type": "string", "default": "50m" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+
+    "helmsync": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "image": {
+          "type": "object",
+          "properties": {
+            "repository": { "type": "string", "default": "alpine/helm" }
+          }
+        },
+        "kubeconfig": { "type": "string", "description": "Inline kubeconfig YAML content used by helmsync." },
+        "resources": {
+          "type": "object",
+          "properties": {
+            "requests": {
+              "type": "object",
+              "properties": {
+                "memory": { "type": "string", "default": "50Mi" },
+                "cpu": { "type": "string", "default": "10m" }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
