@@ -13,7 +13,7 @@ dockerregistry:
 frontend:
   image:
     repository: qalita.azurecr.io/qalita/frontend
-    tag: "2.2.2"
+    tag: "2.2.3"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
