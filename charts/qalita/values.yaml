@@ -13,7 +13,7 @@ dockerregistry:
 frontend:
   image:
     repository: qalita.azurecr.io/qalita/frontend
-    tag: "2.2.8"
+    tag: "2.2.9"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -68,7 +68,7 @@ doc:
 backend:
   image:
     repository: qalita.azurecr.io/qalita/backend
-    tag: "2.2.5"
+    tag: "2.2.9"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -139,7 +139,7 @@ agent:
 
   image:
     repository: qalita/agent
-    tag: "2.2.8"
+    tag: "2.2.9"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
