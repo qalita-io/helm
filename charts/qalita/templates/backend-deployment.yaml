@@ -114,7 +114,7 @@ spec:
           - name: QALITA_PUBLIC_API_URL
             value: "https://api.{{ .Values.cluster.domain }}"
           - name: QALITA_PUBLIC_DOC_URL
-            value: "https://doc.{{ .Values.cluster.domain }}"
+            value: "{{ .Values.backend.publicDocUrl | default (printf "https://doc.%s" .Values.cluster.domain) }}"
           - name: QALITA_S3_URL
             value: "{{ .Values.backend.s3.url }}"
           - name: QALITA_AUTH_MODE
