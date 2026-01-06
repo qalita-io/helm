@@ -28,10 +28,10 @@ spec:
           exec:
             command:
             - /app/liveness_check.sh
-          initialDelaySeconds: 10
-          periodSeconds: 10
-          failureThreshold: 10
-          timeoutSeconds: 5
+          initialDelaySeconds: {{ .Values.backend.startupProbe.initialDelaySeconds | default 10 }}
+          periodSeconds: {{ .Values.backend.startupProbe.periodSeconds | default 10 }}
+          failureThreshold: {{ .Values.backend.startupProbe.failureThreshold | default 10 }}
+          timeoutSeconds: {{ .Values.backend.startupProbe.timeoutSeconds | default 5 }}
         livenessProbe:
           exec:
             command:
