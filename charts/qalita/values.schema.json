@@ -227,6 +227,13 @@
                     "memory": { "type": "string", "default": "256Mi" },
                     "cpu": { "type": "string", "default": "100m" }
                   }
+                },
+                "limits": {
+                  "type": "object",
+                  "properties": {
+                    "memory": { "type": "string", "default": "1Gi" },
+                    "cpu": { "type": "string", "default": "1000m" }
+                  }
                 }
               }
             },
