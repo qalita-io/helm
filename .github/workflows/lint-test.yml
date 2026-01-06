@@ -5,6 +5,11 @@ on:
     paths:
       - "charts/**"
 
+# Minimal permissions following least privilege principle
+permissions:
+  contents: read
+  actions: read
+
 jobs:
   lint-test:
     runs-on: ubuntu-latest
