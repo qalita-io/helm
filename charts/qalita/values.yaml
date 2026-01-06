@@ -13,7 +13,7 @@ dockerregistry:
 frontend:
   image:
     repository: qalita.azurecr.io/qalita/frontend
-    tag: "2.5.2"
+    tag: "2.5.3"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -68,10 +68,13 @@ doc:
 backend:
   image:
     repository: qalita.azurecr.io/qalita/backend
-    tag: "2.5.2"
+    tag: "2.5.3"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
+
+  # Override public doc URL (defaults to https://doc.<cluster.domain>)
+  # publicDocUrl: "https://doc.qalita.io"
 
   organization:
     name: "local"
@@ -128,7 +131,7 @@ backend:
         memory: "256Mi"
         cpu: "100m"
       limits:
-        memory: "2Gi"
+        memory: "4Gi"
         cpu: "1000m"
 
     extraEnv: []
@@ -142,7 +145,7 @@ agent:
 
   image:
     repository: qalita/agent
-    tag: "2.5.2"
+    tag: "2.5.1"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
