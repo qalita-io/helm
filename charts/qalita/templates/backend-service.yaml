@@ -9,6 +9,12 @@ spec:
       port: {{ .Values.backend.service.targetPort }}
       protocol: {{ .Values.backend.service.protocol }}
       targetPort: {{ .Values.backend.service.targetPort }}{{ .Values.backend.service.protocol | lower }}
+    {{- if .Values.backend.grpc.enabled }}
+    - name: grpc
+      port: {{ .Values.backend.grpc.port }}
+      protocol: {{ .Values.backend.grpc.protocol }}
+      targetPort: grpc
+    {{- end }}
   selector:
     app: "{{ .Release.Name }}-backend"
     release: {{ .Release.Name }}

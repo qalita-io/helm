@@ -170,6 +170,11 @@ spec:
           - containerPort: {{ .Values.backend.service.targetPort }}
             name: {{ .Values.backend.service.targetPort }}{{ .Values.backend.service.protocol | lower }}
             protocol: {{ .Values.backend.service.protocol }}
+          {{- if .Values.backend.grpc.enabled }}
+          - containerPort: {{ .Values.backend.grpc.port }}
+            name: grpc
+            protocol: {{ .Values.backend.grpc.protocol }}
+          {{- end }}
 {{- if .Values.backend.deployment.resources }}
         resources:
 {{ toYaml .Values.backend.deployment.resources | indent 10 }}

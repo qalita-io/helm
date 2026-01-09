@@ -1,0 +1,44 @@
+{{- if and .Values.backend.grpc.enabled .Values.backend.grpc.ingress.enabled -}}
+{{- $serviceName := print .Release.Name "-backend-service" }}
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "{{ .Release.Name }}-backend-grpc-ingress"
+  annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.allow-http: "false"
+    # Traefik annotations for gRPC
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    # NGINX annotations for gRPC (if using nginx ingress controller)
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+{{- if .Values.backend.grpc.ingress.annotations }}
+{{ toYaml .Values.backend.grpc.ingress.annotations | indent 4 }}
+{{- end }}
+  labels:
+    app: "{{ .Release.Name }}-backend"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+spec:
+{{- if .Values.backend.grpc.ingress.tls.enabled }}
+  tls:
+  - hosts:
+    - grpc.{{ .Values.cluster.domain }}
+    secretName: grpc-cert
+{{- end }}
+  rules:
+  - host: grpc.{{ .Values.cluster.domain }}
+    http:
+      paths:
+      - path: /
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: {{ $serviceName }}
+            port:
+              name: grpc
+{{- end -}}
