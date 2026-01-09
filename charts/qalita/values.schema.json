@@ -208,6 +208,23 @@
             "protocol": { "type": "string", "default": "TCP" }
           }
         },
+        "grpc": {
+          "type": "object",
+          "description": "gRPC service configuration for worker communication",
+          "properties": {
+            "enabled": { "type": "boolean", "default": true, "description": "Enable gRPC port exposure" },
+            "port": { "type": "integer", "default": 50051, "description": "gRPC service port" },
+            "protocol": { "type": "string", "default": "TCP" },
+            "ingress": {
+              "type": "object",
+              "properties": {
+                "enabled": { "type": "boolean", "default": false, "description": "Enable gRPC ingress for external access" },
+                "tls": { "type": "object", "properties": { "enabled": { "type": "boolean", "default": true } } },
+                "annotations": { "type": "object", "default": {}, "description": "Additional annotations for gRPC ingress" }
+              }
+            }
+          }
+        },
         "ingress": {
           "type": "object",
           "properties": {

@@ -120,6 +120,16 @@ backend:
     targetPort: "3080"
     protocol: TCP
 
+  grpc:
+    enabled: true
+    port: 50051
+    protocol: TCP
+    ingress:
+      enabled: false
+      tls:
+        enabled: true
+      annotations: {}
+
   ingress:
     enabled: true
     tls:
