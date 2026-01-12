@@ -94,4 +94,8 @@ spec:
             allowPrivilegeEscalation: true
             privileged: true
 {{- end }}
+      {{- if .Values.dockerregistry.enabled }}
+      imagePullSecrets:
+      - name: qalita-platform-dockerregistry
+      {{- end }}
 {{ end }}
