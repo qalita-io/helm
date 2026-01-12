@@ -28,13 +28,13 @@ spec:
           command: ["/bin/sh", "-c"]
           args: ["cat /etc/config/init.sh | /bin/sh; sleep infinity"]
           env:
-          - name: QALITA_AGENT_NAME
+          - name: QALITA_WORKER_NAME
             value: {{ .Values.agent.name }}
-          - name: QALITA_AGENT_MODE
+          - name: QALITA_WORKER_MODE
             value: {{ .Values.agent.mode }}
-          - name: QALITA_AGENT_ENDPOINT
+          - name: QALITA_WORKER_ENDPOINT
             value: "http://{{ .Release.Name }}-backend-service:3080"
-          - name: QALITA_AGENT_TOKEN
+          - name: QALITA_WORKER_TOKEN
             value: {{ .Values.agent.token }}
 {{- if .Values.agent.deployment.extraEnv }}
 {{ toYaml .Values.agent.deployment.extraEnv | indent 10 }}
@@ -57,15 +57,15 @@ spec:
         - name: agent
           image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
           command: ["/bin/sh", "-c"]
-          args: ["cat /etc/config/init.sh | /bin/sh; /app/qalita/main.py agent run"]
+          args: ["cat /etc/config/init.sh | /bin/sh; qalita worker run"]
           env:
-          - name: QALITA_AGENT_NAME
+          - name: QALITA_WORKER_NAME
             value: {{ .Values.agent.name }}
-          - name: QALITA_AGENT_MODE
+          - name: QALITA_WORKER_MODE
             value: {{ .Values.agent.mode }}
-          - name: QALITA_AGENT_ENDPOINT
+          - name: QALITA_WORKER_ENDPOINT
             value: "http://{{ .Release.Name }}-backend-service:3080"
-          - name: QALITA_AGENT_TOKEN
+          - name: QALITA_WORKER_TOKEN
             value: {{ .Values.agent.token }}
 {{- if .Values.agent.deployment.extraEnv }}
 {{ toYaml .Values.agent.deployment.extraEnv | indent 10 }}
