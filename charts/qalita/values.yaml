@@ -154,7 +154,7 @@ agent:
   token: "changeme"
 
   image:
-    repository: qalita/agent
+    repository: qalita/worker
     tag: "2.6.0"
     pullPolicy: IfNotPresent
 

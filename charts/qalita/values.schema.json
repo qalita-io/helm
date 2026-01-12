@@ -272,7 +272,7 @@
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "qalita/agent" },
+            "repository": { "type": "string", "default": "qalita/worker" },
             "tag": { "type": "string", "default": "2.1.10" },
             "pullPolicy": { "type": "string", "default": "IfNotPresent" }
           }
