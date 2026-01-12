@@ -5,10 +5,10 @@ metadata:
 spec:
   type: {{ .Values.backend.service.type }}
   ports:
-    - name: {{ .Values.backend.service.targetPort }}{{ .Values.backend.service.protocol | lower }}
+    - name: rest
       port: {{ .Values.backend.service.targetPort }}
       protocol: {{ .Values.backend.service.protocol }}
-      targetPort: {{ .Values.backend.service.targetPort }}{{ .Values.backend.service.protocol | lower }}
+      targetPort: rest
     {{- if .Values.backend.grpc.enabled }}
     - name: grpc
       port: {{ .Values.backend.grpc.port }}

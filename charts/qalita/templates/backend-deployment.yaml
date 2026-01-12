@@ -168,7 +168,7 @@ spec:
 {{- end }}
         ports:
           - containerPort: {{ .Values.backend.service.targetPort }}
-            name: {{ .Values.backend.service.targetPort }}{{ .Values.backend.service.protocol | lower }}
+            name: rest
             protocol: {{ .Values.backend.service.protocol }}
           {{- if .Values.backend.grpc.enabled }}
           - containerPort: {{ .Values.backend.grpc.port }}
