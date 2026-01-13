@@ -149,7 +149,7 @@ backend:
 agent:
   enabled: false
   privileged: false
-  name: "local-agent"
+  name: "worker"
   mode: "worker"
   token: "changeme"
 
