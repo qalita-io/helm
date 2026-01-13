@@ -6,19 +6,18 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: "{{ .Release.Name }}-frontend-ingress"
+  labels:
+    app: "{{ .Release.Name }}-frontend"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
   annotations:
     cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
     ingress.kubernetes.io/ssl-redirect: "true"
     kubernetes.io/ingress.allow-http: "false"
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
-  labels:
-    app: "{{ .Release.Name }}-frontend"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
 {{- if .Values.frontend.ingress.annotations }}
-  annotations:
 {{ toYaml .Values.frontend.ingress.annotations | indent 4 }}
 {{- end }}
 spec:
@@ -33,7 +32,7 @@ spec:
     http:
       paths:
       - path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
         backend:
           service:
             name: {{ $serviceName }}

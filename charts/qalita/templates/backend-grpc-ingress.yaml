@@ -5,6 +5,11 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: "{{ .Release.Name }}-backend-grpc-ingress"
+  labels:
+    app: "{{ .Release.Name }}-backend"
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
   annotations:
     cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
     ingress.kubernetes.io/ssl-redirect: "true"
@@ -18,11 +23,6 @@ metadata:
 {{- if .Values.backend.grpc.ingress.annotations }}
 {{ toYaml .Values.backend.grpc.ingress.annotations | indent 4 }}
 {{- end }}
-  labels:
-    app: "{{ .Release.Name }}-backend"
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    heritage: {{ .Release.Service }}
-    release: {{ .Release.Name }}
 spec:
 {{- if .Values.backend.grpc.ingress.tls.enabled }}
   tls:
@@ -35,7 +35,7 @@ spec:
     http:
       paths:
       - path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
         backend:
           service:
             name: {{ $serviceName }}
