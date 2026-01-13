@@ -2,11 +2,8 @@ dependencies:
 - name: postgresql
   repository: https://charts.bitnami.com/bitnami
   version: 12.12.10
-- name: redis
-  repository: https://charts.bitnami.com/bitnami
-  version: 18.16.1
 - name: seaweedfs
   repository: https://seaweedfs.github.io/seaweedfs/helm
   version: 4.0.380
-digest: sha256:2fc66ef814e68af0636c2766f2ebb8115914f4fadf02a695be149ba982d1e5e3
-generated: "2025-06-30T16:47:58.23705783+02:00"
+digest: sha256:6da0fc434e4d9874fd82d94575b578e0a98f57039986fb985843176cd2bfc0b2
+generated: "2026-01-13T14:05:31.785546991+01:00"
