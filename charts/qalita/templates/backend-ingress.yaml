@@ -1,24 +1,22 @@
 {{- if .Values.backend.ingress.enabled -}}
 {{- $serviceName := print .Release.Name "-backend-service" }}
-{{- $servicePort := print .Values.backend.service.targetPort .Values.backend.service.protocol | lower -}}
 
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: "{{ .Release.Name }}-backend-ingress"
-  annotations:
-    cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
-    ingress.kubernetes.io/ssl-redirect: "true"
-    kubernetes.io/ingress.allow-http: "false"
-    traefik.ingress.kubernetes.io/router.entrypoints: websecure
-    traefik.ingress.kubernetes.io/router.tls: "true"  
   labels:
     app: "{{ .Release.Name }}-backend"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
-{{- if .Values.backend.ingress.annotations }}
   annotations:
+    cert-manager.io/cluster-issuer: {{ .Values.cluster.issuer }}
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.allow-http: "false"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+{{- if .Values.backend.ingress.annotations }}
 {{ toYaml .Values.backend.ingress.annotations | indent 4 }}
 {{- end }}
 spec:
@@ -33,10 +31,10 @@ spec:
     http:
       paths:
       - path: /
-        pathType: ImplementationSpecific
+        pathType: Prefix
         backend:
           service:
             name: {{ $serviceName }}
             port:
-              name: {{ $servicePort }}
+              name: rest
 {{- end -}}
