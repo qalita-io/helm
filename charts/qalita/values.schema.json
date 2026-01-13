@@ -370,37 +370,6 @@
       }
     },
 
-    "redis": {
-      "type": "object",
-      "additionalProperties": true,
-      "properties": {
-        "enabled": { "type": "boolean", "default": true },
-        "image": {
-          "type": "object",
-          "properties": {
-            "registry": { "type": "string", "default": "qalita.azurecr.io" },
-            "repository": { "type": "string", "default": "redis" },
-            "tag": { "type": "string", "default": "7.4.2" },
-            "pullSecrets": { "type": "array", "items": { "type": "string" }, "default": ["qalita-platform-dockerregistry"] }
-          }
-        },
-        "architecture": { "type": "string", "default": "standalone" },
-        "auth": {
-          "type": "object",
-          "properties": {
-            "usePasswordFiles": { "type": "boolean", "default": true },
-            "existingSecret": { "type": "string", "default": "qalita-rediscreds" }
-          }
-        },
-        "master": {
-          "type": "object",
-          "properties": {
-            "persistence": { "type": "object", "properties": { "enabled": { "type": "boolean", "default": false } } }
-          }
-        }
-      }
-    },
-
     "seaweedfs": {
       "type": "object",
       "additionalProperties": true,

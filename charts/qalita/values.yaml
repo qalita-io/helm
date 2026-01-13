@@ -202,23 +202,6 @@ postgresql:
       storage:
         resourcePolicy: "keep"
 
-redis:
-  enabled: true
-  image:
-    registry: qalita.azurecr.io
-    repository: redis
-    tag: "7.4.2"
-    pullSecrets:
-      - "qalita-platform-dockerregistry"
-  architecture: standalone
-  auth:
-    usePasswordFiles: true
-    existingSecret: "qalita-rediscreds"
-
-  master:
-    persistence:
-      enabled: false
-
 seaweedfs:
   enabled: true
 
