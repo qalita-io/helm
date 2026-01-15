@@ -17,6 +17,8 @@ metadata:
     # Traefik annotations for gRPC
     traefik.ingress.kubernetes.io/router.entrypoints: websecure
     traefik.ingress.kubernetes.io/router.tls: "true"
+    # Required: Tell Traefik to use HTTP/2 cleartext (h2c) to communicate with backend gRPC
+    traefik.ingress.kubernetes.io/service.serversscheme: h2c
     # NGINX annotations for gRPC (if using nginx ingress controller)
     nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
