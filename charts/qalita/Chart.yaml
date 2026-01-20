@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for QALITA Platform, a platform for managing and monitoring your data quality.
 name: "qalita"
-version: "2.8.1"
+version: "2.9.0"
 icon: https://avatars.githubusercontent.com/u/101010687?s=48&v=4
 appVersion: "2.9.0"
 home: https://qalita.io
