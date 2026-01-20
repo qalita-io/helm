@@ -251,6 +251,9 @@ seaweedfs:
         memory: "64Mi"
         cpu: "50m"
 
+redirect:
+  enabled: false
+
 helmsync:
   enabled: false
   image:

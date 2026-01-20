@@ -1,0 +1,186 @@
+{{- if .Values.redirect.enabled -}}
+{{- $releaseName := .Release.Name -}}
+{{- $chartName := .Chart.Name -}}
+{{- $chartVersion := .Chart.Version -}}
+{{- $releaseService := .Release.Service -}}
+{{- $namespace := .Release.Namespace -}}
+{{- $clusterIssuer := .Values.cluster.issuer -}}
+
+# =============================================================================
+# Frontend Redirect: {{ .Values.redirect.frontend.fromDomain }} -> {{ .Values.redirect.frontend.toUrl }}
+# =============================================================================
+{{- if .Values.redirect.frontend.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: "{{ $releaseName }}-frontend-redirect"
+  labels:
+    app: "{{ $releaseName }}-frontend"
+    chart: "{{ $chartName }}-{{ $chartVersion }}"
+    heritage: {{ $releaseService }}
+    release: {{ $releaseName }}
+spec:
+  redirectRegex:
+    regex: "^https?://{{ .Values.redirect.frontend.fromDomain }}/(.*)"
+    replacement: "{{ .Values.redirect.frontend.toUrl }}/${1}"
+    permanent: true
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "{{ $releaseName }}-frontend-redirect"
+  labels:
+    app: "{{ $releaseName }}-frontend"
+    chart: "{{ $chartName }}-{{ $chartVersion }}"
+    heritage: {{ $releaseService }}
+    release: {{ $releaseName }}
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.allow-http: "false"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: {{ $clusterIssuer }}
+    traefik.ingress.kubernetes.io/router.middlewares: {{ $namespace }}-{{ $releaseName }}-frontend-redirect@kubernetescrd
+    {{- with .Values.redirect.frontend.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  tls:
+    - hosts:
+        - {{ .Values.redirect.frontend.fromDomain }}
+      secretName: {{ .Values.redirect.frontend.tlsSecretName | default (printf "%s-frontend-redirect-tls" $releaseName) }}
+  rules:
+    - host: {{ .Values.redirect.frontend.fromDomain }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $releaseName }}-frontend-service
+                port:
+                  name: 3000tcp
+{{- end }}
+
+# =============================================================================
+# Backend API Redirect: {{ .Values.redirect.api.fromDomain }} -> {{ .Values.redirect.api.toUrl }}
+# =============================================================================
+{{- if .Values.redirect.api.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: "{{ $releaseName }}-api-redirect"
+  labels:
+    app: "{{ $releaseName }}-backend"
+    chart: "{{ $chartName }}-{{ $chartVersion }}"
+    heritage: {{ $releaseService }}
+    release: {{ $releaseName }}
+spec:
+  redirectRegex:
+    regex: "^https?://{{ .Values.redirect.api.fromDomain }}/(.*)"
+    replacement: "{{ .Values.redirect.api.toUrl }}/${1}"
+    permanent: true
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: "{{ $releaseName }}-api-redirect"
+  labels:
+    app: "{{ $releaseName }}-backend"
+    chart: "{{ $chartName }}-{{ $chartVersion }}"
+    heritage: {{ $releaseService }}
+    release: {{ $releaseName }}
+  annotations:
+    ingress.kubernetes.io/ssl-redirect: "true"
+    kubernetes.io/ingress.allow-http: "false"
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+    traefik.ingress.kubernetes.io/router.tls: "true"
+    cert-manager.io/cluster-issuer: {{ $clusterIssuer }}
+    traefik.ingress.kubernetes.io/router.middlewares: {{ $namespace }}-{{ $releaseName }}-api-redirect@kubernetescrd
+    {{- with .Values.redirect.api.annotations }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  tls:
+    - hosts:
+        - {{ .Values.redirect.api.fromDomain }}
+      secretName: {{ .Values.redirect.api.tlsSecretName | default (printf "%s-api-redirect-tls" $releaseName) }}
+  rules:
+    - host: {{ .Values.redirect.api.fromDomain }}
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ $releaseName }}-backend-service
+                port:
+                  name: rest
+{{- end }}
+
+# =============================================================================
+# Backend gRPC Redirect: {{ .Values.redirect.grpc.fromDomain }} -> {{ .Values.redirect.grpc.toUrl }}
+# =============================================================================
+{{- if .Values.redirect.grpc.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: "{{ $releaseName }}-grpc-redirect"
+  labels:
+    app: "{{ $releaseName }}-backend"
+    chart: "{{ $chartName }}-{{ $chartVersion }}"
+    heritage: {{ $releaseService }}
+    release: {{ $releaseName }}
+spec:
+  redirectRegex:
+    regex: "^https?://{{ .Values.redirect.grpc.fromDomain }}/(.*)"
+    replacement: "{{ .Values.redirect.grpc.toUrl }}/${1}"
+    permanent: true
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: "{{ $releaseName }}-grpc-redirect-ingressroute"
+  labels:
+    app: "{{ $releaseName }}-backend"
+    chart: "{{ $chartName }}-{{ $chartVersion }}"
+    heritage: {{ $releaseService }}
+    release: {{ $releaseName }}
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`{{ .Values.redirect.grpc.fromDomain }}`)
+      kind: Rule
+      middlewares:
+        - name: {{ $releaseName }}-grpc-redirect
+      services:
+        - name: {{ $releaseName }}-backend-service
+          port: {{ .Values.backend.grpc.port }}
+          scheme: h2c
+  tls:
+    secretName: {{ .Values.redirect.grpc.tlsSecretName | default (printf "%s-grpc-redirect-tls" $releaseName) }}
+---
+# Certificate for gRPC redirect endpoint
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ .Values.redirect.grpc.tlsSecretName | default (printf "%s-grpc-redirect-tls" $releaseName) }}
+  labels:
+    app: "{{ $releaseName }}-backend"
+    chart: "{{ $chartName }}-{{ $chartVersion }}"
+    heritage: {{ $releaseService }}
+    release: {{ $releaseName }}
+spec:
+  secretName: {{ .Values.redirect.grpc.tlsSecretName | default (printf "%s-grpc-redirect-tls" $releaseName) }}
+  issuerRef:
+    name: {{ $clusterIssuer }}
+    kind: ClusterIssuer
+  dnsNames:
+    - {{ .Values.redirect.grpc.fromDomain }}
+{{- end }}
+
+{{- end -}}
