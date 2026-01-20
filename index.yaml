@@ -3,6 +3,36 @@ entries:
   qalita:
   - apiVersion: v2
     appVersion: 2.9.0
+    created: "2026-01-20T13:32:11.521560844Z"
+    dependencies:
+    - condition: postgresql.enabled
+      name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: 12.12.10
+    - condition: seaweedfs.enabled
+      name: seaweedfs
+      repository: https://seaweedfs.github.io/seaweedfs/helm
+      version: 4.0.380
+    description: Helm chart for QALITA Platform, a platform for managing and monitoring
+      your data quality.
+    digest: 926072c46f415bb48b795855269ef287f1004ed620f1bd3fa554015b0053ef29
+    home: https://qalita.io
+    icon: https://avatars.githubusercontent.com/u/101010687?s=48&v=4
+    keywords:
+    - cloud-native
+    - data-quality
+    kubeVersion: '>= 1.24.0-0'
+    maintainers:
+    - email: contact@qalita.io
+      name: qalita
+      url: https://qalita.io
+    name: qalita
+    type: application
+    urls:
+    - https://github.com/qalita-io/helm/releases/download/qalita-2.9.0/qalita-2.9.0.tgz
+    version: 2.9.0
+  - apiVersion: v2
+    appVersion: 2.9.0
     created: "2026-01-16T08:50:27.986193997Z"
     dependencies:
     - condition: postgresql.enabled
@@ -4585,4 +4615,4 @@ entries:
     urls:
     - https://github.com/qalita-io/helm/releases/download/qalita-1.0.12/qalita-1.0.12.tgz
     version: 1.0.12
-generated: "2026-01-16T08:50:27.986505076Z"
+generated: "2026-01-20T13:32:11.521855313Z"
