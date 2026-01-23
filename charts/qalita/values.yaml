@@ -254,6 +254,19 @@ seaweedfs:
 redirect:
   enabled: false
 
+# HTTP to HTTPS redirect configuration
+httpRedirect:
+  enabled: false
+  frontend:
+    enabled: true
+    annotations: {}
+  api:
+    enabled: true
+    annotations: {}
+  doc:
+    enabled: true
+    annotations: {}
+
 helmsync:
   enabled: false
   image:
