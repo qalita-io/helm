@@ -260,20 +260,20 @@
       }
     },
 
-    "agent": {
+    "worker": {
       "type": "object",
       "additionalProperties": true,
       "properties": {
         "enabled": { "type": "boolean", "default": false },
         "privileged": { "type": "boolean", "default": false },
-        "name": { "type": "string", "default": "local-agent" },
+        "name": { "type": "string", "default": "worker" },
         "mode": { "type": "string", "default": "worker", "enum": ["job", "worker"] },
         "token": { "type": "string", "default": "changeme" },
         "image": {
           "type": "object",
           "properties": {
             "repository": { "type": "string", "default": "qalita/worker" },
-            "tag": { "type": "string", "default": "2.1.10" },
+            "tag": { "type": "string", "default": "2.11.0" },
             "pullPolicy": { "type": "string", "default": "IfNotPresent" }
           }
         },

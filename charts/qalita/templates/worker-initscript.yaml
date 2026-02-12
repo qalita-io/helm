@@ -1,0 +1,9 @@
+{{ if .Values.worker.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: qalita-worker-initscript
+data:
+  init.sh: |
+    {{ .Values.worker.initscript | nindent 8 }}
+{{ end }}

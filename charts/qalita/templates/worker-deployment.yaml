@@ -1,95 +1,95 @@
-{{ if .Values.agent.enabled }}
+{{ if .Values.worker.enabled }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: qalita-agent
+  name: qalita-worker
   labels:
-    app: "{{ .Release.Name }}-agent"
+    app: "{{ .Release.Name }}-worker"
     chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
     heritage: {{ .Release.Service }}
     release: {{ .Release.Name }}
 spec:
-  replicas: {{ .Values.agent.replicaCount }}
+  replicas: {{ .Values.worker.replicaCount }}
   selector:
     matchLabels:
-      app: "{{ .Release.Name }}-agent"
+      app: "{{ .Release.Name }}-worker"
       release: {{ .Release.Name }}
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: "{{ .Release.Name }}-agent"
+        app: "{{ .Release.Name }}-worker"
         release: {{ .Release.Name }}
     spec:
       containers:
         - name: cli
-          image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
           command: ["/bin/sh", "-c"]
           args: ["cat /etc/config/init.sh | /bin/sh; sleep infinity"]
           env:
           - name: QALITA_WORKER_NAME
-            value: {{ .Values.agent.name }}
+            value: {{ .Values.worker.name }}
           - name: QALITA_WORKER_MODE
-            value: {{ .Values.agent.mode }}
+            value: {{ .Values.worker.mode }}
           - name: QALITA_WORKER_ENDPOINT
             value: "http://{{ .Release.Name }}-backend-service:3080"
           - name: QALITA_WORKER_TOKEN
-            value: {{ .Values.agent.token }}
-{{- if .Values.agent.deployment.extraEnv }}
-{{ toYaml .Values.agent.deployment.extraEnv | indent 10 }}
+            value: {{ .Values.worker.token }}
+{{- if .Values.worker.deployment.extraEnv }}
+{{ toYaml .Values.worker.deployment.extraEnv | indent 10 }}
 {{- end }}
           volumeMounts:
             - name: init-script
               mountPath: /etc/config
-{{- if .Values.agent.pvc.enabled }}
-            - name: agent-store-pvc
+{{- if .Values.worker.pvc.enabled }}
+            - name: worker-store-pvc
               mountPath: /data
-            - name: agent-store-pvc
+            - name: worker-store-pvc
               mountPath: /root/.qalita/
               subPath: ./qalita
 {{- end }}
-{{- if .Values.agent.privileged }}
+{{- if .Values.worker.privileged }}
           securityContext:
             allowPrivilegeEscalation: true
             privileged: true
 {{- end }}
-        - name: agent
-          image: "{{ .Values.agent.image.repository }}:{{ .Values.agent.image.tag }}"
+        - name: worker
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
           command: ["/bin/sh", "-c"]
           args: ["cat /etc/config/init.sh | /bin/sh; qalita worker run"]
           env:
           - name: QALITA_WORKER_NAME
-            value: {{ .Values.agent.name }}
+            value: {{ .Values.worker.name }}
           - name: QALITA_WORKER_MODE
-            value: {{ .Values.agent.mode }}
+            value: {{ .Values.worker.mode }}
           - name: QALITA_WORKER_ENDPOINT
             value: "http://{{ .Release.Name }}-backend-service:3080"
           - name: QALITA_WORKER_TOKEN
-            value: {{ .Values.agent.token }}
-{{- if .Values.agent.deployment.extraEnv }}
-{{ toYaml .Values.agent.deployment.extraEnv | indent 10 }}
+            value: {{ .Values.worker.token }}
+{{- if .Values.worker.deployment.extraEnv }}
+{{ toYaml .Values.worker.deployment.extraEnv | indent 10 }}
 {{- end }}
           volumeMounts:
             - name: init-script
               mountPath: /etc/config
-{{- if .Values.agent.pvc.enabled }}
-            - name: agent-store-pvc
+{{- if .Values.worker.pvc.enabled }}
+            - name: worker-store-pvc
               mountPath: /data
-            - name: agent-store-pvc
+            - name: worker-store-pvc
               mountPath: /root/.qalita/
               subPath: ./qalita
 {{- end }}
       volumes:
         - name: init-script
           configMap:
-            name: "qalita-agent-initscript"
-{{- if .Values.agent.pvc.enabled }}
-        - name: agent-store-pvc
+            name: "qalita-worker-initscript"
+{{- if .Values.worker.pvc.enabled }}
+        - name: worker-store-pvc
           persistentVolumeClaim:
-            claimName: qalita-agent-store
+            claimName: qalita-worker-store
 {{- end }}
-{{- if .Values.agent.privileged }}
+{{- if .Values.worker.privileged }}
           securityContext:
             allowPrivilegeEscalation: true
             privileged: true
