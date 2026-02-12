@@ -13,7 +13,7 @@ dockerregistry:
 frontend:
   image:
     repository: qalita.azurecr.io/qalita/frontend
-    tag: "2.8.0"
+    tag: "2.11.5"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -44,7 +44,7 @@ doc:
   enabled: true
   image:
     repository: qalita.azurecr.io/qalita/doc
-    tag: "2.8.0"
+    tag: "2.11.0"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -68,7 +68,7 @@ doc:
 backend:
   image:
     repository: qalita.azurecr.io/qalita/backend
-    tag: "2.8.0"
+    tag: "2.11.5"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -110,6 +110,12 @@ backend:
     read_access_key_id: ""
     read_secret_access_key: ""
 
+  startupProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    failureThreshold: 10
+    timeoutSeconds: 5
+
   api:
     port: "3080"
     host: "0.0.0.0"
@@ -146,7 +152,7 @@ backend:
 
     extraEnv: []
 
-agent:
+worker:
   enabled: false
   privileged: false
   name: "worker"
@@ -155,7 +161,7 @@ agent:
 
   image:
     repository: qalita/worker
-    tag: "2.8.0"
+    tag: "2.11.0"
     pullPolicy: IfNotPresent
 
   replicaCount: 1

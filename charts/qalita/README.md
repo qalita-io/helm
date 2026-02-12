@@ -93,7 +93,7 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.organization.name | string | `local` | Set the organization Name |
 | backend.RetentionLogsHours | int | `720` | Set the log retention in hours |
 | backend.AUTHTokenExpireMinutes | int | `240` | Set the user session timeout, it is configured in the JWT exp value, default to 4 hours |
-| backend.APItokenExpireMinutes | int | `525600` | Set the user API token expiration time, this api token is used for agent connection and partner synchronisation, it is configured in the JWT exp value. Default to 1 Year |
+| backend.APItokenExpireMinutes | int | `525600` | Set the user API token expiration time, this api token is used for worker connection and partner synchronisation, it is configured in the JWT exp value. Default to 1 Year |
 | backend.mode | string | `PROD` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | backend.iniSleep | int | `3` | The amount of seconds the backend waits to connect to the backend database (postgresql) before retrying |
 | backend.authMode | string | `table` | Authentication mode: `table/ldap/saml` |
@@ -132,25 +132,25 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 | backend.mail.starttls | bool | `false` | SMTP Mail Server STARTTLS |
 | backend.mail.ssl_tls | bool | `false` | SMTP Mail Server SSL_TLS Protocol |
 
-## Agent
+## Worker
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| agent.enabled | bool | `false` | Enabling agent deployment |
-| agent.privileged | bool | `false` | Enabling privilege escalation for cifs mounts |
-| agent.name | string | `local-agent` | Qalita Agent Name |
-| agent.initscript | string | `echo hello world` | Qalita Agent init script helps add custom instructions before launching agent, can be used to mount cifs remote path or other actions |
-| agent.mode | string | `worker` | Qalita Agent mode <job/worker> |
-| agent.token | string | `changeme` | Qalita Agent API Token |
-| agent.image.repository | string | `qalita/worker` | [QALITA Worker Image Repository](https://hub.docker.com/r/qalita/worker) |
-| agent.image.tag | string | `2.3.2` | QALITA Agent Image Tag |
-| agent.image.pullPolicy | string | `Always` | QALITA Agent Image Pull Policy |
-| agent.replicaCount | int | `1` | QALITA Agent Replica Count |
-| agent.deployment.extraEnv | list | `[]` | QALITA Agent Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
-| agent.deployment.resources.requests.memory | string | `256Mi` | QALITA Agent Memory Request |
-| agent.deployment.resources.requests.cpu | string | `200m` | QALITA Agent CPU Request |
-| agent.pvc.enabled | bool | `false` | Enable persistence for agent data |
-| agent.pvc.storageSize | string | `10Gi` | PVC Size for persisting data |
+| worker.enabled | bool | `false` | Enabling worker deployment |
+| worker.privileged | bool | `false` | Enabling privilege escalation for cifs mounts |
+| worker.name | string | `worker` | Qalita Worker Name |
+| worker.initscript | string | `echo hello world` | Qalita Worker init script helps add custom instructions before launching worker, can be used to mount cifs remote path or other actions |
+| worker.mode | string | `worker` | Qalita Worker mode <job/worker> |
+| worker.token | string | `changeme` | Qalita Worker API Token |
+| worker.image.repository | string | `qalita/worker` | [QALITA Worker Image Repository](https://hub.docker.com/r/qalita/worker) |
+| worker.image.tag | string | `2.11.0` | QALITA Worker Image Tag |
+| worker.image.pullPolicy | string | `IfNotPresent` | QALITA Worker Image Pull Policy |
+| worker.replicaCount | int | `1` | QALITA Worker Replica Count |
+| worker.deployment.extraEnv | list | `[]` | QALITA Worker Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
+| worker.deployment.resources.requests.memory | string | `50Mi` | QALITA Worker Memory Request |
+| worker.deployment.resources.requests.cpu | string | `10m` | QALITA Worker CPU Request |
+| worker.pvc.enabled | bool | `false` | Enable persistence for worker data |
+| worker.pvc.storageSize | string | `10Gi` | PVC Size for persisting data |
 
 ## Documentation
 

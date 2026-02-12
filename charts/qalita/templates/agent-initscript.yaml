@@ -1,9 +1,0 @@
-{{ if .Values.agent.enabled }}
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: qalita-agent-initscript
-data:
-  init.sh: |
-    {{ .Values.agent.initscript | nindent 8 }}
-{{ end }}
