@@ -93,6 +93,8 @@ spec:
             value: "{{ .Values.backend.api.host }}"
           - name: QALITA_API_WORKER
             value: "{{ .Values.backend.api.worker }}"
+          - name: QALITA_API_TIMEOUT
+            value: "{{ .Values.backend.api.timeout | default 120 }}"
           - name: QALITA_ADMIN_USERNAME
             value: "{{ .Values.backend.adminUsername }}"
           - name: QALITA_ALGORITHM
