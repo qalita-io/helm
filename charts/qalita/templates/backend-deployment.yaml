@@ -36,10 +36,10 @@ spec:
           exec:
             command:
             - /app/liveness_check.sh
-          initialDelaySeconds: 10
-          periodSeconds: 60
-          failureThreshold: 3
-          timeoutSeconds: 5
+          initialDelaySeconds: {{ .Values.backend.livenessProbe.initialDelaySeconds | default 10 }}
+          periodSeconds: {{ .Values.backend.livenessProbe.periodSeconds | default 60 }}
+          failureThreshold: {{ .Values.backend.livenessProbe.failureThreshold | default 3 }}
+          timeoutSeconds: {{ .Values.backend.livenessProbe.timeoutSeconds | default 15 }}
         env:
           - name: POSTGRESQL_SERVER
             value: "{{ .Release.Name }}-postgresql"
