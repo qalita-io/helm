@@ -120,6 +120,7 @@ backend:
     port: "3080"
     host: "0.0.0.0"
     worker: 4
+    timeout: 120
 
   service:
     type: ClusterIP
