@@ -116,6 +116,12 @@ backend:
     failureThreshold: 10
     timeoutSeconds: 5
 
+  livenessProbe:
+    initialDelaySeconds: 10
+    periodSeconds: 60
+    failureThreshold: 3
+    timeoutSeconds: 15
+
   api:
     port: "3080"
     host: "0.0.0.0"
