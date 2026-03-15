@@ -1,0 +1,85 @@
+# =============================================
+# .kilocodeignore — Reduce embedding API costs
+# =============================================
+
+# Dependencies
+node_modules/
+.pnpm-store/
+__pycache__/
+*.pyc
+.venv/
+venv/
+env/
+.eggs/
+*.egg-info/
+
+# Build artifacts
+.next/
+dist/
+build/
+out/
+.turbo/
+.cache/
+.parcel-cache/
+
+# Lock files (huge, no semantic value)
+pnpm-lock.yaml
+package-lock.json
+yarn.lock
+bun.lock
+poetry.lock
+Pipfile.lock
+
+# Docker / Infrastructure
+.terraform/
+*.tfstate
+*.tfstate.backup
+
+# Logs and data
+*.log
+logs/
+*.csv
+*.parquet
+*.sqlite
+*.db
+
+# IDE / OS
+.git/
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Images and binary files
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.ico
+*.svg
+*.webp
+*.woff
+*.woff2
+*.ttf
+*.eot
+*.mp4
+*.mp3
+*.pdf
+*.zip
+*.tar.gz
+*.tgz
+
+# Generated / Minified
+*.min.js
+*.min.css
+*.map
+*.chunk.js
+
+# Test snapshots
+__snapshots__/
+
+# SBOM / Reports
+*.sarif
+*.sbom
+*.spdx
+
