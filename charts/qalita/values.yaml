@@ -1,6 +1,8 @@
+# For private GHCR images: set to a GitHub username (or token username) and PAT with read:packages.
 licenseUser: "unlicenced"
 licenseKey: "unlicenced"
-licenseUrl: qalita.azurecr.io
+# Docker registry hostname for imagePullSecret (.dockerconfigjson "auths" key). Use ghcr.io for GitHub Container Registry.
+licenseUrl: ghcr.io
 
 cluster:
   issuer: letsencrypt-prod
@@ -12,7 +14,7 @@ dockerregistry:
 
 frontend:
   image:
-    repository: qalita.azurecr.io/qalita/frontend
+    repository: ghcr.io/qalita-io/qalita/frontend
     tag: "2.11.6"
     pullPolicy: IfNotPresent
 
@@ -43,7 +45,7 @@ frontend:
 doc:
   enabled: true
   image:
-    repository: qalita.azurecr.io/qalita/doc
+    repository: ghcr.io/qalita-io/qalita/doc
     tag: "2.11.0"
     pullPolicy: IfNotPresent
 
@@ -67,7 +69,7 @@ doc:
 
 backend:
   image:
-    repository: qalita.azurecr.io/qalita/backend
+    repository: ghcr.io/qalita-io/qalita/backend
     tag: "2.11.6"
     pullPolicy: IfNotPresent
 
@@ -167,7 +169,7 @@ worker:
   token: "changeme"
 
   image:
-    repository: qalita/worker
+    repository: ghcr.io/qalita-io/qalita/worker
     tag: "2.11.0"
     pullPolicy: IfNotPresent
 
@@ -192,7 +194,7 @@ worker:
 postgresql:
   enabled: true
   image:
-    registry: qalita.azurecr.io
+    registry: ghcr.io/qalita-io
     repository: postgresql
     pullSecrets:
       - "qalita-platform-dockerregistry"
@@ -221,8 +223,8 @@ seaweedfs:
   global:
     createClusterRole: true
     serviceAccountName: "seaweedfs"
-    registry: qalita.azurecr.io
-    repository: qalita.azurecr.io/seaweedfs
+    registry: ghcr.io/qalita-io
+    repository: seaweedfs
     imagePullSecrets: "qalita-platform-dockerregistry"
     imageName: seaweedfs
 

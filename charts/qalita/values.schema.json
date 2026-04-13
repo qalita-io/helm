@@ -16,8 +16,8 @@
     },
     "licenseUrl": {
       "type": "string",
-      "default": "qalita.azurecr.io",
-      "description": "Private registry host used for licensing/registry access."
+      "default": "ghcr.io",
+      "description": "Container registry hostname for imagePullSecret auth (e.g. ghcr.io)."
     },
 
     "cluster": {
@@ -46,7 +46,7 @@
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "qalita.azurecr.io/qalita/frontend" },
+            "repository": { "type": "string", "default": "ghcr.io/qalita-io/qalita/frontend" },
             "tag": { "type": "string", "default": "2.1.8" },
             "pullPolicy": { "type": "string", "default": "IfNotPresent" }
           }
@@ -102,7 +102,7 @@
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "qalita.azurecr.io/qalita/doc" },
+            "repository": { "type": "string", "default": "ghcr.io/qalita-io/qalita/doc" },
             "tag": { "type": "string", "default": "2.1.7" },
             "pullPolicy": { "type": "string", "default": "IfNotPresent" }
           }
@@ -150,7 +150,7 @@
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "qalita.azurecr.io/qalita/backend" },
+            "repository": { "type": "string", "default": "ghcr.io/qalita-io/qalita/backend" },
             "tag": { "type": "string", "default": "2.1.8" },
             "pullPolicy": { "type": "string", "default": "IfNotPresent" }
           }
@@ -272,7 +272,7 @@
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "qalita/worker" },
+            "repository": { "type": "string", "default": "ghcr.io/qalita-io/qalita/worker" },
             "tag": { "type": "string", "default": "2.11.0" },
             "pullPolicy": { "type": "string", "default": "IfNotPresent" }
           }
@@ -315,7 +315,7 @@
         "image": {
           "type": "object",
           "properties": {
-            "registry": { "type": "string", "default": "qalita.azurecr.io" },
+            "registry": { "type": "string", "default": "ghcr.io/qalita-io" },
             "repository": { "type": "string", "default": "postgresql" },
             "pullSecrets": { "type": "array", "items": { "type": "string" }, "default": ["qalita-platform-dockerregistry"] },
             "tag": { "type": "string", "default": "15.4.0" }
@@ -380,8 +380,8 @@
           "properties": {
             "createClusterRole": { "type": "boolean", "default": true },
             "serviceAccountName": { "type": "string", "default": "seaweedfs" },
-            "registry": { "type": "string", "default": "qalita.azurecr.io" },
-            "repository": { "type": "string", "default": "qalita.azurecr.io/seaweedfs" },
+            "registry": { "type": "string", "default": "ghcr.io/qalita-io" },
+            "repository": { "type": "string", "default": "seaweedfs" },
             "imagePullSecrets": { "type": ["string", "array"], "default": "qalita-platform-dockerregistry" },
             "imageName": { "type": "string", "default": "seaweedfs" }
           }
