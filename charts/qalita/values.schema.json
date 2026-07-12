@@ -47,7 +47,7 @@
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "ghcr.io/qalita-io/qalita/frontend" },
+            "repository": { "type": "string", "default": "ghcr.io/qalita/qalita/frontend" },
             "tag": { "type": "string", "default": "2.1.8" },
             "pullPolicy": { "type": "string", "default": "IfNotPresent" }
           }
@@ -103,7 +103,7 @@
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "ghcr.io/qalita-io/qalita/doc" },
+            "repository": { "type": "string", "default": "ghcr.io/qalita/qalita/doc" },
             "tag": { "type": "string", "default": "2.1.7" },
             "pullPolicy": { "type": "string", "default": "IfNotPresent" }
           }
@@ -151,7 +151,7 @@
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "ghcr.io/qalita-io/qalita/backend" },
+            "repository": { "type": "string", "default": "ghcr.io/qalita/qalita/backend" },
             "tag": { "type": "string", "default": "2.1.8" },
             "pullPolicy": { "type": "string", "default": "IfNotPresent" }
           }
@@ -273,7 +273,7 @@
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "ghcr.io/qalita-io/qalita/worker" },
+            "repository": { "type": "string", "default": "ghcr.io/qalita/qalita/worker" },
             "tag": { "type": "string", "default": "2.11.0" },
             "pullPolicy": { "type": "string", "default": "IfNotPresent" }
           }
@@ -316,7 +316,7 @@
         "image": {
           "type": "object",
           "properties": {
-            "registry": { "type": "string", "default": "ghcr.io/qalita-io" },
+            "registry": { "type": "string", "default": "ghcr.io/qalita" },
             "repository": { "type": "string", "default": "postgresql" },
             "pullSecrets": { "type": "array", "items": { "type": "string" }, "default": ["qalita-platform-dockerregistry"] },
             "tag": { "type": "string", "default": "15.4.0" }
@@ -381,7 +381,7 @@
           "properties": {
             "createClusterRole": { "type": "boolean", "default": true },
             "serviceAccountName": { "type": "string", "default": "seaweedfs" },
-            "registry": { "type": "string", "default": "ghcr.io/qalita-io" },
+            "registry": { "type": "string", "default": "ghcr.io/qalita" },
             "repository": { "type": "string", "default": "seaweedfs" },
             "imagePullSecrets": { "type": ["string", "array"], "default": "qalita-platform-dockerregistry" },
             "imageName": { "type": "string", "default": "seaweedfs" }

@@ -6,7 +6,7 @@ Ce fichier fournit des instructions aux agents IA pour travailler sur ce dépôt
 
 **Qalita Helm Platform** — Charts Helm pour déployer la plateforme Qalita sur Kubernetes.
 
-- **Organisation GitHub** : `qalita-io`
+- **Organisation GitHub** : `qalita`
 - **Cluster K8s** : `raspberry-pi-cluster`
 - **Namespaces** : `qalita-platform-prod`, `qalita-platform-dev`, `qalita-platform-demo`
 

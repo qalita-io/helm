@@ -15,7 +15,7 @@ dockerregistry:
 
 frontend:
   image:
-    repository: ghcr.io/qalita-io/platform-frontend
+    repository: ghcr.io/qalita/platform-frontend
     tag: "2.16.0"
     pullPolicy: IfNotPresent
 
@@ -46,7 +46,7 @@ frontend:
 doc:
   enabled: true
   image:
-    repository: ghcr.io/qalita-io/documentation
+    repository: ghcr.io/qalita/documentation
     tag: "2.13.0"
     pullPolicy: IfNotPresent
 
@@ -70,7 +70,7 @@ doc:
 
 backend:
   image:
-    repository: ghcr.io/qalita-io/platform-backend
+    repository: ghcr.io/qalita/platform-backend
     tag: "2.16.0"
     pullPolicy: IfNotPresent
 
@@ -167,7 +167,7 @@ worker:
   token: "changeme"
 
   image:
-    repository: ghcr.io/qalita-io/qalita-cli
+    repository: ghcr.io/qalita/qalita-cli
     tag: "2.13.2"
     pullPolicy: IfNotPresent
 
@@ -193,7 +193,7 @@ worker:
 postgresql:
   enabled: true
   image:
-    registry: ghcr.io/qalita-io
+    registry: ghcr.io/qalita
     repository: postgresql
     pullSecrets:
       - "qalita-platform-dockerregistry"
@@ -222,7 +222,7 @@ seaweedfs:
   global:
     createClusterRole: true
     serviceAccountName: "seaweedfs"
-    registry: ghcr.io/qalita-io
+    registry: ghcr.io/qalita
     repository: seaweedfs
     imagePullSecrets: "qalita-platform-dockerregistry"
     imageName: seaweedfs

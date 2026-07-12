@@ -4,7 +4,7 @@
   <img width="250px" height="auto" src="https://app.platform.qalita.io/logo.svg" style="max-width:250px;"/>
 </p>
 
-[![Badge](https://github.com/qalita-io/helm-platform/workflows/Release%20Charts/badge.svg?branch=main)](https://github.com//qalita-io/helm-platform/actions)
+[![Badge](https://github.com/qalita/helm-platform/workflows/Release%20Charts/badge.svg?branch=main)](https://github.com//qalita/helm-platform/actions)
 [![Artifact HUB](https://img.shields.io/endpoint?url=https://artifacthub.io/badge/repository/qalita)](https://artifacthub.io/packages/search?repo=qalita)
 
 Welcome to QALITA's charts repository. All charts are in the charts directory.
