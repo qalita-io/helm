@@ -167,6 +167,9 @@ worker:
   token: "changeme"
 
   image:
+    # Repo renamed qalita-cli -> cli on 2026-07-12; this default stays pinned
+    # to the legacy ghcr.io/qalita/qalita-cli package (prod-stable release)
+    # until the first tagged release exists under ghcr.io/qalita/cli.
     repository: ghcr.io/qalita/qalita-cli
     tag: "2.13.2"
     pullPolicy: IfNotPresent
