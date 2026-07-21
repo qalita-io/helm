@@ -21,6 +21,10 @@ spec:
         app: "{{ .Release.Name }}-doc"
         release: {{ .Release.Name }}
     spec:
+      {{- with .Values.doc.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: "doc"
         image: "{{ .Values.doc.image.repository }}:{{ .Values.doc.image.tag }}"

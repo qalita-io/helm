@@ -22,6 +22,10 @@ spec:
         app: "{{ .Release.Name }}-worker"
         release: {{ .Release.Name }}
     spec:
+      {{- with .Values.worker.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: cli
           image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"

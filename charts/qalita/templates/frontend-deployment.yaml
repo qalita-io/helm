@@ -20,6 +20,10 @@ spec:
         app: "{{ .Release.Name }}-frontend"
         release: {{ .Release.Name }}
     spec:
+      {{- with .Values.frontend.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
       - name: "frontend"
         image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"

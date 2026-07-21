@@ -20,6 +20,10 @@ spec:
         app: "{{ .Release.Name }}-helmsync"
         release: {{ .Release.Name }}
     spec:
+      {{- with .Values.helmsync.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - args:
             - 'infinity'
