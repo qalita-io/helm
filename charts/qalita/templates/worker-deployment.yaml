@@ -21,6 +21,11 @@ spec:
       labels:
         app: "{{ .Release.Name }}-worker"
         release: {{ .Release.Name }}
+      {{- if .Values.forceRedeploy }}
+      annotations:
+        # Force a rollout on every upgrade (dev environments use mutable image tags).
+        rollme: {{ randAlphaNum 5 | quote }}
+      {{- end }}
     spec:
       {{- with .Values.worker.affinity }}
       affinity:

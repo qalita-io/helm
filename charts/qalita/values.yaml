@@ -9,6 +9,10 @@ cluster:
   domain: example.com
   name: local
 
+# Adds a random rollme annotation to pods: every helm upgrade forces a rollout.
+# Enable only on environments tracking mutable image tags (e.g. :dev).
+forceRedeploy: false
+
 dockerregistry:
   enabled: true
   deploySecret: true
