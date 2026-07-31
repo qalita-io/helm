@@ -164,8 +164,23 @@ spec:
                 optional: false
           - name: QALITA_LICENSE_USER
             value: "{{ .Values.licenseUser }}"
+        {{- if .Values.backend.caBundle.existingSecret }}
+          - name: QALITA_CA_CERTS_DIR
+            value: "{{ .Values.backend.caBundle.mountPath }}"
+        {{- end }}
 {{- if .Values.backend.deployment.extraEnv }}
 {{ toYaml .Values.backend.deployment.extraEnv | indent 10 }}
+{{- end }}
+{{- if or .Values.backend.caBundle.existingSecret .Values.backend.deployment.extraVolumeMounts }}
+        volumeMounts:
+        {{- if .Values.backend.caBundle.existingSecret }}
+          - name: ca-certificates
+            mountPath: "{{ .Values.backend.caBundle.mountPath }}"
+            readOnly: true
+        {{- end }}
+{{- if .Values.backend.deployment.extraVolumeMounts }}
+{{ toYaml .Values.backend.deployment.extraVolumeMounts | indent 10 }}
+{{- end }}
 {{- end }}
         ports:
           - containerPort: {{ .Values.backend.service.targetPort }}
@@ -179,6 +194,17 @@ spec:
 {{- if .Values.backend.deployment.resources }}
         resources:
 {{ toYaml .Values.backend.deployment.resources | indent 10 }}
+{{- end }}
+{{- if or .Values.backend.caBundle.existingSecret .Values.backend.deployment.extraVolumes }}
+      volumes:
+        {{- if .Values.backend.caBundle.existingSecret }}
+        - name: ca-certificates
+          secret:
+            secretName: "{{ .Values.backend.caBundle.existingSecret }}"
+        {{- end }}
+{{- if .Values.backend.deployment.extraVolumes }}
+{{ toYaml .Values.backend.deployment.extraVolumes | indent 8 }}
+{{- end }}
 {{- end }}
       {{- if .Values.dockerregistry.enabled }}
       imagePullSecrets:

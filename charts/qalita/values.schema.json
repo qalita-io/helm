@@ -233,6 +233,22 @@
             "tls": { "type": "object", "properties": { "enabled": { "type": "boolean", "default": true } } }
           }
         },
+        "caBundle": {
+          "type": "object",
+          "description": "Extra CA certificates trusted for outbound TLS (private LLM endpoint, TLS-intercepting proxy, internal PKI). Merged with the public CA bundle at startup.",
+          "properties": {
+            "existingSecret": {
+              "type": "string",
+              "default": "",
+              "description": "Name of a Secret whose keys are PEM files named *.crt or *.pem."
+            },
+            "mountPath": {
+              "type": "string",
+              "default": "/etc/qalita/ca-certificates",
+              "description": "Path where the CA Secret is mounted; must match QALITA_CA_CERTS_DIR."
+            }
+          }
+        },
         "deployment": {
           "type": "object",
           "properties": {
@@ -255,7 +271,9 @@
                 }
               }
             },
-            "extraEnv": { "type": "array", "items": { "type": "object" }, "default": [] }
+            "extraEnv": { "type": "array", "items": { "type": "object" }, "default": [] },
+            "extraVolumes": { "type": "array", "items": { "type": "object" }, "default": [] },
+            "extraVolumeMounts": { "type": "array", "items": { "type": "object" }, "default": [] }
           }
         }
       }
