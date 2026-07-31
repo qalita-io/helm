@@ -68,7 +68,20 @@ spec:
           image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
           imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
           command: ["/bin/sh", "-c"]
-          args: ["cat /etc/config/init.sh | /bin/sh; qalita worker run"]
+          args:
+            # The init script runs 'qalita worker login', which writes the worker
+            # registration file (~/.qalita/.worker). Do NOT chain with ';': a failed
+            # login would then be followed by a 'worker run' whose only symptom is a
+            # misleading "can't load data file" further down the logs.
+            - |
+              if ! cat /etc/config/init.sh | /bin/sh; then
+                echo "[qalita] worker init script failed - see the errors above." >&2
+                echo "[qalita] 'qalita worker login' did not complete, so the worker is not registered." >&2
+                echo "[qalita] Usual causes: invalid or expired QALITA_WORKER_TOKEN, token without the" >&2
+                echo "[qalita] Data Engineer role, or backend unreachable at QALITA_WORKER_ENDPOINT." >&2
+                exit 1
+              fi
+              exec qalita worker run
           env:
           - name: QALITA_WORKER_NAME
             value: {{ .Values.worker.name }}
