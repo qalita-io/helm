@@ -152,6 +152,17 @@ backend:
     tls:
       enabled: true
 
+  # Extra CA certificates trusted for outbound TLS: private LLM endpoint,
+  # TLS-intercepting proxy, internal PKI. Create a Secret whose keys are PEM
+  # files named *.crt or *.pem, then set existingSecret:
+  #   kubectl create secret generic qalita-ca-bundle \
+  #     --from-file=chu-root.crt --from-file=chu-intermediate.crt
+  # They are merged with the public CA bundle at container startup, so public
+  # CAs stay trusted (license registry, Stripe, cloud LLM providers).
+  caBundle:
+    existingSecret: ""
+    mountPath: /etc/qalita/ca-certificates
+
   deployment:
     resources:
       requests:
@@ -162,6 +173,8 @@ backend:
         cpu: "1000m"
 
     extraEnv: []
+    extraVolumes: []
+    extraVolumeMounts: []
 
 worker:
   enabled: false
