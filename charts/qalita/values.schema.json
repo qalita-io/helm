@@ -265,8 +265,8 @@
                 "limits": {
                   "type": "object",
                   "properties": {
-                    "memory": { "type": "string", "default": "1Gi" },
-                    "cpu": { "type": "string", "default": "1000m" }
+                    "memory": { "type": ["string", "null"], "default": "1Gi" },
+                    "cpu": { "type": ["string", "null"], "default": "1000m" }
                   }
                 }
               }
