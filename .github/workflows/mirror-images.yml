@@ -33,21 +33,13 @@ jobs:
         # are deliberately NOT mirrored here - there is no external source to
         # copy them from.
         #
-        # postgresql (Bitnami chart, version 12.12.10) is NOT included below:
-        # its vendored subchart default is
-        # docker.io/bitnami/postgresql:15.4.0-debian-11-r45 (the tag
-        # charts/qalita/values.yaml re-tags to ghcr.io/qalita/postgresql:15.4.0,
-        # already pushed by hand on 2026-04-13), but that exact upstream tag
-        # no longer exists - confirmed 2026-08-13 via
-        # `docker manifest inspect docker.io/bitnami/postgresql:15.4.0-debian-11-r45`
-        # (404 MANIFEST_UNKNOWN) and the registry API directly. Bitnami has
-        # pruned legacy version-pinned tags from the free Docker Hub repo
-        # (only `latest` and sha256-* signature/attestation pseudo-tags
-        # remain). Re-mirroring this exact pinned version isn't possible
-        # without a different source (a retained local copy, a paid Bitnami
-        # Secure Images subscription, or switching to a different upstream
-        # image), which is a decision out of scope for this workflow-creation
-        # task. Flagged for separate follow-up.
+        # postgresql is DELIBERATELY NOT in the matrix below - excluded on
+        # purpose, not by oversight, so please do not "fix" it by adding a
+        # line. No usable upstream source is available for the version this
+        # chart pins, so there is nothing for this workflow to copy from.
+        # Choosing a different source is a decision that belongs to the
+        # dedicated PostgreSQL work, not to this workflow; the rationale and
+        # the follow-up are recorded in the internal specification.
         include:
           # SeaweedFS chart dependency (Chart.yaml: version 4.0.380).
           # ghcr.io/seaweedfs/seaweedfs only serves the Helm chart, not the
