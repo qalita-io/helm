@@ -1,0 +1,118 @@
+name: Mirror External Images to GHCR
+
+on:
+  schedule:
+    # Weekly on Sunday at 3 AM UTC
+    - cron: '0 3 * * 0'
+  workflow_dispatch:
+    inputs:
+      images:
+        description: 'Comma-separated list of images to mirror (leave empty for all)'
+        required: false
+        default: ''
+        type: string
+
+env:
+  REGISTRY: ghcr.io
+  NAMESPACE: qalita
+
+jobs:
+  mirror-images:
+    name: Mirror Images
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        # charts/qalita has two external, chart-bundled dependencies (see
+        # Chart.yaml): postgresql and seaweedfs. cli, documentation,
+        # platform-backend and platform-frontend all have their own
+        # "CI: Build and Push" workflow in their respective source repos and
+        # are deliberately NOT mirrored here - there is no external source to
+        # copy them from.
+        #
+        # postgresql (Bitnami chart, version 12.12.10) is NOT included below:
+        # its vendored subchart default is
+        # docker.io/bitnami/postgresql:15.4.0-debian-11-r45 (the tag
+        # charts/qalita/values.yaml re-tags to ghcr.io/qalita/postgresql:15.4.0,
+        # already pushed by hand on 2026-04-13), but that exact upstream tag
+        # no longer exists - confirmed 2026-08-13 via
+        # `docker manifest inspect docker.io/bitnami/postgresql:15.4.0-debian-11-r45`
+        # (404 MANIFEST_UNKNOWN) and the registry API directly. Bitnami has
+        # pruned legacy version-pinned tags from the free Docker Hub repo
+        # (only `latest` and sha256-* signature/attestation pseudo-tags
+        # remain). Re-mirroring this exact pinned version isn't possible
+        # without a different source (a retained local copy, a paid Bitnami
+        # Secure Images subscription, or switching to a different upstream
+        # image), which is a decision out of scope for this workflow-creation
+        # task. Flagged for separate follow-up.
+        include:
+          # SeaweedFS chart dependency (Chart.yaml: version 4.0.380).
+          # ghcr.io/seaweedfs/seaweedfs only serves the Helm chart, not the
+          # image - the image itself stays published at
+          # docker.io/chrislusf/seaweedfs.
+          # Target has NO chrislusf/ prefix here, unlike other consumers of
+          # this same subchart: the vendored common.image helper
+          # (templates/_helpers.tpl) composes
+          # {global.registry}/{image.repository}{global.imageName}:{tag}, and
+          # in charts/qalita/values.yaml (mirrored in helm-website/platform/
+          # {dev,demo,prod}-values.yaml) only global.registry (ghcr.io/qalita)
+          # and global.imageName (seaweedfs) are set - image.repository is
+          # never overridden, so it stays "" (subchart default). The
+          # global.repository: seaweedfs key set alongside it is inert: the
+          # helper never reads global.repository. Net result:
+          # ghcr.io/qalita/seaweedfs:<tag>, not ghcr.io/qalita/seaweedfs/
+          # seaweedfs:<tag> and not ghcr.io/qalita/chrislusf/seaweedfs:<tag>.
+          # 4.41 is the target version for the upcoming SeaweedFS bump and
+          # does not exist yet under ghcr.io/qalita/seaweedfs (currently only
+          # tag 3.80, matching the chart's current appVersion, is published).
+          - source: docker.io/chrislusf/seaweedfs:4.41
+            target: seaweedfs:4.41
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4.2.0
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up crane
+        uses: imjasonh/setup-crane@v0.7
+
+      - name: Mirror image ${{ matrix.target }}
+        run: |
+          SOURCE="${{ matrix.source }}"
+          TARGET="${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ matrix.target }}"
+
+          echo "Mirroring $SOURCE -> $TARGET"
+
+          # crane uses ~/.docker/config.json populated by docker/login-action
+          # to push to ghcr.io.
+          # Retry a few times in case of transient network errors.
+          # crane copy preserves multi-arch manifest lists by default.
+          MAX_ATTEMPTS=3
+          for attempt in $(seq 1 $MAX_ATTEMPTS); do
+            if crane copy "$SOURCE" "$TARGET"; then
+              echo "Successfully mirrored $TARGET"
+              exit 0
+            fi
+            if [ "$attempt" -lt "$MAX_ATTEMPTS" ]; then
+              SLEEP=$(( attempt * 20 ))
+              echo "Attempt $attempt failed; sleeping ${SLEEP}s before retry..."
+              sleep "$SLEEP"
+            fi
+          done
+          echo "All $MAX_ATTEMPTS attempts failed"
+          exit 1
+
+      - name: Verify mirrored image
+        run: |
+          TARGET="${{ env.REGISTRY }}/${{ env.NAMESPACE }}/${{ matrix.target }}"
+          echo "Inspecting $TARGET"
+          crane manifest "$TARGET" | head -50
