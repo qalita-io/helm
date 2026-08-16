@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm chart for QALITA Platform, a platform for managing and monitoring your data quality.
 name: "qalita"
-version: "2.18.2"
+version: "2.19.0"
 icon: https://avatars.githubusercontent.com/u/101010687?s=48&v=4
 appVersion: "2.18.0"
 home: https://qalita.io
@@ -17,7 +17,10 @@ dependencies:
     condition: postgresql.enabled
   - name: seaweedfs
     repository: https://seaweedfs.github.io/seaweedfs/helm
-    version: 4.0.380
+    # 4.41.0 est la version de CHART ; elle livre l'appVersion 4.41, qui est
+    # ce que vise le socle. Les deux numéros se ressemblent sans être le même
+    # objet.
+    version: 4.41.0
     condition: seaweedfs.enabled
 maintainers:
   - name: qalita

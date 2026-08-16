@@ -239,11 +239,22 @@ postgresql:
 seaweedfs:
   enabled: true
 
+  # OBLIGATOIRE depuis le chart 4.41.0. 4.41.0 est passé de `seaweedfs.name` à
+  # `seaweedfs.componentName`, bâti sur `<Release.Name>-seaweedfs` : sans cette
+  # ligne TOUS les objets sont renommés, les PVC deviennent orphelins, et
+  # `spec.selector` d'un StatefulSet étant immuable, l'upgrade échoue.
+  fullnameOverride: "seaweedfs"
+
   global:
     createClusterRole: true
     serviceAccountName: "seaweedfs"
     registry: ghcr.io/qalita
-    repository: seaweedfs
+    # PAS de `repository:` ici. La clé existait et n'a JAMAIS rien fait : en
+    # chart 4.0.380 le helper d'image ne la lisait pas (c'était même écrit dans
+    # .github/workflows/mirror-images.yml). Le chart 4.41.0 la RESSUSCITE via
+    # son shim de compatibilité (_compat.tpl:27-31), et elle rend alors
+    # `ghcr.io/qalita/seaweedfs/seaweedfs:4.41` — chemin doublé, image
+    # inexistante, sans la moindre erreur au rendu. Mesuré le 2026-08-16.
     imagePullSecrets: "qalita-platform-dockerregistry"
     imageName: seaweedfs
 
