@@ -8,6 +8,32 @@ This chart deploys QALITA Platform on a Kubernetes cluster using the Helm packag
 
 # Quick Start
 
+## Upgrading to 2.19.0 — SeaweedFS 4.41
+
+The bundled SeaweedFS chart moves from 4.0.380 (app 3.80) to 4.41.0 (app 4.41).
+Two values change, and **both must land together** — the chart bump alone
+renders an image that does not exist, and the values alone cannot reach 4.41
+because the old chart hard-codes its tag.
+
+**`seaweedfs.global.repository` is removed.** If you set it, delete it. The key
+never had any effect under the old chart, but SeaweedFS 4.41.0 revives it
+through a compatibility shim and it then doubles the image path
+(`ghcr.io/you/seaweedfs/seaweedfs:4.41`) with no rendering error. A value that
+used to be ignored now breaks your pull.
+
+**`seaweedfs.fullnameOverride` now defaults to `seaweedfs`.** SeaweedFS 4.41.0
+renames every object it creates to `<release>-seaweedfs-*`. Left to that
+default, an existing installation would orphan its `data-filer-*` and
+`data1-*` PersistentVolumeClaims — the data survives, but the S3 endpoint
+serves an empty store — and the upgrade would fail outright, since a
+StatefulSet's `spec.selector` is immutable. The override keeps the names you
+already have. **If you deliberately want the new naming**, set it to `""` and
+plan a data migration; do not do it in place.
+
+Requires **Helm >= 3.17.0** (the SeaweedFS chart uses `fromToml`). An older
+Helm fails with `function "fromToml" not defined`, which reads like a chart
+bug but is a tooling floor.
+
 ## Pre-requisites
 
 - Kubernetes `1.24+`
