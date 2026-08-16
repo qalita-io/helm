@@ -400,7 +400,6 @@
             "createClusterRole": { "type": "boolean", "default": true },
             "serviceAccountName": { "type": "string", "default": "seaweedfs" },
             "registry": { "type": "string", "default": "ghcr.io/qalita" },
-            "repository": { "type": "string", "default": "seaweedfs" },
             "imagePullSecrets": { "type": ["string", "array"], "default": "qalita-platform-dockerregistry" },
             "imageName": { "type": "string", "default": "seaweedfs" }
           }
