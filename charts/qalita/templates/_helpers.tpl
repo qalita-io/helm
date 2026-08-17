@@ -158,3 +158,19 @@ diffère entre les deux, et elle reste donc chez l'appelant.
       name: qalita-postgres-backup-s3
       key: secret_access_key
 {{- end -}}
+
+{{/*
+Port PostgreSQL, robuste à la disparition du sous-chart bitnami.
+
+`.Values.postgresql.primary.service.ports.postgresql` n'existe PAS dans les
+values de ce chart : il arrive par la fusion des defaults du sous-chart. Or une
+dépendance sous `condition: postgresql.enabled` disparaît TOUT ENTIÈRE quand la
+condition tombe — templates ET defaults. Mesuré : à l'étape 5 de la séquence de
+migration 11c (postgresql.enabled: false), le chemin fait un nil pointer et le
+chart devient inrendable au moment précis où l'on retire l'ancien serveur.
+La navigation parenthésée rend chaque étage optionnel ; 5432 est la valeur que
+ce parc n'a jamais surchargée nulle part.
+*/}}
+{{- define "qalita.postgresPort" -}}
+{{- ((((.Values.postgresql).primary).service).ports).postgresql | default 5432 -}}
+{{- end -}}

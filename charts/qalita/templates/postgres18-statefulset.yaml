@@ -158,6 +158,6 @@ spec:
   selector:
     app: qalita-postgres18
   ports:
-    - port: {{ .Values.postgresql.primary.service.ports.postgresql }}
+    - port: {{ include "qalita.postgresPort" . }}
       targetPort: 5432
 {{- end }}

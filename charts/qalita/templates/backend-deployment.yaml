@@ -69,7 +69,7 @@ spec:
           - name: POSTGRESQL_SERVER
             value: {{ $pgHost | quote }}
           - name: POSTGRESQL_PORT
-            value: "{{ .Values.postgresql.primary.service.ports.postgresql }}"
+            value: "{{ include "qalita.postgresPort" . }}"
           - name: POSTGRESQL_DATABASE
             value: "{{ .Values.postgresql.global.postgresql.auth.database }}"
           - name: POSTGRESQL_USERNAME
