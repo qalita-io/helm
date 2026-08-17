@@ -137,14 +137,28 @@ diffère entre les deux, et elle reste donc chez l'appelant.
   value: {{ .Values.postgresBackup.retentionDays | quote }}
 - name: MIN_BACKUP_BYTES
   value: {{ .Values.postgresBackup.minBytes | quote }}
-- name: BACKUP_PING_URL
-  value: {{ .Values.postgresBackup.pingUrl | quote }}
+{{- /*
+  Ni S3_BACKUP_PREFIX ni BACKUP_PING_URL ici : chaque consommateur pose les
+  siens. Les préfixes séparent les archives des deux serveurs (cf. plus bas) ;
+  les URL de ping séparent leurs ALARMES — pendant la fenêtre 18-vide, les
+  /fail attendus du sidecar ne doivent pas sonner sur le check de la
+  sauvegarde de production.
+*/}}
 - name: S3_BACKUP_ENDPOINT
   value: {{ .Values.postgresBackup.s3.endpoint | quote }}
 - name: S3_BACKUP_BUCKET
   value: {{ .Values.postgresBackup.s3.bucket | quote }}
-- name: S3_BACKUP_PREFIX
-  value: {{ .Values.postgresBackup.s3.prefix | quote }}
+{{- /*
+  PAS de S3_BACKUP_PREFIX ici, et c'est structurel : pendant la phase 11c les
+  DEUX consommateurs de ce helper tournent en même temps — le Deployment
+  transitoire dumpe le serveur 15, le sidecar dumpe le serveur 18 — et la base
+  porte le même nom des deux côtés. Un préfixe commun aurait mélangé leurs
+  archives backup_qalitadb_*.sql.gz dans le même dossier : « la dernière
+  archive » pouvait être la copie 18 périmée d'avant l'incident du 15, et la
+  purge de l'un rongeait la rétention de l'autre. Chaque consommateur pose son
+  S3_BACKUP_PREFIX (…/pg15, …/pg18) ; la purge du script est scoper par
+  préfixe, donc chacun ne purge que les siennes.
+*/}}
 - name: S3_BACKUP_REGION
   value: {{ .Values.postgresBackup.s3.region | quote }}
 - name: S3_BACKUP_ACCESS_KEY_ID

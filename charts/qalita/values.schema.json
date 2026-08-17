@@ -1148,6 +1148,11 @@
               }
             }
           }
+        },
+        "spoolSizeLimit": {
+          "type": "string",
+          "default": "2Gi",
+          "description": "Plafond de l'emptyDir des archives locales (filet, le script ne garde qu'une archive en échec)."
         }
       },
       "description": "Sauvegarde logique PostgreSQL (phase 11a) : Deployment transitoire contre le serveur bitnami, puis sidecar du StatefulSet postgres18. Meme script, meme image, meme bucket."
@@ -1200,6 +1205,11 @@
             "enabled": {
               "type": "boolean",
               "default": true
+            },
+            "pingUrl": {
+              "type": "string",
+              "default": "",
+              "description": "URL healthchecks propre au serveur 18, jamais partagée avec postgresBackup.pingUrl."
             }
           }
         },

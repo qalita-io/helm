@@ -266,14 +266,27 @@ postgresBackup:
   # dump réel de ces bases est trois ordres de grandeur au-dessus. Seule garde
   # qui survivrait à un shell sans pipefail.
   minBytes: 1024
-  # URL healthchecks.io (vide = pas de ping). Déposée au déploiement depuis
-  # Infisical, jamais dans ce fichier.
+  # URL healthchecks.io du Deployment transitoire (vide = pas de ping).
+  # Déposée au déploiement depuis Infisical, jamais dans ce fichier. Le sidecar
+  # du serveur 18 a la SIENNE (postgres18.backup.pingUrl) : leurs alarmes ne
+  # doivent pas se mélanger.
   pingUrl: ""
+  # Plafond de l'emptyDir où les archives locales transitent avant envoi S3.
+  # Le script ne garde qu'une archive en échec (ménage en tête de cycle) ;
+  # cette limite est un filet, dimensionné pour deux dumps de la plus grosse
+  # base du parc (qalita-dev, 1 Go -> ~200-300 Mo gzippés).
+  spoolSizeLimit: "2Gi"
   s3:
     # Stockage objet HORS cluster (OVH) — sauvegarder vers le SeaweedFS du
     # même cluster ne serait pas une sauvegarde.
     endpoint: ""
     bucket: ""
+    # ATTENTION SI LE BUCKET EST PARTAGÉ ENTRE ENVIRONNEMENTS : ce préfixe
+    # DOIT être surchargé par environnement (dev/…, demo/…, prod/… — modèle
+    # previly), sinon les archives des trois environnements portent le même
+    # nom d'objet dans le même dossier et la purge de l'un ronge la rétention
+    # des autres. Le chart y ajoute lui-même /pg15 (Deployment transitoire)
+    # ou /pg18 (sidecar) pour séparer les archives des deux serveurs.
     prefix: "postgresql-backups"
     region: "gra"
     # Déposés au déploiement (Infisical). Vides ici : qalita.preservedSecret
@@ -326,13 +339,39 @@ postgres18:
     # Vide = généré au premier déploiement puis préservé
     # (qalita.preservedSecret). Rotation : ALTER ROLE d'abord, values ensuite —
     # sur volume persistant l'entrypoint ne recrée jamais le rôle.
+    #
+    # PRIVILÈGES, À SAVOIR : l'entrypoint de library/postgres crée
+    # POSTGRES_USER en SUPERUSER — sur le 18, le rôle applicatif `qalita` est
+    # donc superuser, là où bitnami le créait en simple propriétaire de base à
+    # côté d'un rôle postgres séparé. C'est le modèle de previly et jobchef en
+    # production (un seul rôle, superuser, base par namespace jamais exposée
+    # hors cluster) ; l'adopter ici est un choix d'uniformité assumé, pas un
+    # oubli. Si un rôle applicatif non privilégié devient souhaitable, c'est
+    # un script docker-entrypoint-initdb.d au PREMIER démarrage — pas un
+    # réglage de values après coup.
     password: ""
   backup:
     # Sidecar dans le pod (modèle jobchef/previly), partageant image, script
     # et bucket avec postgresBackup. À activer AVANT serveApp : le serveur 18
     # doit être sauvegardé dès qu'il porte des données.
     enabled: true
+    # URL healthchecks.io PROPRE au serveur 18, distincte de
+    # postgresBackup.pingUrl : pendant la fenêtre entre postgres18.enabled et
+    # le restore, la base 18 est vide et son dump échoue sous le plancher
+    # minBytes — des /fail ATTENDUS, qui ne doivent pas sonner sur le check de
+    # la sauvegarde de production. Vide = pas de ping.
+    pingUrl: ""
   persistence:
+    # IMMUABLE APRÈS LE PREMIER DÉPLOIEMENT : cette taille vit dans les
+    # volumeClaimTemplates du StatefulSet, que Kubernetes refuse de modifier.
+    # La changer ici ferait échouer tout helm upgrade de la release. La
+    # procédure d'agrandissement est manuelle et dans cet ordre :
+    #   1. kubectl patch pvc data-qalita-postgres18-0 (expansion en ligne)
+    #   2. kubectl delete sts qalita-postgres18 --cascade=orphan
+    #   3. helm upgrade avec la nouvelle valeur (recrée le StatefulSet)
+    # Dimensionner large dès le départ coûte moins cher que cette gymnastique
+    # — cf. l'incident SeaweedFS du 2026-08-17 pour ce que les
+    # volumeClaimTemplates font aux upgrades.
     size: 8Gi
     # Vide = StorageClass par défaut du cluster. Épinglé dans les values
     # d'environnement si le cluster en a plusieurs marquées default.

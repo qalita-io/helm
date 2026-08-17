@@ -1,4 +1,12 @@
-{{- if .Values.postgresBackup.enabled }}
+{{- if and .Values.postgresBackup.enabled .Values.postgresql.enabled }}
+{{- /*
+  Gardé AUSSI sur postgresql.enabled : ce runner sauvegarde le serveur bitnami
+  et référence son Service et son Secret. À l'étape 5 de la migration
+  (postgresql.enabled: false), ces objets disparaissent avec le sous-chart —
+  sans cette garde, le Deployment restait rendu et son pod se figeait en
+  CreateContainerConfigError sur un secret mort. Il vit et meurt avec le
+  serveur qu'il sauvegarde, structurellement.
+*/}}
 # Sauvegarde TRANSITOIRE du serveur bitnami 15.4 actuel — phase 11a de la spec
 # d'alignement : « livrer et vérifier le sidecar de sauvegarde AVANT toute
 # bascule », parce qu'il n'existe aujourd'hui aucune sauvegarde logique de
@@ -64,11 +72,26 @@ spec:
                   # serveur-là, il vit et meurt avec lui.
                   name: "{{ .Release.Name }}-postgresql"
                   key: password
+            # /pg15 : les archives du serveur bitnami 15.4 vivent dans leur
+            # propre dossier, jamais mêlées à celles du serveur 18 (cf. le
+            # commentaire de qalita.postgresBackup.commonEnv). Après la
+            # migration, ce dossier reste tel quel comme historique — plus
+            # personne ne le purge, sa suppression est un geste d'opérateur.
+            - name: S3_BACKUP_PREFIX
+              value: {{ printf "%s/pg15" .Values.postgresBackup.s3.prefix | quote }}
+            - name: BACKUP_PING_URL
+              value: {{ .Values.postgresBackup.pingUrl | quote }}
             {{- include "qalita.postgresBackup.commonEnv" . | nindent 12 }}
           volumeMounts:
             - name: backup-script
               mountPath: /scripts
               readOnly: true
+            # emptyDir borné plutôt que la couche writable du conteneur : les
+            # archives locales ne comptent pas sur la partition racine du nœud,
+            # et le script ne garde de toute façon qu'UNE archive en échec
+            # (ménage en tête de cycle). La limite est un filet, pas un budget.
+            - name: backup-spool
+              mountPath: /tmp/backups
           resources:
             {{- toYaml .Values.postgresBackup.resources | nindent 12 }}
           {{- /*
@@ -83,4 +106,7 @@ spec:
           configMap:
             name: qalita-postgres-backup-script
             defaultMode: 0755
+        - name: backup-spool
+          emptyDir:
+            sizeLimit: {{ .Values.postgresBackup.spoolSizeLimit | quote }}
 {{- end }}

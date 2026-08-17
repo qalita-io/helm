@@ -121,11 +121,30 @@ spec:
                 secretKeyRef:
                   name: qalita-postgres18
                   key: password
+            # /pg18 : jamais le même dossier que les archives du serveur 15
+            # (cf. qalita.postgresBackup.commonEnv).
+            - name: S3_BACKUP_PREFIX
+              value: {{ printf "%s/pg18" .Values.postgresBackup.s3.prefix | quote }}
+            # URL healthchecks DISTINCTE de celle du serveur 15 : pendant la
+            # fenêtre entre postgres18.enabled et le restore, la base 18 est
+            # vide, son dump passe sous le plancher minBytes et pinge /fail —
+            # sur l'URL partagée, ces échecs attendus se seraient mêlés aux
+            # alertes de la sauvegarde de PRODUCTION, entraînant l'opérateur à
+            # classer le tout « bruit de migration ». Vide par défaut : pas de
+            # ping tant qu'un check dédié n'existe pas.
+            - name: BACKUP_PING_URL
+              value: {{ .Values.postgres18.backup.pingUrl | quote }}
             {{- include "qalita.postgresBackup.commonEnv" . | nindent 12 }}
           volumeMounts:
             - name: backup-script
               mountPath: /scripts
               readOnly: true
+            # emptyDir borné : dans CE pod, une accumulation d'archives dans
+            # la couche writable pouvait finir en éviction — du pod de la
+            # BASE, emportée par sa propre sauvegarde. Le script ne garde
+            # qu'une archive en échec ; la limite est un filet.
+            - name: backup-spool
+              mountPath: /tmp/backups
           resources:
             {{- toYaml .Values.postgresBackup.resources | nindent 12 }}
         {{- end }}
@@ -135,6 +154,9 @@ spec:
           configMap:
             name: qalita-postgres-backup-script
             defaultMode: 0755
+        - name: backup-spool
+          emptyDir:
+            sizeLimit: {{ .Values.postgresBackup.spoolSizeLimit | quote }}
       {{- end }}
   volumeClaimTemplates:
     - metadata:

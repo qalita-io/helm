@@ -1,14 +1,26 @@
 name: Build PostgreSQL Backup Image
 
-# Modèle jobchef/helm, avec deux différences délibérées :
-#   - PAS de QEMU (règle du parc : jamais d'émulation) et pas d'ubuntu-latest
-#     (quota Actions hébergé épuisé, cf. values-qalita-amd64.yaml dans
-#     helm-github-agent). Chaque architecture se construit NATIVEMENT sur un
-#     runner self-hosted, puis un manifest les réunit — même motif que le CI de
-#     qalita/platform ;
-#   - le tag suit la majeure du client Postgres embarqué (18), qui doit rester
-#     >= à celle du serveur sauvegardé. linux/arm64 est indispensable : la prod
-#     tourne sur les nœuds pi.
+# CE DÉPÔT EST PUBLIC, ET ÇA DÉCIDE DU RUNNER. Le groupe de runners self-hosted
+# de l'org (Default) interdit les dépôts publics (allows_public_repositories:
+# false — vérifié le 2026-08-17, et c'est la bonne posture : un runner
+# self-hosted exposé à un dépôt public est le piège de sécurité classique). Un
+# `runs-on: [self-hosted, ...]` ici resterait donc en « Waiting for a runner »
+# pour toujours. À l'inverse, les minutes hébergées sont GRATUITES sur les
+# dépôts publics — le blocage de facturation du compte ne les concerne pas,
+# prouvé par les runs verts de « CI: Lint and Test » sur ce même dépôt le jour
+# où ce workflow a été écrit.
+#
+# Chaque architecture se construit NATIVEMENT (règle du parc : jamais de
+# QEMU) : ubuntu-latest est amd64, ubuntu-24.04-arm est le runner arm64 hébergé
+# — gratuit lui aussi sur les dépôts publics. linux/arm64 est indispensable :
+# la prod tourne sur les nœuds pi.
+#
+# Le tag :18 suit la majeure du client pg_dump embarqué, qui doit rester >= à
+# celle du serveur sauvegardé. :18 est MUTABLE et les charts tirent en
+# IfNotPresent : un rebuild du même tag n'atteint jamais un nœud qui l'a en
+# cache. C'est pourquoi chaque build pousse AUSSI :18-<sha court> — immuable,
+# épinglable dans les values d'un environnement pour forcer la reprise d'un
+# correctif sans attendre que le cache des nœuds tourne.
 on:
   push:
     branches: [main]
@@ -28,9 +40,9 @@ jobs:
       matrix:
         include:
           - arch: amd64
-            runner: [self-hosted, linux, X64]
+            runner: ubuntu-latest
           - arch: arm64
-            runner: [self-hosted, linux, ARM64]
+            runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
     timeout-minutes: 30
     permissions:
@@ -62,7 +74,7 @@ jobs:
   merge:
     name: Merge manifest
     needs: build
-    runs-on: [self-hosted, linux, ARM64]
+    runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
       contents: read
@@ -77,10 +89,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create and push multi-arch manifest
+      - name: Create and push multi-arch manifests
         run: |
+          SHORT_SHA="${GITHUB_SHA::7}"
           docker buildx imagetools create \
             -t ${{ env.IMAGE }}:18 \
+            -t "${{ env.IMAGE }}:18-${SHORT_SHA}" \
             ${{ env.IMAGE }}:18-amd64 \
             ${{ env.IMAGE }}:18-arm64
 

@@ -58,6 +58,22 @@ data:
     BACKUP_PING_URL="${BACKUP_PING_URL:-}"
     BACKUP_DIR="/tmp/backups"
 
+    # Le planificateur maison ne lit QUE minute et heure, et uniquement des
+    # ENTIERS. Sans cette garde, `0 */6 * * *` passait le premier cycle puis
+    # tuait le shell en « arithmetic syntax error » dans
+    # seconds_until_next_run — crash-loop qui redumpait la base à chaque
+    # redémarrage, monitoring au vert (le premier ping était parti). Échouer
+    # ICI, au démarrage, avant même la première sauvegarde : un pod qui refuse
+    # de démarrer se voit ; un pod qui boucle en travaillant, non.
+    CRON_MINUTE=$(echo "${BACKUP_SCHEDULE}" | cut -d' ' -f1)
+    CRON_HOUR=$(echo "${BACKUP_SCHEDULE}" | cut -d' ' -f2)
+    case "${CRON_MINUTE}${CRON_HOUR}" in
+      *[!0-9]*)
+        echo "Erreur : BACKUP_SCHEDULE='${BACKUP_SCHEDULE}' — seuls des entiers sont acceptés en minute et heure (un passage par jour). '*/N', '*' et les listes ne sont pas interprétés." >&2
+        exit 1
+        ;;
+    esac
+
     if [ -n "${S3_PREFIX}" ]; then
       S3_PATH="${S3_BUCKET}/${S3_PREFIX}"
       LIST_PREFIX="${S3_PREFIX}/backup_${POSTGRES_DB}_"
@@ -86,20 +102,39 @@ data:
     }
 
     # Le bucket est provisionné à la main (OVH) : on ne le crée pas, on vérifie
-    # qu'il répond. Sans lui, échouer bruyamment tout de suite vaut mieux que
-    # découvrir le trou le jour de la restauration.
+    # qu'il répond. NE JAMAIS SORTIR ICI, et c'est une leçon de revue : ce
+    # script tourne aussi en SIDECAR du pod postgres18. Un exit y déclenche un
+    # CrashLoopBackOff du conteneur, le pod passe NotReady, le contrôleur
+    # d'endpoints retire l'unique endpoint du Service — et la BASE devient
+    # injoignable pour toute la plateforme, à cause d'un incident S3 qui ne la
+    # concerne pas. C'est exactement le mécanisme pour lequel la spec interdit
+    # une readinessProbe sur le sidecar ; un exit produit le même effet par un
+    # autre chemin. Le script previly de production ne sort jamais ici non
+    # plus. L'alerte part par healthchecks, et upload_to_s3 échouera de toute
+    # façon bruyamment à chaque cycle tant que S3 est indisponible.
     check_bucket() {
       if aws s3api head-bucket --bucket "${S3_BUCKET}" \
         --endpoint-url "${S3_ENDPOINT}" > /dev/null 2>&1; then
         echo "Bucket ${S3_BUCKET} joignable."
       else
-        echo "Erreur : bucket ${S3_BUCKET} injoignable sur ${S3_ENDPOINT}" >&2
-        echo "(identifiants, région ou nom de bucket)" >&2
-        exit 1
+        echo "Avertissement : bucket ${S3_BUCKET} injoignable sur ${S3_ENDPOINT}" >&2
+        echo "(identifiants, région ou nom de bucket) — on continue, alerte via healthchecks" >&2
+        ping_hc "/fail" "bucket injoignable au demarrage"
       fi
     }
 
     create_backup() {
+      # Borne l'accumulation locale : une archive dont l'envoi S3 a échoué est
+      # conservée (c'est voulu), mais UNE seule — sans ce ménage, une panne S3
+      # de plusieurs jours empilait un dump par nuit dans /tmp/backups et
+      # pouvait faire évincer le pod. En 11c ce script est un sidecar du pod
+      # PostgreSQL : l'éviction emporterait la base avec sa sauvegarde.
+      KEEP=$(ls -t "${BACKUP_DIR}"/backup_"${POSTGRES_DB}"_*.sql.gz 2>/dev/null | head -1)
+      for old in "${BACKUP_DIR}"/backup_"${POSTGRES_DB}"_*.sql.gz; do
+        [ -e "${old}" ] || continue
+        [ "${old}" = "${KEEP}" ] || { echo "Ménage local : ${old} supprimé" >&2; rm -f "${old}"; }
+      done
+
       TIMESTAMP=$(date +%Y%m%d_%H%M%S)
       BACKUP_FILE="${BACKUP_DIR}/backup_${POSTGRES_DB}_${TIMESTAMP}.sql.gz"
       echo "Dump vers ${BACKUP_FILE}" >&2
@@ -173,7 +208,13 @@ data:
           # Le ping part AVANT la purge : une purge lente sur un gros backlog
           # ne doit pas faire sonner l'alarme d'un cycle pourtant réussi.
           ping_hc "" "sauvegarde deposee"
-          clean_old_backups
+          # `|| …` n'est pas décoratif : il place l'appel en contexte
+          # conditionnel, ce qui SUSPEND set -e pour tout l'arbre d'appel.
+          # Sans lui, un échec S3 pendant le list-objects de la purge —
+          # survenant donc APRÈS un dépôt réussi — tuait le shell via
+          # set -e + pipefail : mort silencieuse, redémarrage du conteneur,
+          # et redump complet de la base à chaque itération.
+          clean_old_backups || echo "Avertissement : purge en échec (non fatale), elle repassera au prochain cycle" >&2
         else
           echo "Erreur : envoi S3 en échec — archive locale conservée, PURGE SAUTÉE" >&2
           ping_hc "/fail" "envoi S3 en echec"
@@ -184,17 +225,21 @@ data:
       fi
     }
 
-    # Seuls minute et heure du cron sont interprétés — un passage par jour.
+    # Seuls minute et heure du cron sont interprétés (entiers, validés au
+    # démarrage) — un passage par jour.
     seconds_until_next_run() {
-      CRON_MINUTE=$(echo "${BACKUP_SCHEDULE}" | cut -d' ' -f1)
-      CRON_HOUR=$(echo "${BACKUP_SCHEDULE}" | cut -d' ' -f2)
-      # Les zéros de tête sont lus comme de l'octal invalide par $(( )).
-      CRON_MINUTE=$(echo "${CRON_MINUTE#0}" | sed 's/^$/0/')
-      CRON_HOUR=$(echo "${CRON_HOUR#0}" | sed 's/^$/0/')
-      NOW_HOUR=$(date +%H); NOW_HOUR=$(echo "${NOW_HOUR#0}" | sed 's/^$/0/')
-      NOW_MINUTE=$(date +%M); NOW_MINUTE=$(echo "${NOW_MINUTE#0}" | sed 's/^$/0/')
-      NOW_SECOND=$(date +%S); NOW_SECOND=$(echo "${NOW_SECOND#0}" | sed 's/^$/0/')
-      TARGET=$((CRON_HOUR * 3600 + CRON_MINUTE * 60))
+      # Zéros de tête : lus comme de l'octal invalide par $(( )).
+      M=$(echo "${CRON_MINUTE#0}" | sed 's/^$/0/')
+      H=$(echo "${CRON_HOUR#0}" | sed 's/^$/0/')
+      # UN SEUL appel à date : trois appels successifs (+%H puis +%M puis +%S)
+      # pouvaient chevaucher une frontière d'heure — « 01 » puis « 00 » à
+      # 02:00:00 pile — et décaler la sauvegarde du jour d'une heure.
+      NOW_HMS=$(date +%H:%M:%S)
+      NOW_HOUR=${NOW_HMS%%:*}; NOW_HOUR=$(echo "${NOW_HOUR#0}" | sed 's/^$/0/')
+      REST=${NOW_HMS#*:}
+      NOW_MINUTE=${REST%%:*}; NOW_MINUTE=$(echo "${NOW_MINUTE#0}" | sed 's/^$/0/')
+      NOW_SECOND=${REST#*:}; NOW_SECOND=$(echo "${NOW_SECOND#0}" | sed 's/^$/0/')
+      TARGET=$((H * 3600 + M * 60))
       NOW=$((NOW_HOUR * 3600 + NOW_MINUTE * 60 + NOW_SECOND))
       if [ ${TARGET} -gt ${NOW} ]; then
         echo $((TARGET - NOW))
