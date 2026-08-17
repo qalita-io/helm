@@ -31,6 +31,12 @@ spec:
       affinity:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.worker.pvc.enabled }}
+      securityContext:
+        # The containers run as uid 10001 (user qalita); without fsGroup the
+        # mounted PVC belongs to root and every write fails with EACCES.
+        fsGroup: 10001
+      {{- end }}
       containers:
         - name: cli
           image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
@@ -56,7 +62,9 @@ spec:
             - name: worker-store-pvc
               mountPath: /data
             - name: worker-store-pvc
-              mountPath: /root/.qalita/
+              # The image runs as the non-root user qalita (uid 10001) since the
+              # cli image rework: worker state lives under /home/qalita/.qalita.
+              mountPath: /home/qalita/.qalita/
               subPath: ./qalita
 {{- end }}
 {{- if .Values.worker.privileged }}
@@ -101,7 +109,9 @@ spec:
             - name: worker-store-pvc
               mountPath: /data
             - name: worker-store-pvc
-              mountPath: /root/.qalita/
+              # The image runs as the non-root user qalita (uid 10001) since the
+              # cli image rework: worker state lives under /home/qalita/.qalita.
+              mountPath: /home/qalita/.qalita/
               subPath: ./qalita
 {{- end }}
       volumes:
