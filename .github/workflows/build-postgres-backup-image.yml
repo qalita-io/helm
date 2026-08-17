@@ -1,0 +1,88 @@
+name: Build PostgreSQL Backup Image
+
+# Modèle jobchef/helm, avec deux différences délibérées :
+#   - PAS de QEMU (règle du parc : jamais d'émulation) et pas d'ubuntu-latest
+#     (quota Actions hébergé épuisé, cf. values-qalita-amd64.yaml dans
+#     helm-github-agent). Chaque architecture se construit NATIVEMENT sur un
+#     runner self-hosted, puis un manifest les réunit — même motif que le CI de
+#     qalita/platform ;
+#   - le tag suit la majeure du client Postgres embarqué (18), qui doit rester
+#     >= à celle du serveur sauvegardé. linux/arm64 est indispensable : la prod
+#     tourne sur les nœuds pi.
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'images/postgres-backup/**'
+      - '.github/workflows/build-postgres-backup-image.yml'
+  workflow_dispatch:
+
+env:
+  IMAGE: ghcr.io/qalita/postgres-backup
+
+jobs:
+  build:
+    name: Build ${{ matrix.arch }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: amd64
+            runner: [self-hosted, linux, X64]
+          - arch: arm64
+            runner: [self-hosted, linux, ARM64]
+    runs-on: ${{ matrix.runner }}
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v4.1.0
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4.2.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push (native ${{ matrix.arch }})
+        uses: docker/build-push-action@v7.2.0
+        with:
+          context: images/postgres-backup
+          platforms: linux/${{ matrix.arch }}
+          push: true
+          # provenance produirait un index par architecture et casserait le
+          # `imagetools create` du job merge.
+          provenance: false
+          tags: ${{ env.IMAGE }}:18-${{ matrix.arch }}
+
+  merge:
+    name: Merge manifest
+    needs: build
+    runs-on: [self-hosted, linux, ARM64]
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: docker/setup-buildx-action@v4.1.0
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v4.2.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create and push multi-arch manifest
+        run: |
+          docker buildx imagetools create \
+            -t ${{ env.IMAGE }}:18 \
+            ${{ env.IMAGE }}:18-amd64 \
+            ${{ env.IMAGE }}:18-arm64
+
+      - name: Verify pushed image
+        run: docker buildx imagetools inspect ${{ env.IMAGE }}:18

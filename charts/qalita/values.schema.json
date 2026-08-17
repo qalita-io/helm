@@ -19,27 +19,50 @@
       "default": "ghcr.io",
       "description": "Container registry hostname for imagePullSecret auth (e.g. ghcr.io)."
     },
-
     "cluster": {
       "type": "object",
       "additionalProperties": false,
       "properties": {
-        "issuer": { "type": "string", "default": "letsencrypt-prod", "description": "Cert-Manager ClusterIssuer name." },
-        "domain": { "type": "string", "default": "example.com", "description": "Base domain used for ingress hosts." },
-        "name": { "type": "string", "default": "local", "description": "Cluster name used in endpoints." }
+        "issuer": {
+          "type": "string",
+          "default": "letsencrypt-prod",
+          "description": "Cert-Manager ClusterIssuer name."
+        },
+        "domain": {
+          "type": "string",
+          "default": "example.com",
+          "description": "Base domain used for ingress hosts."
+        },
+        "name": {
+          "type": "string",
+          "default": "local",
+          "description": "Cluster name used in endpoints."
+        }
       }
     },
-
     "dockerregistry": {
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "enabled": { "type": "boolean", "default": true, "description": "Enable private Docker registry imagePullSecret references." },
-        "deploySecret": { "type": "boolean", "default": true, "description": "Create the docker registry Secret from chart values." },
-        "dataSecret": { "type": ["string", "object"], "description": "Docker config JSON payload used to create imagePullSecret." }
+        "enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable private Docker registry imagePullSecret references."
+        },
+        "deploySecret": {
+          "type": "boolean",
+          "default": true,
+          "description": "Create the docker registry Secret from chart values."
+        },
+        "dataSecret": {
+          "type": [
+            "string",
+            "object"
+          ],
+          "description": "Docker config JSON payload used to create imagePullSecret."
+        }
       }
     },
-
     "frontend": {
       "type": "object",
       "additionalProperties": true,
@@ -47,30 +70,80 @@
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "ghcr.io/qalita/qalita/frontend" },
-            "tag": { "type": "string", "default": "2.1.8" },
-            "pullPolicy": { "type": "string", "default": "IfNotPresent" }
+            "repository": {
+              "type": "string",
+              "default": "ghcr.io/qalita/qalita/frontend"
+            },
+            "tag": {
+              "type": "string",
+              "default": "2.1.8"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "IfNotPresent"
+            }
           }
         },
-        "replicaCount": { "type": "integer", "default": 1 },
-        "telemetryDisabled": { "type": "string", "default": "1", "description": "Disable Next.js telemetry (as string)." },
-        "webPackPolling": { "type": "string", "default": "false", "description": "Enable webpack polling (dev only), string form." },
-        "mode": { "type": "string", "default": "production", "enum": ["DEV", "PROD", "DEMO", "production"], "description": "Frontend run mode." },
+        "replicaCount": {
+          "type": "integer",
+          "default": 1
+        },
+        "telemetryDisabled": {
+          "type": "string",
+          "default": "1",
+          "description": "Disable Next.js telemetry (as string)."
+        },
+        "webPackPolling": {
+          "type": "string",
+          "default": "false",
+          "description": "Enable webpack polling (dev only), string form."
+        },
+        "mode": {
+          "type": "string",
+          "default": "production",
+          "enum": [
+            "DEV",
+            "PROD",
+            "DEMO",
+            "production"
+          ],
+          "description": "Frontend run mode."
+        },
         "service": {
           "type": "object",
           "properties": {
-            "type": { "type": "string", "default": "ClusterIP" },
-            "targetPort": { "type": ["integer", "string"], "default": "3000" },
-            "protocol": { "type": "string", "default": "TCP" }
+            "type": {
+              "type": "string",
+              "default": "ClusterIP"
+            },
+            "targetPort": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "default": "3000"
+            },
+            "protocol": {
+              "type": "string",
+              "default": "TCP"
+            }
           }
         },
         "ingress": {
           "type": "object",
           "properties": {
-            "enabled": { "type": "boolean", "default": true },
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
             "tls": {
               "type": "object",
-              "properties": { "enabled": { "type": "boolean", "default": true } }
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
             }
           }
         },
@@ -83,45 +156,94 @@
                 "requests": {
                   "type": "object",
                   "properties": {
-                    "memory": { "type": "string", "default": "50Mi" },
-                    "cpu": { "type": "string", "default": "50m" }
+                    "memory": {
+                      "type": "string",
+                      "default": "50Mi"
+                    },
+                    "cpu": {
+                      "type": "string",
+                      "default": "50m"
+                    }
                   }
                 }
               }
             },
-            "extraEnv": { "type": "array", "items": { "type": "object" }, "default": [] }
+            "extraEnv": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "default": []
+            }
           }
         }
       }
     },
-
     "doc": {
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "enabled": { "type": "boolean", "default": true },
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "ghcr.io/qalita/qalita/doc" },
-            "tag": { "type": "string", "default": "2.1.7" },
-            "pullPolicy": { "type": "string", "default": "IfNotPresent" }
+            "repository": {
+              "type": "string",
+              "default": "ghcr.io/qalita/qalita/doc"
+            },
+            "tag": {
+              "type": "string",
+              "default": "2.1.7"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "IfNotPresent"
+            }
           }
         },
-        "replicaCount": { "type": "integer", "default": 1 },
+        "replicaCount": {
+          "type": "integer",
+          "default": 1
+        },
         "service": {
           "type": "object",
           "properties": {
-            "type": { "type": "string", "default": "ClusterIP" },
-            "targetPort": { "type": ["integer", "string"], "default": "80" },
-            "protocol": { "type": "string", "default": "TCP" }
+            "type": {
+              "type": "string",
+              "default": "ClusterIP"
+            },
+            "targetPort": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "default": "80"
+            },
+            "protocol": {
+              "type": "string",
+              "default": "TCP"
+            }
           }
         },
         "ingress": {
           "type": "object",
           "properties": {
-            "enabled": { "type": "boolean", "default": true },
-            "tls": { "type": "object", "properties": { "enabled": { "type": "boolean", "default": true } } }
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "tls": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            }
           }
         },
         "deployment": {
@@ -133,8 +255,14 @@
                 "requests": {
                   "type": "object",
                   "properties": {
-                    "memory": { "type": "string", "default": "50Mi" },
-                    "cpu": { "type": "string", "default": "50m" }
+                    "memory": {
+                      "type": "string",
+                      "default": "50Mi"
+                    },
+                    "cpu": {
+                      "type": "string",
+                      "default": "50m"
+                    }
                   }
                 }
               }
@@ -143,7 +271,6 @@
         }
       }
     },
-
     "backend": {
       "type": "object",
       "additionalProperties": true,
@@ -151,77 +278,242 @@
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "ghcr.io/qalita/qalita/backend" },
-            "tag": { "type": "string", "default": "2.1.8" },
-            "pullPolicy": { "type": "string", "default": "IfNotPresent" }
+            "repository": {
+              "type": "string",
+              "default": "ghcr.io/qalita/qalita/backend"
+            },
+            "tag": {
+              "type": "string",
+              "default": "2.1.8"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "IfNotPresent"
+            }
           }
         },
-        "replicaCount": { "type": "integer", "default": 1 },
-        "organization": { "type": "object", "properties": { "name": { "type": "string", "default": "local" } } },
-        "RetentionLogsHours": { "type": "integer", "default": 720 },
-        "AUTHTokenExpireMinutes": { "type": "integer", "default": 240 },
-        "APItokenExpireMinutes": { "type": "integer", "default": 525600 },
-        "mode": { "type": "string", "default": "PROD", "enum": ["DEV", "PROD", "DEMO"] },
-        "iniSleep": { "type": ["integer", "string"], "default": "3" },
-        "authMode": { "type": "string", "default": "table", "enum": ["table", "ldap", "saml"] },
-        "adminUsername": { "type": "string", "default": "admin" },
-        "adminPassword": { "type": ["string", "null"], "default": null },
-        "secretKey": { "type": ["string", "null"], "default": null },
-        "secretKeyAlgorithm": { "type": "string", "default": "HS256" },
+        "replicaCount": {
+          "type": "integer",
+          "default": 1
+        },
+        "organization": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "default": "local"
+            }
+          }
+        },
+        "RetentionLogsHours": {
+          "type": "integer",
+          "default": 720
+        },
+        "AUTHTokenExpireMinutes": {
+          "type": "integer",
+          "default": 240
+        },
+        "APItokenExpireMinutes": {
+          "type": "integer",
+          "default": 525600
+        },
+        "mode": {
+          "type": "string",
+          "default": "PROD",
+          "enum": [
+            "DEV",
+            "PROD",
+            "DEMO"
+          ]
+        },
+        "iniSleep": {
+          "type": [
+            "integer",
+            "string"
+          ],
+          "default": "3"
+        },
+        "authMode": {
+          "type": "string",
+          "default": "table",
+          "enum": [
+            "table",
+            "ldap",
+            "saml"
+          ]
+        },
+        "adminUsername": {
+          "type": "string",
+          "default": "admin"
+        },
+        "adminPassword": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        },
+        "secretKey": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "default": null
+        },
+        "secretKeyAlgorithm": {
+          "type": "string",
+          "default": "HS256"
+        },
         "mail": {
           "type": "object",
           "properties": {
-            "enabled": { "type": "boolean", "default": false },
-            "username": { "type": "string", "default": "" },
-            "password": { "type": "string", "default": "" },
-            "from": { "type": "string", "default": "no-reply@example.com" },
-            "from_name": { "type": "string", "default": "QALITA Platform" },
-            "port": { "type": "integer", "default": 1025 },
-            "server": { "type": "string", "default": "" },
-            "starttls": { "type": "boolean", "default": false },
-            "ssl_tls": { "type": "boolean", "default": false }
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "username": {
+              "type": "string",
+              "default": ""
+            },
+            "password": {
+              "type": "string",
+              "default": ""
+            },
+            "from": {
+              "type": "string",
+              "default": "no-reply@example.com"
+            },
+            "from_name": {
+              "type": "string",
+              "default": "QALITA Platform"
+            },
+            "port": {
+              "type": "integer",
+              "default": 1025
+            },
+            "server": {
+              "type": "string",
+              "default": ""
+            },
+            "starttls": {
+              "type": "boolean",
+              "default": false
+            },
+            "ssl_tls": {
+              "type": "boolean",
+              "default": false
+            }
           }
         },
         "s3": {
           "type": "object",
           "properties": {
-            "url": { "type": "string", "default": "http://seaweedfs-s3:8333" },
-            "secretName": { "type": "string", "default": "seaweedfs-s3-secret" },
-            "admin_access_key_id": { "type": "string", "default": "" },
-            "admin_secret_access_key": { "type": "string", "default": "" },
-            "read_access_key_id": { "type": "string", "default": "" },
-            "read_secret_access_key": { "type": "string", "default": "" }
+            "url": {
+              "type": "string",
+              "default": "http://seaweedfs-s3:8333"
+            },
+            "secretName": {
+              "type": "string",
+              "default": "seaweedfs-s3-secret"
+            },
+            "admin_access_key_id": {
+              "type": "string",
+              "default": ""
+            },
+            "admin_secret_access_key": {
+              "type": "string",
+              "default": ""
+            },
+            "read_access_key_id": {
+              "type": "string",
+              "default": ""
+            },
+            "read_secret_access_key": {
+              "type": "string",
+              "default": ""
+            }
           }
         },
         "api": {
           "type": "object",
           "properties": {
-            "port": { "type": ["integer", "string"], "default": "3080" },
-            "host": { "type": "string", "default": "0.0.0.0" },
-            "worker": { "type": "integer", "default": 4 }
+            "port": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "default": "3080"
+            },
+            "host": {
+              "type": "string",
+              "default": "0.0.0.0"
+            },
+            "worker": {
+              "type": "integer",
+              "default": 4
+            }
           }
         },
         "service": {
           "type": "object",
           "properties": {
-            "type": { "type": "string", "default": "ClusterIP" },
-            "targetPort": { "type": ["integer", "string"], "default": "3080" },
-            "protocol": { "type": "string", "default": "TCP" }
+            "type": {
+              "type": "string",
+              "default": "ClusterIP"
+            },
+            "targetPort": {
+              "type": [
+                "integer",
+                "string"
+              ],
+              "default": "3080"
+            },
+            "protocol": {
+              "type": "string",
+              "default": "TCP"
+            }
           }
         },
         "grpc": {
           "type": "object",
           "description": "gRPC service configuration for worker communication",
           "properties": {
-            "enabled": { "type": "boolean", "default": true, "description": "Enable gRPC port exposure" },
-            "port": { "type": "integer", "default": 50051, "description": "gRPC service port" },
-            "protocol": { "type": "string", "default": "TCP" },
+            "enabled": {
+              "type": "boolean",
+              "default": true,
+              "description": "Enable gRPC port exposure"
+            },
+            "port": {
+              "type": "integer",
+              "default": 50051,
+              "description": "gRPC service port"
+            },
+            "protocol": {
+              "type": "string",
+              "default": "TCP"
+            },
             "ingress": {
               "type": "object",
               "properties": {
-                "enabled": { "type": "boolean", "default": false, "description": "Enable gRPC ingress for external access" },
-                "tls": { "type": "object", "properties": { "enabled": { "type": "boolean", "default": true } } },
-                "annotations": { "type": "object", "default": {}, "description": "Additional annotations for gRPC ingress" }
+                "enabled": {
+                  "type": "boolean",
+                  "default": false,
+                  "description": "Enable gRPC ingress for external access"
+                },
+                "tls": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean",
+                      "default": true
+                    }
+                  }
+                },
+                "annotations": {
+                  "type": "object",
+                  "default": {},
+                  "description": "Additional annotations for gRPC ingress"
+                }
               }
             }
           }
@@ -229,8 +521,19 @@
         "ingress": {
           "type": "object",
           "properties": {
-            "enabled": { "type": "boolean", "default": true },
-            "tls": { "type": "object", "properties": { "enabled": { "type": "boolean", "default": true } } }
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "tls": {
+              "type": "object",
+              "properties": {
+                "enabled": {
+                  "type": "boolean",
+                  "default": true
+                }
+              }
+            }
           }
         },
         "caBundle": {
@@ -258,53 +561,128 @@
                 "requests": {
                   "type": "object",
                   "properties": {
-                    "memory": { "type": "string", "default": "256Mi" },
-                    "cpu": { "type": "string", "default": "100m" }
+                    "memory": {
+                      "type": "string",
+                      "default": "256Mi"
+                    },
+                    "cpu": {
+                      "type": "string",
+                      "default": "100m"
+                    }
                   }
                 },
                 "limits": {
                   "type": "object",
                   "properties": {
-                    "memory": { "type": ["string", "null"], "default": "1Gi" },
-                    "cpu": { "type": ["string", "null"], "default": "1000m" }
+                    "memory": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "default": "1Gi"
+                    },
+                    "cpu": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "default": "1000m"
+                    }
                   }
                 }
               }
             },
-            "extraEnv": { "type": "array", "items": { "type": "object" }, "default": [] },
-            "extraVolumes": { "type": "array", "items": { "type": "object" }, "default": [] },
-            "extraVolumeMounts": { "type": "array", "items": { "type": "object" }, "default": [] }
+            "extraEnv": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "default": []
+            },
+            "extraVolumes": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "default": []
+            },
+            "extraVolumeMounts": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "default": []
+            }
           }
         }
       }
     },
-
     "worker": {
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "enabled": { "type": "boolean", "default": false },
-        "privileged": { "type": "boolean", "default": false },
-        "name": { "type": "string", "default": "worker" },
-        "mode": { "type": "string", "default": "worker", "enum": ["job", "worker"] },
-        "token": { "type": "string", "default": "changeme" },
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "privileged": {
+          "type": "boolean",
+          "default": false
+        },
+        "name": {
+          "type": "string",
+          "default": "worker"
+        },
+        "mode": {
+          "type": "string",
+          "default": "worker",
+          "enum": [
+            "job",
+            "worker"
+          ]
+        },
+        "token": {
+          "type": "string",
+          "default": "changeme"
+        },
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "ghcr.io/qalita/qalita/worker" },
-            "tag": { "type": "string", "default": "2.11.0" },
-            "pullPolicy": { "type": "string", "default": "IfNotPresent" }
+            "repository": {
+              "type": "string",
+              "default": "ghcr.io/qalita/qalita/worker"
+            },
+            "tag": {
+              "type": "string",
+              "default": "2.11.0"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "IfNotPresent"
+            }
           }
         },
-        "replicaCount": { "type": "integer", "default": 1 },
+        "replicaCount": {
+          "type": "integer",
+          "default": 1
+        },
         "pvc": {
           "type": "object",
           "properties": {
-            "enabled": { "type": "boolean", "default": false },
-            "storageSize": { "type": "string", "default": "10Gi" }
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
+            "storageSize": {
+              "type": "string",
+              "default": "10Gi"
+            }
           }
         },
-        "initscript": { "type": "string", "default": "#!/bin/bash\necho \"Hello World\"\n" },
+        "initscript": {
+          "type": "string",
+          "default": "#!/bin/bash\necho \"Hello World\"\n"
+        },
         "deployment": {
           "type": "object",
           "properties": {
@@ -314,30 +692,61 @@
                 "requests": {
                   "type": "object",
                   "properties": {
-                    "memory": { "type": "string", "default": "50Mi" },
-                    "cpu": { "type": "string", "default": "10m" }
+                    "memory": {
+                      "type": "string",
+                      "default": "50Mi"
+                    },
+                    "cpu": {
+                      "type": "string",
+                      "default": "10m"
+                    }
                   }
                 }
               }
             },
-            "extraEnv": { "type": "array", "items": { "type": "object" }, "default": [] }
+            "extraEnv": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "default": []
+            }
           }
         }
       }
     },
-
     "postgresql": {
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "enabled": { "type": "boolean", "default": true },
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
         "image": {
           "type": "object",
           "properties": {
-            "registry": { "type": "string", "default": "ghcr.io/qalita" },
-            "repository": { "type": "string", "default": "postgresql" },
-            "pullSecrets": { "type": "array", "items": { "type": "string" }, "default": ["qalita-platform-dockerregistry"] },
-            "tag": { "type": "string", "default": "15.4.0" }
+            "registry": {
+              "type": "string",
+              "default": "ghcr.io/qalita"
+            },
+            "repository": {
+              "type": "string",
+              "default": "postgresql"
+            },
+            "pullSecrets": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "default": [
+                "qalita-platform-dockerregistry"
+              ]
+            },
+            "tag": {
+              "type": "string",
+              "default": "15.4.0"
+            }
           }
         },
         "global": {
@@ -349,9 +758,21 @@
                 "auth": {
                   "type": "object",
                   "properties": {
-                    "database": { "type": "string", "default": "qalitadb" },
-                    "username": { "type": "string", "default": "qalita" },
-                    "password": { "type": ["string", "null"], "default": null }
+                    "database": {
+                      "type": "string",
+                      "default": "qalitadb"
+                    },
+                    "username": {
+                      "type": "string",
+                      "default": "qalita"
+                    },
+                    "password": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "default": null
+                    }
                   }
                 }
               }
@@ -364,7 +785,10 @@
             "persistence": {
               "type": "object",
               "properties": {
-                "size": { "type": "string", "default": "8Gi" }
+                "size": {
+                  "type": "string",
+                  "default": "8Gi"
+                }
               }
             }
           }
@@ -372,14 +796,20 @@
         "backup": {
           "type": "object",
           "properties": {
-            "enabled": { "type": "boolean", "default": false },
+            "enabled": {
+              "type": "boolean",
+              "default": false
+            },
             "cronjob": {
               "type": "object",
               "properties": {
                 "storage": {
                   "type": "object",
                   "properties": {
-                    "resourcePolicy": { "type": "string", "default": "keep" }
+                    "resourcePolicy": {
+                      "type": "string",
+                      "default": "keep"
+                    }
                   }
                 }
               }
@@ -388,28 +818,57 @@
         }
       }
     },
-
     "seaweedfs": {
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "enabled": { "type": "boolean", "default": true },
+        "enabled": {
+          "type": "boolean",
+          "default": true
+        },
         "global": {
           "type": "object",
           "properties": {
-            "createClusterRole": { "type": "boolean", "default": true },
-            "serviceAccountName": { "type": "string", "default": "seaweedfs" },
-            "registry": { "type": "string", "default": "ghcr.io/qalita" },
-            "imagePullSecrets": { "type": ["string", "array"], "default": "qalita-platform-dockerregistry" },
-            "imageName": { "type": "string", "default": "seaweedfs" }
+            "createClusterRole": {
+              "type": "boolean",
+              "default": true
+            },
+            "serviceAccountName": {
+              "type": "string",
+              "default": "seaweedfs"
+            },
+            "registry": {
+              "type": "string",
+              "default": "ghcr.io/qalita"
+            },
+            "imagePullSecrets": {
+              "type": [
+                "string",
+                "array"
+              ],
+              "default": "qalita-platform-dockerregistry"
+            },
+            "imageName": {
+              "type": "string",
+              "default": "seaweedfs"
+            }
           }
         },
         "s3": {
           "type": "object",
           "properties": {
-            "enabled": { "type": "boolean", "default": true },
-            "enableAuth": { "type": "boolean", "default": true },
-            "existingConfigSecret": { "type": "string", "default": "seaweedfs-s3-secret" }
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            },
+            "enableAuth": {
+              "type": "boolean",
+              "default": true
+            },
+            "existingConfigSecret": {
+              "type": "string",
+              "default": "seaweedfs-s3-secret"
+            }
           }
         },
         "filer": {
@@ -418,16 +877,31 @@
             "data": {
               "type": "object",
               "properties": {
-                "type": { "type": "string", "default": "persistentVolumeClaim" },
-                "size": { "type": "string", "default": "4Gi" }
+                "type": {
+                  "type": "string",
+                  "default": "persistentVolumeClaim"
+                },
+                "size": {
+                  "type": "string",
+                  "default": "4Gi"
+                }
               }
             },
             "s3": {
               "type": "object",
               "properties": {
-                "enabled": { "type": "boolean", "default": true },
-                "enableAuth": { "type": "boolean", "default": true },
-                "existingConfigSecret": { "type": "string", "default": "seaweedfs-s3-secret" }
+                "enabled": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "enableAuth": {
+                  "type": "boolean",
+                  "default": true
+                },
+                "existingConfigSecret": {
+                  "type": "string",
+                  "default": "seaweedfs-s3-secret"
+                }
               }
             },
             "resources": {
@@ -436,8 +910,14 @@
                 "requests": {
                   "type": "object",
                   "properties": {
-                    "memory": { "type": "string", "default": "100Mi" },
-                    "cpu": { "type": "string", "default": "50m" }
+                    "memory": {
+                      "type": "string",
+                      "default": "100Mi"
+                    },
+                    "cpu": {
+                      "type": "string",
+                      "default": "50m"
+                    }
                   }
                 }
               }
@@ -452,13 +932,32 @@
               "items": {
                 "type": "object",
                 "properties": {
-                  "name": { "type": "string", "default": "data1" },
-                  "type": { "type": "string", "default": "persistentVolumeClaim" },
-                  "size": { "type": "string", "default": "32Gi" },
-                  "maxVolumes": { "type": "integer", "default": 0 }
+                  "name": {
+                    "type": "string",
+                    "default": "data1"
+                  },
+                  "type": {
+                    "type": "string",
+                    "default": "persistentVolumeClaim"
+                  },
+                  "size": {
+                    "type": "string",
+                    "default": "32Gi"
+                  },
+                  "maxVolumes": {
+                    "type": "integer",
+                    "default": 0
+                  }
                 }
               },
-              "default": [ { "name": "data1", "type": "persistentVolumeClaim", "size": "32Gi", "maxVolumes": 0 } ]
+              "default": [
+                {
+                  "name": "data1",
+                  "type": "persistentVolumeClaim",
+                  "size": "32Gi",
+                  "maxVolumes": 0
+                }
+              ]
             },
             "resources": {
               "type": "object",
@@ -466,8 +965,14 @@
                 "requests": {
                   "type": "object",
                   "properties": {
-                    "memory": { "type": "string", "default": "100Mi" },
-                    "cpu": { "type": "string", "default": "50m" }
+                    "memory": {
+                      "type": "string",
+                      "default": "100Mi"
+                    },
+                    "cpu": {
+                      "type": "string",
+                      "default": "50m"
+                    }
                   }
                 }
               }
@@ -483,8 +988,14 @@
                 "requests": {
                   "type": "object",
                   "properties": {
-                    "memory": { "type": "string", "default": "64Mi" },
-                    "cpu": { "type": "string", "default": "50m" }
+                    "memory": {
+                      "type": "string",
+                      "default": "64Mi"
+                    },
+                    "cpu": {
+                      "type": "string",
+                      "default": "50m"
+                    }
                   }
                 }
               }
@@ -493,32 +1004,259 @@
         }
       }
     },
-
     "helmsync": {
       "type": "object",
       "additionalProperties": true,
       "properties": {
-        "enabled": { "type": "boolean", "default": false },
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
         "image": {
           "type": "object",
           "properties": {
-            "repository": { "type": "string", "default": "alpine/helm" }
+            "repository": {
+              "type": "string",
+              "default": "alpine/helm"
+            }
           }
         },
-        "kubeconfig": { "type": "string", "description": "Inline kubeconfig YAML content used by helmsync." },
+        "kubeconfig": {
+          "type": "string",
+          "description": "Inline kubeconfig YAML content used by helmsync."
+        },
         "resources": {
           "type": "object",
           "properties": {
             "requests": {
               "type": "object",
               "properties": {
-                "memory": { "type": "string", "default": "50Mi" },
-                "cpu": { "type": "string", "default": "10m" }
+                "memory": {
+                  "type": "string",
+                  "default": "50Mi"
+                },
+                "cpu": {
+                  "type": "string",
+                  "default": "10m"
+                }
               }
             }
           }
         }
       }
+    },
+    "postgresBackup": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "image": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "repository": {
+              "type": "string",
+              "default": "ghcr.io/qalita/postgres-backup"
+            },
+            "tag": {
+              "type": "string",
+              "default": "18",
+              "description": "Majeure du client pg_dump ; doit rester >= a celle du serveur sauvegarde."
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "IfNotPresent"
+            }
+          }
+        },
+        "schedule": {
+          "type": "string",
+          "default": "0 2 * * *"
+        },
+        "retentionDays": {
+          "type": "integer",
+          "default": 30
+        },
+        "minBytes": {
+          "type": "integer",
+          "default": 1024
+        },
+        "pingUrl": {
+          "type": "string",
+          "default": ""
+        },
+        "s3": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "endpoint": {
+              "type": "string",
+              "default": ""
+            },
+            "bucket": {
+              "type": "string",
+              "default": ""
+            },
+            "prefix": {
+              "type": "string",
+              "default": "postgresql-backups"
+            },
+            "region": {
+              "type": "string",
+              "default": "gra"
+            },
+            "accessKeyId": {
+              "type": "string",
+              "default": "",
+              "description": "Vide = valeur deja en cluster reutilisee (qalita.preservedSecret) ; echec au premier deploiement si rien n'existe."
+            },
+            "secretAccessKey": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "requests": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "memory": {
+                  "type": "string"
+                },
+                "cpu": {
+                  "type": "string"
+                }
+              }
+            },
+            "limits": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "memory": {
+                  "type": "string"
+                },
+                "cpu": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "description": "Sauvegarde logique PostgreSQL (phase 11a) : Deployment transitoire contre le serveur bitnami, puis sidecar du StatefulSet postgres18. Meme script, meme image, meme bucket."
+    },
+    "postgres18": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "default": false
+        },
+        "serveApp": {
+          "type": "boolean",
+          "default": false
+        },
+        "image": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "repository": {
+              "type": "string",
+              "default": "ghcr.io/qalita/postgres"
+            },
+            "tag": {
+              "type": "string",
+              "default": "18-alpine"
+            },
+            "pullPolicy": {
+              "type": "string",
+              "default": "IfNotPresent"
+            }
+          }
+        },
+        "auth": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "password": {
+              "type": "string",
+              "default": "",
+              "description": "Vide = genere au premier deploiement puis preserve. Rotation : ALTER ROLE d'abord, values ensuite."
+            }
+          }
+        },
+        "backup": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        },
+        "persistence": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "size": {
+              "type": "string",
+              "default": "8Gi"
+            },
+            "storageClass": {
+              "type": "string",
+              "default": ""
+            }
+          }
+        },
+        "nodeSelector": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "readinessTimeoutSeconds": {
+          "type": "integer",
+          "default": 5
+        },
+        "resources": {
+          "type": "object",
+          "additionalProperties": true,
+          "properties": {
+            "requests": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "memory": {
+                  "type": "string"
+                },
+                "cpu": {
+                  "type": "string"
+                }
+              }
+            },
+            "limits": {
+              "type": "object",
+              "additionalProperties": true,
+              "properties": {
+                "memory": {
+                  "type": "string"
+                },
+                "cpu": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "description": "PostgreSQL 18 maison (phase 11), cote-a-cote avec le sous-chart bitnami. serveApp: true = bascule du backend, et aussi le retour arriere."
     }
   }
 }

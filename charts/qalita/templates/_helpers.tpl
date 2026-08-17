@@ -122,3 +122,39 @@ Arguments (dict) :
 {{- end -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Variables d'environnement S3 + planification du script de sauvegarde
+PostgreSQL. Partagées mot pour mot entre le Deployment transitoire (qui
+sauvegarde le serveur bitnami 15.4 via le Service) et le sidecar du
+StatefulSet postgres18 (qui parle à localhost) : seule la connexion à la base
+diffère entre les deux, et elle reste donc chez l'appelant.
+*/}}
+{{- define "qalita.postgresBackup.commonEnv" -}}
+- name: BACKUP_SCHEDULE
+  value: {{ .Values.postgresBackup.schedule | quote }}
+- name: RETENTION_DAYS
+  value: {{ .Values.postgresBackup.retentionDays | quote }}
+- name: MIN_BACKUP_BYTES
+  value: {{ .Values.postgresBackup.minBytes | quote }}
+- name: BACKUP_PING_URL
+  value: {{ .Values.postgresBackup.pingUrl | quote }}
+- name: S3_BACKUP_ENDPOINT
+  value: {{ .Values.postgresBackup.s3.endpoint | quote }}
+- name: S3_BACKUP_BUCKET
+  value: {{ .Values.postgresBackup.s3.bucket | quote }}
+- name: S3_BACKUP_PREFIX
+  value: {{ .Values.postgresBackup.s3.prefix | quote }}
+- name: S3_BACKUP_REGION
+  value: {{ .Values.postgresBackup.s3.region | quote }}
+- name: S3_BACKUP_ACCESS_KEY_ID
+  valueFrom:
+    secretKeyRef:
+      name: qalita-postgres-backup-s3
+      key: access_key_id
+- name: S3_BACKUP_SECRET_ACCESS_KEY
+  valueFrom:
+    secretKeyRef:
+      name: qalita-postgres-backup-s3
+      key: secret_access_key
+{{- end -}}

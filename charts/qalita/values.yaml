@@ -230,11 +230,110 @@ postgresql:
     persistence:
       size: 8Gi
 
+  # Clé du sous-chart BITNAMI, jamais câblée à rien de fonctionnel dans ce
+  # chart (aucune sauvegarde logique n'a jamais existé sur ces bases — spec
+  # d'alignement, phase 11). Conservée uniquement parce que le sous-chart la
+  # lit ; la vraie sauvegarde est `postgresBackup` ci-dessous.
   backup:
     enabled: false
     cronjob:
       storage:
         resourcePolicy: "keep"
+
+# Sauvegarde logique PostgreSQL — phase 11a de la spec d'alignement, livrée
+# AVANT la migration 15 -> 18 parce qu'on ne migre pas une base qui n'a aucune
+# sauvegarde. `enabled` gouverne le Deployment TRANSITOIRE qui dumpe le serveur
+# bitnami 15.4 actuel via son Service ; le bloc s3/schedule/retention sert
+# aussi au sidecar du StatefulSet postgres18 (postgres18.backup.enabled), même
+# script, même image, même bucket.
+postgresBackup:
+  enabled: false
+  image:
+    # Construite par .github/workflows/build-postgres-backup-image.yml
+    # (runners self-hosted natifs, amd64+arm64). Le client pg_dump est en 18 :
+    # il dumpe aussi bien le serveur 15.4 actuel que le serveur 18 cible —
+    # pg_dump ne refuse que les serveurs PLUS RÉCENTS que lui. Le tag :18 est
+    # OBLIGATOIRE, pas préférable (cf. images/postgres-backup/Dockerfile).
+    repository: ghcr.io/qalita/postgres-backup
+    tag: "18"
+    pullPolicy: IfNotPresent
+  schedule: "0 2 * * *"
+  # 30 et non 7 : même arbitrage que previly/helm — dès que la purge marche
+  # vraiment, la rétention déclarée devient réelle, et 7 jours est trop court
+  # pour survivre à des vacances.
+  retentionDays: 30
+  # Plancher de taille : un gzip d'un flux vide fait 20 octets ; le plus petit
+  # dump réel de ces bases est trois ordres de grandeur au-dessus. Seule garde
+  # qui survivrait à un shell sans pipefail.
+  minBytes: 1024
+  # URL healthchecks.io (vide = pas de ping). Déposée au déploiement depuis
+  # Infisical, jamais dans ce fichier.
+  pingUrl: ""
+  s3:
+    # Stockage objet HORS cluster (OVH) — sauvegarder vers le SeaweedFS du
+    # même cluster ne serait pas une sauvegarde.
+    endpoint: ""
+    bucket: ""
+    prefix: "postgresql-backups"
+    region: "gra"
+    # Déposés au déploiement (Infisical). Vides ici : qalita.preservedSecret
+    # réutilise la valeur déjà en cluster, et ÉCHOUE au premier déploiement si
+    # rien n'est fourni — jamais de secret vide écrit, jamais de généré.
+    accessKeyId: ""
+    secretAccessKey: ""
+  resources:
+    requests:
+      memory: "64Mi"
+      cpu: "25m"
+    limits:
+      memory: "256Mi"
+
+# PostgreSQL 18 maison — phase 11 : sortie du sous-chart bitnami. Côte-à-côte
+# avec lui : propre StatefulSet, Service, secret et volume, il ne touche à rien
+# de ce que bitnami possède. Séquence de migration (phase 11c) :
+#   1. postgres18.enabled: true          -> le serveur 18 démarre, vide
+#   2. dump/restore (jamais pg_upgrade)  -> depuis une archive postgresBackup
+#   3. postgres18.serveApp: true         -> le backend bascule (repointage)
+#   4. sous-chart bitnami à l'échelle 0, volume INTACT plusieurs jours
+#   5. postgresql.enabled: false         -> seulement après période nominale
+# Retour arrière à toute étape : serveApp false — l'ancien serveur n'a jamais
+# bougé.
+postgres18:
+  enabled: false
+  # true = le backend vise qalita-postgres18 (service et secret) au lieu du
+  # sous-chart bitnami. C'est LA bascule, et c'est aussi le retour arrière.
+  serveApp: false
+  image:
+    # Miroir GHCR de library/postgres:18-alpine (mirror-images.yml) — la
+    # décision de source que mirror-images.yml renvoyait « au chantier
+    # PostgreSQL dédié » est ici : l'image officielle, pas bitnami, comme
+    # jobchef et previly.
+    repository: ghcr.io/qalita/postgres
+    tag: "18-alpine"
+    pullPolicy: IfNotPresent
+  auth:
+    # Vide = généré au premier déploiement puis préservé
+    # (qalita.preservedSecret). Rotation : ALTER ROLE d'abord, values ensuite —
+    # sur volume persistant l'entrypoint ne recrée jamais le rôle.
+    password: ""
+  backup:
+    # Sidecar dans le pod (modèle jobchef/previly), partageant image, script
+    # et bucket avec postgresBackup. À activer AVANT serveApp : le serveur 18
+    # doit être sauvegardé dès qu'il porte des données.
+    enabled: true
+  persistence:
+    size: 8Gi
+    # Vide = StorageClass par défaut du cluster. Épinglé dans les values
+    # d'environnement si le cluster en a plusieurs marquées default.
+    storageClass: ""
+  nodeSelector: {}
+  readinessTimeoutSeconds: 5
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "1Gi"
 
 seaweedfs:
   enabled: true

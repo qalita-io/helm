@@ -8,6 +8,69 @@ This chart deploys QALITA Platform on a Kubernetes cluster using the Helm packag
 
 # Quick Start
 
+## Upgrading to 3.0.0 — PostgreSQL backups, and the path to PostgreSQL 18
+
+**This is a major version: the chart's public API changes.** Nothing is removed
+yet — the bitnami `postgresql` subchart still runs your database exactly as
+before, and a `helm upgrade` with your existing values is a no-op for the
+database. What 3.0.0 adds is the machinery for a safe 15 → 18 migration, in
+the order the internal migration plan mandates: **backups first, new server
+second, cutover last.**
+
+### Step 1 — turn on logical backups (do this now, on 15.4)
+
+Until 3.0.0 this chart shipped **no logical backup of your database** —
+`postgresql.backup.enabled` was a bitnami key wired to nothing operational.
+The new `postgresBackup` block runs a dedicated Deployment that dumps the
+current server daily to S3-compatible object storage **outside the cluster**:
+
+```yaml
+postgresBackup:
+  enabled: true
+  s3:
+    endpoint: "https://s3.gra.io.cloud.ovh.net"
+    bucket: "<your-backup-bucket>"        # provisioned by you, checked at start
+    accessKeyId: "<injected at deploy>"   # empty on later upgrades: the value
+    secretAccessKey: "<injected>"         # already in-cluster is preserved
+```
+
+The dump client is PostgreSQL 18's `pg_dump` (`postgres-backup:18`): pg_dump
+only refuses servers *newer* than itself, so it backs up today's 15.4 server,
+and the archives it produces are exactly what the 18 restore will replay.
+
+The script refuses empty archives (`minBytes` floor), never runs the retention
+purge after a failed upload, and can ping a healthchecks.io URL (`pingUrl`).
+Verify your first archive is restorable before moving on — restore it into a
+scratch database and count tables.
+
+### Step 2 — start the 18 server, side by side
+
+```yaml
+postgres18:
+  enabled: true        # new StatefulSet qalita-postgres18, own volume/secret
+  serveApp: false      # the app still points at bitnami — nothing moved yet
+```
+
+The new server starts **empty**, with its own generated password. It never
+touches anything the bitnami subchart owns. Restore your latest archive into
+it (`gunzip -c backup.sql.gz | psql -h qalita-postgres18 …`).
+
+### Step 3 — cut over (and how to roll back)
+
+```yaml
+postgres18:
+  serveApp: true       # backend now targets qalita-postgres18
+```
+
+Rollback at any point is the same boolean, set back to `false`: the old server
+was never modified. Scale the bitnami StatefulSet to 0 but **keep its volume
+intact for several nominal days** before setting `postgresql.enabled: false`.
+
+**Never migrate with `pg_upgrade` and never remount the old volume on the new
+server**: PostgreSQL 18 moved its data directory, and a volume mounted at the
+pre-18 path makes the server silently write into an anonymous volume — empty
+database on next restart.
+
 ## Upgrading to 2.19.0 — SeaweedFS 4.41
 
 The bundled SeaweedFS chart moves from 4.0.380 (app 3.80) to 4.41.0 (app 4.41).

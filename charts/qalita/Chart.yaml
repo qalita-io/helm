@@ -1,7 +1,12 @@
 apiVersion: v2
 description: Helm chart for QALITA Platform, a platform for managing and monitoring your data quality.
 name: "qalita"
-version: "2.20.0"
+# MAJEURE — phase 11 de la spec d'alignement : l'API publique du chart change.
+# Nouveaux blocs de values `postgresBackup` (sauvegarde logique, inexistante
+# jusqu'ici) et `postgres18` (serveur maison, côte-à-côte avec le sous-chart
+# bitnami que ce chart quittera en fin de phase 11c). Le schéma de values et
+# les notes de migration sont dans values.schema.json et README.md.
+version: "3.0.0"
 icon: https://avatars.githubusercontent.com/u/101010687?s=48&v=4
 appVersion: "2.18.0"
 home: https://qalita.io
