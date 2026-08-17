@@ -43,3 +43,82 @@ app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
+
+{{/*
+Valeur d'un champ de Secret, EN PRÉSERVANT CE QUI EXISTE DÉJÀ EN CLUSTER.
+
+Retourne la valeur EN CLAIR. L'appelant l'écrit dans `stringData` ; il ne doit
+pas la ré-encoder.
+
+POURQUOI CE HELPER EXISTE. Le 2026-08-17, un `helm upgrade` de
+qalita-platform-demo lancé avec le seul fichier de values a détruit deux
+Secrets d'un coup :
+  - seaweedfs-s3-secret : les quatre identifiants réécrits à VIDE, parce que
+    platform/demo-values.yaml déclare `backend.s3.*: ""` — ce sont des
+    emplacements que le pipeline remplit au déploiement, et le template les
+    recopiait tels quels. Le backend est tombé en boucle sur
+    « InvalidAccessKeyId », la passerelle S3 ne relisant sa configuration qu'au
+    démarrage ;
+  - qalita-qalita-secret : `secretKey` (signature JWT) et `adminPassword`
+    regénérés aléatoirement, parce qu'ils étaient rendus avec
+    `default (randAlphaNum N) .Values…` — un défaut qui rotait donc ces valeurs
+    à CHAQUE upgrade où elles n'étaient pas fournies, invalidant toutes les
+    sessions en cours.
+Le champ `licenseKey` du même Secret, lui, avait déjà le bon motif (`lookup`
+puis réutilisation) et a traversé l'incident intact. Ce helper généralise ce
+motif au lieu de le laisser à un seul champ.
+
+ORDRE DE RÉSOLUTION, du plus explicite au plus prudent :
+  1. la valeur fournie dans les values, si elle est non vide — c'est la
+     déclaration, elle prime toujours ;
+  2. sinon la valeur DÉJÀ PRÉSENTE dans le Secret en cluster — un déploiement
+     qui ne fournit pas un secret ne doit jamais en détruire un ;
+  3. sinon `default`, s'il est renseigné — pour les champs qui ont une valeur
+     de repli qui a un sens métier, comme `licenseKey` qui vaut « unlicenced »
+     tant qu'aucune licence n'est posée ;
+  4. sinon, si `generate` est vrai, une valeur aléatoire de `length`
+     caractères — uniquement au tout premier déploiement, quand il n'y a rien
+     à préserver ;
+  5. sinon `fail`, avec le nom du champ. Un déploiement qui ne peut pas
+     produire une valeur valide doit s'arrêter bruyamment, pas écrire du vide.
+
+ATTENTION AU MODE `helm template`. `lookup` y renvoie toujours vide : l'étape 2
+est donc inopérante, et un rendu hors cluster avec des values vides tombera en
+3 ou en 4. C'est voulu — `helm template` sert à inspecter, pas à déployer — mais
+cela veut dire qu'un test de non-régression sur la préservation doit passer par
+`helm upgrade --dry-run`, seul mode où `lookup` interroge réellement l'API.
+
+Arguments (dict) :
+  ctx       le contexte racine ($)
+  secret    nom du Secret en cluster
+  key       clé dans ce Secret
+  value     valeur issue des values (peut être vide ou nulle)
+  default   valeur de repli explicite (facultatif)
+  generate  booléen : générer une valeur aléatoire en dernier recours
+  length    longueur de la valeur générée
+*/}}
+{{- define "qalita.preservedSecret" -}}
+{{- $ctx := .ctx -}}
+{{- /* `default ""` avant `toString` : sur une valeur nulle, `toString` seul
+       rendrait la chaîne "<nil>", qui passerait pour une valeur fournie. */ -}}
+{{- $supplied := .value | default "" | toString -}}
+{{- if $supplied -}}
+{{- $supplied -}}
+{{- else -}}
+{{- $existing := lookup "v1" "Secret" $ctx.Release.Namespace .secret -}}
+{{- $prev := "" -}}
+{{- if and $existing $existing.data (hasKey $existing.data .key) -}}
+{{- $prev = index $existing.data .key | b64dec -}}
+{{- end -}}
+{{- $fallback := .default | default "" | toString -}}
+{{- if $prev -}}
+{{- $prev -}}
+{{- else if $fallback -}}
+{{- $fallback -}}
+{{- else if .generate -}}
+{{- randAlphaNum (.length | int) -}}
+{{- else -}}
+{{- fail (printf "Secret %s : le champ %s est vide et aucune valeur existante n'a ete trouvee dans le namespace %s. Fournissez-le (pipeline, Infisical, --set) plutot que de deployer avec un emplacement vide : ecrire une valeur vide ici casserait l'authentification." .secret .key $ctx.Release.Namespace) -}}
+{{- end -}}
+{{- end -}}
+{{- end -}}
