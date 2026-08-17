@@ -308,6 +308,17 @@ postgres18:
     # décision de source que mirror-images.yml renvoyait « au chantier
     # PostgreSQL dédié » est ici : l'image officielle, pas bitnami, comme
     # jobchef et previly.
+    #
+    # ALPINE = MUSL, ET C'EST UN CHANGEMENT DE COLLATION : le serveur bitnami
+    # actuel est glibc (datcollate en_US.UTF-8, tri linguistique), musl traite
+    # les locales en ordre octet. Mesuré sur la base de prod avant l'arbitrage :
+    # ZÉRO colonne à collation explicite (rien n'échoue au restore) et 151
+    # colonnes texte dont seul l'ordre de tri des accents change en ORDER BY —
+    # cosmétique. Pas de risque de corruption : la migration est un
+    # dump/restore, les index sont reconstruits sur la cible. previly et
+    # jobchef tournent déjà en alpine/musl en production. Si un tri
+    # linguistique devenait nécessaire un jour : ICU par colonne, pas un
+    # changement d'image.
     repository: ghcr.io/qalita/postgres
     tag: "18-alpine"
     pullPolicy: IfNotPresent
