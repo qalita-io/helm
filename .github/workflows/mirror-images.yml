@@ -67,9 +67,7 @@ jobs:
           # renvoyait « au chantier PostgreSQL dédié » est prise (phase 11) :
           # l'image OFFICIELLE library/postgres, pas bitnami, comme jobchef et
           # previly. Elle alimente le StatefulSet maison qalita-postgres18
-          # (charts/qalita/templates/postgres18-statefulset.yaml). L'image du
-          # sidecar de sauvegarde n'est PAS ici : elle se construit (elle ne se
-          # copie pas), cf. build-postgres-backup-image.yml.
+          # (charts/qalita/templates/postgres18-statefulset.yaml).
           - source: mirror.gcr.io/library/postgres:18-alpine
             target: postgres:18-alpine
 

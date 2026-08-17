@@ -8,42 +8,20 @@ This chart deploys QALITA Platform on a Kubernetes cluster using the Helm packag
 
 # Quick Start
 
-## Upgrading to 3.0.0 — PostgreSQL backups, and the path to PostgreSQL 18
+## Upgrading to 3.0.0 — the path to PostgreSQL 18
 
 **This is a major version: the chart's public API changes.** Nothing is removed
 yet — the bitnami `postgresql` subchart still runs your database exactly as
 before, and a `helm upgrade` with your existing values is a no-op for the
-database. What 3.0.0 adds is the machinery for a safe 15 → 18 migration, in
-the order the internal migration plan mandates: **backups first, new server
-second, cutover last.**
+database. What 3.0.0 adds is the machinery for a safe 15 → 18 migration:
+**side by side, cutover by one boolean, rollback by the same boolean.**
 
-### Step 1 — turn on logical backups (do this now, on 15.4)
+There is deliberately no scheduled logical-backup machinery in this chart:
+database protection is expected at the **volume level** (e.g. nightly Longhorn
+backups of the PostgreSQL PVC, with an exercised restore path). Take a volume
+snapshot/backup right before each migration step below.
 
-Until 3.0.0 this chart shipped **no logical backup of your database** —
-`postgresql.backup.enabled` was a bitnami key wired to nothing operational.
-The new `postgresBackup` block runs a dedicated Deployment that dumps the
-current server daily to S3-compatible object storage **outside the cluster**:
-
-```yaml
-postgresBackup:
-  enabled: true
-  s3:
-    endpoint: "https://s3.gra.io.cloud.ovh.net"
-    bucket: "<your-backup-bucket>"        # provisioned by you, checked at start
-    accessKeyId: "<injected at deploy>"   # empty on later upgrades: the value
-    secretAccessKey: "<injected>"         # already in-cluster is preserved
-```
-
-The dump client is PostgreSQL 18's `pg_dump` (`postgres-backup:18`): pg_dump
-only refuses servers *newer* than itself, so it backs up today's 15.4 server,
-and the archives it produces are exactly what the 18 restore will replay.
-
-The script refuses empty archives (`minBytes` floor), never runs the retention
-purge after a failed upload, and can ping a healthchecks.io URL (`pingUrl`).
-Verify your first archive is restorable before moving on — restore it into a
-scratch database and count tables.
-
-### Step 2 — start the 18 server, side by side
+### Step 1 — start the 18 server, side by side
 
 ```yaml
 postgres18:
@@ -51,9 +29,21 @@ postgres18:
   serveApp: false      # the app still points at bitnami — nothing moved yet
 ```
 
-The new server starts **empty**, with its own generated password. It never
-touches anything the bitnami subchart owns. Restore your latest archive into
-it (`gunzip -c backup.sql.gz | psql -h qalita-postgres18 …`).
+The new server starts **empty**, with its own generated password (preserved
+across upgrades). It never touches anything the bitnami subchart owns.
+
+### Step 2 — one-shot dump/restore (never `pg_upgrade`)
+
+The dump client must be ≥ the newest server's major, so run `pg_dump` **from
+the postgres18 pod** — pg_dump happily dumps the older 15.4 server:
+
+```bash
+kubectl exec qalita-postgres18-0 -- sh -c \
+  'PGPASSWORD=<bitnami pwd> pg_dump -h <release>-postgresql -U qalita -d qalitadb \
+     --no-owner --no-acl | psql -U qalita -d qalitadb'
+```
+
+Then compare table counts on both servers before moving on.
 
 ### Step 3 — cut over (and how to roll back)
 

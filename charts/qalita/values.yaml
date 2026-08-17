@@ -231,81 +231,29 @@ postgresql:
       size: 8Gi
 
   # Clé du sous-chart BITNAMI, jamais câblée à rien de fonctionnel dans ce
-  # chart (aucune sauvegarde logique n'a jamais existé sur ces bases — spec
-  # d'alignement, phase 11). Conservée uniquement parce que le sous-chart la
-  # lit ; la vraie sauvegarde est `postgresBackup` ci-dessous.
+  # chart. Conservée uniquement parce que le sous-chart la lit. DÉCISION DU
+  # PROPRIÉTAIRE (2026-08-17) : pas de sauvegarde logique planifiée pour
+  # QALITA — la couverture est la sauvegarde Longhorn nocturne du PVC, dont la
+  # restauration est un chemin exercé (le volume de prod en service est
+  # lui-même issu d'une restauration Longhorn, qalita-pg-restore-0716). Le
+  # dump de la migration 15 -> 18 est un geste one-shot, cf. README.
   backup:
     enabled: false
     cronjob:
       storage:
         resourcePolicy: "keep"
 
-# Sauvegarde logique PostgreSQL — phase 11a de la spec d'alignement, livrée
-# AVANT la migration 15 -> 18 parce qu'on ne migre pas une base qui n'a aucune
-# sauvegarde. `enabled` gouverne le Deployment TRANSITOIRE qui dumpe le serveur
-# bitnami 15.4 actuel via son Service ; le bloc s3/schedule/retention sert
-# aussi au sidecar du StatefulSet postgres18 (postgres18.backup.enabled), même
-# script, même image, même bucket.
-postgresBackup:
-  enabled: false
-  image:
-    # Construite par .github/workflows/build-postgres-backup-image.yml
-    # (runners self-hosted natifs, amd64+arm64). Le client pg_dump est en 18 :
-    # il dumpe aussi bien le serveur 15.4 actuel que le serveur 18 cible —
-    # pg_dump ne refuse que les serveurs PLUS RÉCENTS que lui. Le tag :18 est
-    # OBLIGATOIRE, pas préférable (cf. images/postgres-backup/Dockerfile).
-    repository: ghcr.io/qalita/postgres-backup
-    tag: "18"
-    pullPolicy: IfNotPresent
-  schedule: "0 2 * * *"
-  # 30 et non 7 : même arbitrage que previly/helm — dès que la purge marche
-  # vraiment, la rétention déclarée devient réelle, et 7 jours est trop court
-  # pour survivre à des vacances.
-  retentionDays: 30
-  # Plancher de taille : un gzip d'un flux vide fait 20 octets ; le plus petit
-  # dump réel de ces bases est trois ordres de grandeur au-dessus. Seule garde
-  # qui survivrait à un shell sans pipefail.
-  minBytes: 1024
-  # URL healthchecks.io du Deployment transitoire (vide = pas de ping).
-  # Déposée au déploiement depuis Infisical, jamais dans ce fichier. Le sidecar
-  # du serveur 18 a la SIENNE (postgres18.backup.pingUrl) : leurs alarmes ne
-  # doivent pas se mélanger.
-  pingUrl: ""
-  # Plafond de l'emptyDir où les archives locales transitent avant envoi S3.
-  # Le script ne garde qu'une archive en échec (ménage en tête de cycle) ;
-  # cette limite est un filet, dimensionné pour deux dumps de la plus grosse
-  # base du parc (qalita-dev, 1 Go -> ~200-300 Mo gzippés).
-  spoolSizeLimit: "2Gi"
-  s3:
-    # Stockage objet HORS cluster (OVH) — sauvegarder vers le SeaweedFS du
-    # même cluster ne serait pas une sauvegarde.
-    endpoint: ""
-    bucket: ""
-    # ATTENTION SI LE BUCKET EST PARTAGÉ ENTRE ENVIRONNEMENTS : ce préfixe
-    # DOIT être surchargé par environnement (dev/…, demo/…, prod/… — modèle
-    # previly), sinon les archives des trois environnements portent le même
-    # nom d'objet dans le même dossier et la purge de l'un ronge la rétention
-    # des autres. Le chart y ajoute lui-même /pg15 (Deployment transitoire)
-    # ou /pg18 (sidecar) pour séparer les archives des deux serveurs.
-    prefix: "postgresql-backups"
-    region: "gra"
-    # Déposés au déploiement (Infisical). Vides ici : qalita.preservedSecret
-    # réutilise la valeur déjà en cluster, et ÉCHOUE au premier déploiement si
-    # rien n'est fourni — jamais de secret vide écrit, jamais de généré.
-    accessKeyId: ""
-    secretAccessKey: ""
-  resources:
-    requests:
-      memory: "64Mi"
-      cpu: "25m"
-    limits:
-      memory: "256Mi"
-
 # PostgreSQL 18 maison — phase 11 : sortie du sous-chart bitnami. Côte-à-côte
 # avec lui : propre StatefulSet, Service, secret et volume, il ne touche à rien
-# de ce que bitnami possède. Séquence de migration (phase 11c) :
+# de ce que bitnami possède. PAS de sidecar de sauvegarde — décision du
+# propriétaire (2026-08-17) : la couverture de ces bases est la sauvegarde
+# Longhorn nocturne du PVC, chemin de restauration exercé. Séquence de
+# migration (phase 11c) :
+#   0. filet : snapshot/backup Longhorn du PVC bitnami juste avant
 #   1. postgres18.enabled: true          -> le serveur 18 démarre, vide
-#   2. dump/restore (jamais pg_upgrade)  -> depuis une archive postgresBackup
+#   2. dump/restore ONE-SHOT (jamais pg_upgrade) :
+#        kubectl exec <pod bitnami> -- pg_dump --no-owner --no-acl … \
+#          | kubectl exec -i <pod postgres18> -- psql …
 #   3. postgres18.serveApp: true         -> le backend bascule (repointage)
 #   4. sous-chart bitnami à l'échelle 0, volume INTACT plusieurs jours
 #   5. postgresql.enabled: false         -> seulement après période nominale
@@ -350,17 +298,6 @@ postgres18:
     # un script docker-entrypoint-initdb.d au PREMIER démarrage — pas un
     # réglage de values après coup.
     password: ""
-  backup:
-    # Sidecar dans le pod (modèle jobchef/previly), partageant image, script
-    # et bucket avec postgresBackup. À activer AVANT serveApp : le serveur 18
-    # doit être sauvegardé dès qu'il porte des données.
-    enabled: true
-    # URL healthchecks.io PROPRE au serveur 18, distincte de
-    # postgresBackup.pingUrl : pendant la fenêtre entre postgres18.enabled et
-    # le restore, la base 18 est vide et son dump échoue sous le plancher
-    # minBytes — des /fail ATTENDUS, qui ne doivent pas sonner sur le check de
-    # la sauvegarde de production. Vide = pas de ping.
-    pingUrl: ""
   persistence:
     # IMMUABLE APRÈS LE PREMIER DÉPLOIEMENT : cette taille vit dans les
     # volumeClaimTemplates du StatefulSet, que Kubernetes refuse de modifier.

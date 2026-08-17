@@ -1045,118 +1045,6 @@
         }
       }
     },
-    "postgresBackup": {
-      "type": "object",
-      "additionalProperties": true,
-      "properties": {
-        "enabled": {
-          "type": "boolean",
-          "default": false
-        },
-        "image": {
-          "type": "object",
-          "additionalProperties": true,
-          "properties": {
-            "repository": {
-              "type": "string",
-              "default": "ghcr.io/qalita/postgres-backup"
-            },
-            "tag": {
-              "type": "string",
-              "default": "18",
-              "description": "Majeure du client pg_dump ; doit rester >= a celle du serveur sauvegarde."
-            },
-            "pullPolicy": {
-              "type": "string",
-              "default": "IfNotPresent"
-            }
-          }
-        },
-        "schedule": {
-          "type": "string",
-          "default": "0 2 * * *"
-        },
-        "retentionDays": {
-          "type": "integer",
-          "default": 30
-        },
-        "minBytes": {
-          "type": "integer",
-          "default": 1024
-        },
-        "pingUrl": {
-          "type": "string",
-          "default": ""
-        },
-        "s3": {
-          "type": "object",
-          "additionalProperties": true,
-          "properties": {
-            "endpoint": {
-              "type": "string",
-              "default": ""
-            },
-            "bucket": {
-              "type": "string",
-              "default": ""
-            },
-            "prefix": {
-              "type": "string",
-              "default": "postgresql-backups"
-            },
-            "region": {
-              "type": "string",
-              "default": "gra"
-            },
-            "accessKeyId": {
-              "type": "string",
-              "default": "",
-              "description": "Vide = valeur deja en cluster reutilisee (qalita.preservedSecret) ; echec au premier deploiement si rien n'existe."
-            },
-            "secretAccessKey": {
-              "type": "string",
-              "default": ""
-            }
-          }
-        },
-        "resources": {
-          "type": "object",
-          "additionalProperties": true,
-          "properties": {
-            "requests": {
-              "type": "object",
-              "additionalProperties": true,
-              "properties": {
-                "memory": {
-                  "type": "string"
-                },
-                "cpu": {
-                  "type": "string"
-                }
-              }
-            },
-            "limits": {
-              "type": "object",
-              "additionalProperties": true,
-              "properties": {
-                "memory": {
-                  "type": "string"
-                },
-                "cpu": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        },
-        "spoolSizeLimit": {
-          "type": "string",
-          "default": "2Gi",
-          "description": "Plafond de l'emptyDir des archives locales (filet, le script ne garde qu'une archive en échec)."
-        }
-      },
-      "description": "Sauvegarde logique PostgreSQL (phase 11a) : Deployment transitoire contre le serveur bitnami, puis sidecar du StatefulSet postgres18. Meme script, meme image, meme bucket."
-    },
     "postgres18": {
       "type": "object",
       "additionalProperties": true,
@@ -1195,21 +1083,6 @@
               "type": "string",
               "default": "",
               "description": "Vide = genere au premier deploiement puis preserve. Rotation : ALTER ROLE d'abord, values ensuite."
-            }
-          }
-        },
-        "backup": {
-          "type": "object",
-          "additionalProperties": true,
-          "properties": {
-            "enabled": {
-              "type": "boolean",
-              "default": true
-            },
-            "pingUrl": {
-              "type": "string",
-              "default": "",
-              "description": "URL healthchecks propre au serveur 18, jamais partagée avec postgresBackup.pingUrl."
             }
           }
         },
@@ -1266,7 +1139,7 @@
           }
         }
       },
-      "description": "PostgreSQL 18 maison (phase 11), cote-a-cote avec le sous-chart bitnami. serveApp: true = bascule du backend, et aussi le retour arriere."
+      "description": "PostgreSQL 18 maison (phase 11), cote-a-cote avec le sous-chart bitnami, sans sidecar de sauvegarde (couverture Longhorn, decision proprietaire 2026-08-17). serveApp: true = bascule du backend, et aussi le retour arriere."
     }
   }
 }
