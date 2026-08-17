@@ -50,10 +50,26 @@ spec:
           failureThreshold: {{ .Values.backend.livenessProbe.failureThreshold | default 3 }}
           timeoutSeconds: {{ .Values.backend.livenessProbe.timeoutSeconds | default 15 }}
         env:
+          {{- /*
+            La bascule PostgreSQL 15 -> 18 (phase 11c) est un REPOINTAGE, pas un
+            redéploiement de base : `postgres18.serveApp: true` fait viser le
+            StatefulSet maison (service et secret qalita-postgres18) au lieu du
+            sous-chart bitnami. Le retour arrière est le même booléen dans
+            l'autre sens — l'ancien serveur reste en place, volume intact,
+            comme la spec l'exige. Base et utilisateur ne changent pas de nom
+            d'un serveur à l'autre : seuls l'hôte et la source du mot de passe
+            bougent.
+          */}}
+          {{- $pgHost := printf "%s-postgresql" .Release.Name }}
+          {{- $pgSecret := printf "%s-postgresql" .Release.Name }}
+          {{- if and .Values.postgres18.enabled .Values.postgres18.serveApp }}
+          {{- $pgHost = "qalita-postgres18" }}
+          {{- $pgSecret = "qalita-postgres18" }}
+          {{- end }}
           - name: POSTGRESQL_SERVER
-            value: "{{ .Release.Name }}-postgresql"
+            value: {{ $pgHost | quote }}
           - name: POSTGRESQL_PORT
-            value: "{{ .Values.postgresql.primary.service.ports.postgresql }}"
+            value: "{{ include "qalita.postgresPort" . }}"
           - name: POSTGRESQL_DATABASE
             value: "{{ .Values.postgresql.global.postgresql.auth.database }}"
           - name: POSTGRESQL_USERNAME
@@ -62,7 +78,7 @@ spec:
             valueFrom:
               secretKeyRef:
                 key: password
-                name: "{{ .Release.Name }}-postgresql"
+                name: {{ $pgSecret | quote }}
                 optional: false
         {{- if .Values.backend.mail.enabled }}
           - name: MAIL_USERNAME

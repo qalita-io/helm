@@ -8,6 +8,59 @@ This chart deploys QALITA Platform on a Kubernetes cluster using the Helm packag
 
 # Quick Start
 
+## Upgrading to 3.0.0 — the path to PostgreSQL 18
+
+**This is a major version: the chart's public API changes.** Nothing is removed
+yet — the bitnami `postgresql` subchart still runs your database exactly as
+before, and a `helm upgrade` with your existing values is a no-op for the
+database. What 3.0.0 adds is the machinery for a safe 15 → 18 migration:
+**side by side, cutover by one boolean, rollback by the same boolean.**
+
+There is deliberately no scheduled logical-backup machinery in this chart:
+database protection is expected at the **volume level** (e.g. nightly Longhorn
+backups of the PostgreSQL PVC, with an exercised restore path). Take a volume
+snapshot/backup right before each migration step below.
+
+### Step 1 — start the 18 server, side by side
+
+```yaml
+postgres18:
+  enabled: true        # new StatefulSet qalita-postgres18, own volume/secret
+  serveApp: false      # the app still points at bitnami — nothing moved yet
+```
+
+The new server starts **empty**, with its own generated password (preserved
+across upgrades). It never touches anything the bitnami subchart owns.
+
+### Step 2 — one-shot dump/restore (never `pg_upgrade`)
+
+The dump client must be ≥ the newest server's major, so run `pg_dump` **from
+the postgres18 pod** — pg_dump happily dumps the older 15.4 server:
+
+```bash
+kubectl exec qalita-postgres18-0 -- sh -c \
+  'PGPASSWORD=<bitnami pwd> pg_dump -h <release>-postgresql -U qalita -d qalitadb \
+     --no-owner --no-acl | psql -U qalita -d qalitadb'
+```
+
+Then compare table counts on both servers before moving on.
+
+### Step 3 — cut over (and how to roll back)
+
+```yaml
+postgres18:
+  serveApp: true       # backend now targets qalita-postgres18
+```
+
+Rollback at any point is the same boolean, set back to `false`: the old server
+was never modified. Scale the bitnami StatefulSet to 0 but **keep its volume
+intact for several nominal days** before setting `postgresql.enabled: false`.
+
+**Never migrate with `pg_upgrade` and never remount the old volume on the new
+server**: PostgreSQL 18 moved its data directory, and a volume mounted at the
+pre-18 path makes the server silently write into an anonymous volume — empty
+database on next restart.
+
 ## Upgrading to 2.19.0 — SeaweedFS 4.41
 
 The bundled SeaweedFS chart moves from 4.0.380 (app 3.80) to 4.41.0 (app 4.41).

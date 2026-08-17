@@ -230,11 +230,97 @@ postgresql:
     persistence:
       size: 8Gi
 
+  # Clé du sous-chart BITNAMI, jamais câblée à rien de fonctionnel dans ce
+  # chart. Conservée uniquement parce que le sous-chart la lit. DÉCISION DU
+  # PROPRIÉTAIRE (2026-08-17) : pas de sauvegarde logique planifiée pour
+  # QALITA — la couverture est la sauvegarde Longhorn nocturne du PVC, dont la
+  # restauration est un chemin exercé (le volume de prod en service est
+  # lui-même issu d'une restauration Longhorn, qalita-pg-restore-0716). Le
+  # dump de la migration 15 -> 18 est un geste one-shot, cf. README.
   backup:
     enabled: false
     cronjob:
       storage:
         resourcePolicy: "keep"
+
+# PostgreSQL 18 maison — phase 11 : sortie du sous-chart bitnami. Côte-à-côte
+# avec lui : propre StatefulSet, Service, secret et volume, il ne touche à rien
+# de ce que bitnami possède. PAS de sidecar de sauvegarde — décision du
+# propriétaire (2026-08-17) : la couverture de ces bases est la sauvegarde
+# Longhorn nocturne du PVC, chemin de restauration exercé. Séquence de
+# migration (phase 11c) :
+#   0. filet : snapshot/backup Longhorn du PVC bitnami juste avant
+#   1. postgres18.enabled: true          -> le serveur 18 démarre, vide
+#   2. dump/restore ONE-SHOT (jamais pg_upgrade) :
+#        kubectl exec <pod bitnami> -- pg_dump --no-owner --no-acl … \
+#          | kubectl exec -i <pod postgres18> -- psql …
+#   3. postgres18.serveApp: true         -> le backend bascule (repointage)
+#   4. sous-chart bitnami à l'échelle 0, volume INTACT plusieurs jours
+#   5. postgresql.enabled: false         -> seulement après période nominale
+# Retour arrière à toute étape : serveApp false — l'ancien serveur n'a jamais
+# bougé.
+postgres18:
+  enabled: false
+  # true = le backend vise qalita-postgres18 (service et secret) au lieu du
+  # sous-chart bitnami. C'est LA bascule, et c'est aussi le retour arrière.
+  serveApp: false
+  image:
+    # Miroir GHCR de library/postgres:18-alpine (mirror-images.yml) — la
+    # décision de source que mirror-images.yml renvoyait « au chantier
+    # PostgreSQL dédié » est ici : l'image officielle, pas bitnami, comme
+    # jobchef et previly.
+    #
+    # ALPINE = MUSL, ET C'EST UN CHANGEMENT DE COLLATION : le serveur bitnami
+    # actuel est glibc (datcollate en_US.UTF-8, tri linguistique), musl traite
+    # les locales en ordre octet. Mesuré sur la base de prod avant l'arbitrage :
+    # ZÉRO colonne à collation explicite (rien n'échoue au restore) et 151
+    # colonnes texte dont seul l'ordre de tri des accents change en ORDER BY —
+    # cosmétique. Pas de risque de corruption : la migration est un
+    # dump/restore, les index sont reconstruits sur la cible. previly et
+    # jobchef tournent déjà en alpine/musl en production. Si un tri
+    # linguistique devenait nécessaire un jour : ICU par colonne, pas un
+    # changement d'image.
+    repository: ghcr.io/qalita/postgres
+    tag: "18-alpine"
+    pullPolicy: IfNotPresent
+  auth:
+    # Vide = généré au premier déploiement puis préservé
+    # (qalita.preservedSecret). Rotation : ALTER ROLE d'abord, values ensuite —
+    # sur volume persistant l'entrypoint ne recrée jamais le rôle.
+    #
+    # PRIVILÈGES, À SAVOIR : l'entrypoint de library/postgres crée
+    # POSTGRES_USER en SUPERUSER — sur le 18, le rôle applicatif `qalita` est
+    # donc superuser, là où bitnami le créait en simple propriétaire de base à
+    # côté d'un rôle postgres séparé. C'est le modèle de previly et jobchef en
+    # production (un seul rôle, superuser, base par namespace jamais exposée
+    # hors cluster) ; l'adopter ici est un choix d'uniformité assumé, pas un
+    # oubli. Si un rôle applicatif non privilégié devient souhaitable, c'est
+    # un script docker-entrypoint-initdb.d au PREMIER démarrage — pas un
+    # réglage de values après coup.
+    password: ""
+  persistence:
+    # IMMUABLE APRÈS LE PREMIER DÉPLOIEMENT : cette taille vit dans les
+    # volumeClaimTemplates du StatefulSet, que Kubernetes refuse de modifier.
+    # La changer ici ferait échouer tout helm upgrade de la release. La
+    # procédure d'agrandissement est manuelle et dans cet ordre :
+    #   1. kubectl patch pvc data-qalita-postgres18-0 (expansion en ligne)
+    #   2. kubectl delete sts qalita-postgres18 --cascade=orphan
+    #   3. helm upgrade avec la nouvelle valeur (recrée le StatefulSet)
+    # Dimensionner large dès le départ coûte moins cher que cette gymnastique
+    # — cf. l'incident SeaweedFS du 2026-08-17 pour ce que les
+    # volumeClaimTemplates font aux upgrades.
+    size: 8Gi
+    # Vide = StorageClass par défaut du cluster. Épinglé dans les values
+    # d'environnement si le cluster en a plusieurs marquées default.
+    storageClass: ""
+  nodeSelector: {}
+  readinessTimeoutSeconds: 5
+  resources:
+    requests:
+      memory: "256Mi"
+      cpu: "100m"
+    limits:
+      memory: "1Gi"
 
 seaweedfs:
   enabled: true

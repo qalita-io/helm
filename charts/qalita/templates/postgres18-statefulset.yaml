@@ -1,0 +1,129 @@
+{{- if .Values.postgres18.enabled }}
+{{- /*
+  PostgreSQL 18 maison — phase 11 de la spec d'alignement : sortie du
+  sous-chart bitnami (12.12.10, serveur 15.4, image sans source amont
+  exploitable — cf. la note de mirror-images.yml qui renvoyait cette décision
+  « au chantier PostgreSQL dédié »). Modèle : jobchef/helm
+  templates/dev-postgres.yaml, en service en production depuis la 18.
+
+  PAS DE SIDECAR DE SAUVEGARDE, ET C'EST UNE DÉCISION DU PROPRIÉTAIRE
+  (2026-08-17), pas un oubli : la couverture de ces bases est la sauvegarde
+  Longhorn nocturne du PVC, dont le chemin de restauration est EXERCÉ — le
+  volume PostgreSQL de prod en service aujourd'hui est lui-même issu d'une
+  restauration Longhorn (qalita-pg-restore-0716). Le dump de la migration 11c
+  est un geste one-shot (kubectl exec pg_dump | psql), pas une infrastructure.
+  previly et jobchef, eux, gardent leur sidecar — données financières et
+  candidatures ne relèvent pas du même arbitrage.
+
+  MIGRATION CÔTE-À-CÔTE, JAMAIS EN PLACE. Ce StatefulSet a son propre nom, son
+  propre Service, son propre secret et son propre volume : il ne touche à rien
+  de ce que le sous-chart bitnami possède. La bascule (phase 11c) est
+  `postgres18.serveApp: true` — un repointage du backend — et le retour
+  arrière est le même booléen, l'ancien serveur restant en place à l'échelle 0
+  avec son volume intact. Ne détruire l'ancien volume qu'après plusieurs jours
+  nominaux.
+
+  Le mot de passe est GÉNÉRÉ au premier déploiement (qalita.preservedSecret,
+  generate) puis préservé : il ne peut pas être « le même » que celui du
+  bitnami par construction, et n'a pas à l'être — le dump/restore ne
+  transporte aucun mot de passe (--no-owner --no-acl), et le backend lit le
+  sien dans le secret que `serveApp` désigne. Rotation ultérieure : sur volume
+  persistant l'entrypoint ne recrée jamais le rôle — ALTER ROLE d'abord,
+  Infisical/values ensuite (spec, « Instruit le 2026-08-16 »).
+*/}}
+{{- $pgPassword := include "qalita.preservedSecret" (dict "ctx" $ "secret" "qalita-postgres18" "key" "password" "value" .Values.postgres18.auth.password "generate" true "length" 32) }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: qalita-postgres18
+stringData:
+  password: {{ $pgPassword | quote }}
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: qalita-postgres18
+  labels:
+    app: qalita-postgres18
+spec:
+  serviceName: qalita-postgres18
+  replicas: 1
+  selector:
+    matchLabels:
+      app: qalita-postgres18
+  template:
+    metadata:
+      labels:
+        app: qalita-postgres18
+    spec:
+      {{- with .Values.postgres18.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- if .Values.dockerregistry.enabled }}
+      imagePullSecrets:
+        - name: qalita-platform-dockerregistry
+      {{- end }}
+      containers:
+        - name: postgresql
+          image: "{{ .Values.postgres18.image.repository }}:{{ .Values.postgres18.image.tag }}"
+          imagePullPolicy: {{ .Values.postgres18.image.pullPolicy }}
+          ports:
+            - containerPort: 5432
+          env:
+            # Mêmes noms de base et d'utilisateur que côté bitnami : la
+            # migration ne change que l'hôte, jamais l'identité.
+            - name: POSTGRES_USER
+              value: "{{ .Values.postgresql.global.postgresql.auth.username }}"
+            - name: POSTGRES_DB
+              value: "{{ .Values.postgresql.global.postgresql.auth.database }}"
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: qalita-postgres18
+                  key: password
+          # PIÈGE MAJEUR DE LA MONTÉE EN 18 (spec, phase 11) : le data dir a
+          # changé de place. Monter /var/lib/postgresql ENTIER — le data dir
+          # est un sous-répertoire versionné géré par l'image, PGDATA inutile.
+          # Un volume monté à l'ancien emplacement (/var/lib/postgresql/data)
+          # ferait écrire le serveur dans un volume anonyme SANS ERREUR, base
+          # vide au redémarrage suivant — c'est ce qui a coûté sa base de dev
+          # à JobChef.
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/postgresql
+          readinessProbe:
+            exec:
+              command:
+                - pg_isready
+                - -U
+                - "{{ .Values.postgresql.global.postgresql.auth.username }}"
+            initialDelaySeconds: 5
+            timeoutSeconds: {{ .Values.postgres18.readinessTimeoutSeconds }}
+          resources:
+            {{- toYaml .Values.postgres18.resources | nindent 12 }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: [ReadWriteOnce]
+        {{- with .Values.postgres18.persistence.storageClass }}
+        storageClassName: {{ . | quote }}
+        {{- end }}
+        resources:
+          requests:
+            storage: {{ .Values.postgres18.persistence.size | quote }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: qalita-postgres18
+  labels:
+    app: qalita-postgres18
+spec:
+  selector:
+    app: qalita-postgres18
+  ports:
+    - port: {{ include "qalita.postgresPort" . }}
+      targetPort: 5432
+{{- end }}
