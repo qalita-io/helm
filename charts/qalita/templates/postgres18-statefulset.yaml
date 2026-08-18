@@ -36,6 +36,26 @@ apiVersion: v1
 kind: Secret
 metadata:
   name: qalita-postgres18
+  annotations:
+    # SANS CETTE ANNOTATION, LE VOLUME DEVIENT DÉFINITIVEMENT INACCESSIBLE.
+    # Ce Secret et le PVC du StatefulSet n'ont pas la même durée de vie : le
+    # PVC vient de volumeClaimTemplates, que ni Helm ni Kubernetes ne ramassent
+    # jamais, alors que le Secret appartient à la révision. Un
+    # `helm upgrade --atomic` qui échoue (le pipeline en pose un, timeout 10 min)
+    # revient à une révision où ce Secret n'existait pas : Helm le SUPPRIME, le
+    # volume reste. Au déploiement suivant, `lookup` ne trouve plus rien et
+    # qalita.preservedSecret régénère un mot de passe — pendant que l'entrypoint
+    # de postgres, voyant un data dir déjà initialisé, SAUTE initdb et laisse au
+    # rôle l'ancien. Secret et rôle divergent sans qu'aucun manifest ne
+    # paraisse anormal : `password authentication failed for user "qalita"`,
+    # sans retour possible par les values. Même chaîne si l'on repasse
+    # postgres18.enabled à false puis à true.
+    # Trouvé en revue le 2026-08-18, avant le premier déploiement du 18.
+    # Si le cas s'est déjà produit, deux sorties : `helm get manifest qalita
+    # -n <ns> --revision <N>` rend l'ancien mot de passe en clair, ou bien
+    # `kubectl exec … psql -U qalita` (l'entrypoint écrit `local all all trust`)
+    # puis ALTER ROLE pour réaligner sur le Secret courant.
+    helm.sh/resource-policy: keep
 stringData:
   password: {{ $pgPassword | quote }}
 ---

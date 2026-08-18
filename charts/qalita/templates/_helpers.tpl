@@ -86,7 +86,7 @@ ATTENTION AU MODE `helm template`. `lookup` y renvoie toujours vide : l'étape 2
 est donc inopérante, et un rendu hors cluster avec des values vides tombera en
 3 ou en 4. C'est voulu — `helm template` sert à inspecter, pas à déployer — mais
 cela veut dire qu'un test de non-régression sur la préservation doit passer par
-`helm upgrade --dry-run`, seul mode où `lookup` interroge réellement l'API.
+`helm upgrade --dry-run=server`, seul mode où `lookup` interroge réellement l'API.
 
 Arguments (dict) :
   ctx       le contexte racine ($)
