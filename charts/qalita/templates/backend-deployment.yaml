@@ -60,6 +60,18 @@ spec:
             d'un serveur à l'autre : seuls l'hôte et la source du mot de passe
             bougent.
           */}}
+          {{- /*
+            DEUX GARDES, chacune contre un manifest qui reste COHÉRENT EN
+            APPARENCE alors que l'application ne peut pas fonctionner. Ajoutées
+            le 2026-08-18 après revue, avant le premier déploiement du 18 ;
+            leur absence a déjà coûté une revue chez previly.
+          */}}
+          {{- if and .Values.postgres18.serveApp (not .Values.postgres18.enabled) }}
+          {{- fail "postgres18.serveApp=true exige postgres18.enabled=true. Sans cette garde le rendu réussit et le backend reste SILENCIEUSEMENT sur bitnami : on croit la bascule faite, on enchaîne l'étape 4 du runbook (bitnami à l'échelle 0) puis l'étape 5 (destruction du volume) — et ce volume porte encore les seules données." }}
+          {{- end }}
+          {{- if and (not .Values.postgresql.enabled) (not (and .Values.postgres18.enabled .Values.postgres18.serveApp)) }}
+          {{- fail "aucun serveur PostgreSQL ne sert l'application : postgresql.enabled=false alors que le 18 ne prend pas le relais. Le backend pointerait sur le secret qalita-postgresql que le sous-chart désactivé ne rend plus, avec optional: false — CreateContainerConfigError, le pod ne démarre jamais. En CI --atomic finit par le rattraper au bout de dix minutes ; un helm upgrade lancé à la main laisse l'application morte." }}
+          {{- end }}
           {{- $pgHost := printf "%s-postgresql" .Release.Name }}
           {{- $pgSecret := printf "%s-postgresql" .Release.Name }}
           {{- if and .Values.postgres18.enabled .Values.postgres18.serveApp }}

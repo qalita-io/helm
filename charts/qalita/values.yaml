@@ -251,14 +251,30 @@ postgresql:
 # migration (phase 11c) :
 #   0. filet : snapshot/backup Longhorn du PVC bitnami juste avant
 #   1. postgres18.enabled: true          -> le serveur 18 démarre, vide
-#   2. dump/restore ONE-SHOT (jamais pg_upgrade) :
+#   2. GELER LES ÉCRITURES : backend et worker à l'échelle 0, et les y laisser
+#      jusqu'à la fin de l'étape 3. Ce n'est pas une précaution de confort,
+#      c'est ce qui rend le dump exact ET ce qui empêche une double écriture :
+#      le déploiement du backend est en RollingUpdate par défaut (aucune
+#      `strategy` déclarée), donc à la bascule l'ANCIEN pod — encore branché
+#      sur bitnami — et le NOUVEAU — branché sur le 18 — coexistent le temps du
+#      rollout. Sans gel, les écritures de cette fenêtre se répartissent entre
+#      DEUX bases, et aucune des deux n'est ensuite complète.
+#   3. dump/restore ONE-SHOT (jamais pg_upgrade), app toujours à 0 :
 #        kubectl exec <pod bitnami> -- pg_dump --no-owner --no-acl … \
 #          | kubectl exec -i <pod postgres18> -- psql …
-#   3. postgres18.serveApp: true         -> le backend bascule (repointage)
-#   4. sous-chart bitnami à l'échelle 0, volume INTACT plusieurs jours
-#   5. postgresql.enabled: false         -> seulement après période nominale
-# Retour arrière à toute étape : serveApp false — l'ancien serveur n'a jamais
-# bougé.
+#      Restaurer sous `psql -v ON_ERROR_STOP=1` : sans lui psql avale les
+#      erreurs et rend une base à moitié peuplée qui a l'air correcte.
+#      Vérifier ensuite les comptes de lignes TABLE PAR TABLE contre la source
+#      — un simple compte de tables ne prouve rien (chez previly, un backend
+#      transitoire avait semé un schéma-leurre au bon nombre de tables, toutes
+#      vides, qui a failli passer pour la restauration).
+#   4. postgres18.serveApp: true         -> le backend bascule (repointage),
+#      puis re-scaler l'application et vérifier.
+#   5. sous-chart bitnami à l'échelle 0, volume INTACT plusieurs jours
+#   6. postgresql.enabled: false         -> seulement après période nominale
+# Retour arrière jusqu'à l'étape 5 : serveApp false — l'ancien serveur n'a
+# jamais bougé. APRÈS l'étape 6 il en faut DEUX (postgresql.enabled=true ET
+# serveApp=false) ; la garde du gabarit backend refuse la moitié du geste.
 postgres18:
   enabled: false
   # true = le backend vise qalita-postgres18 (service et secret) au lieu du
