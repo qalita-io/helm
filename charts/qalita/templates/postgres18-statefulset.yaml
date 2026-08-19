@@ -115,9 +115,27 @@ spec:
           readinessProbe:
             exec:
               command:
+                # `-d` n'est pas facultatif. Sans lui, libpq fait défaut au nom
+                # de l'UTILISATEUR pour le nom de base — ici `qalita`, alors que
+                # la base s'appelle `qalitadb`. Le serveur répond alors
+                # `FATAL: database "qalita" does not exist`, et `pg_isready`
+                # rend malgré tout 0 : il conclut « accepting connections » du
+                # seul fait que le serveur a RÉPONDU, sans regarder ce qu'il a
+                # répondu. La sonde passait donc par accident, et journalisait
+                # un FATAL toutes les 10 s dans chacun des trois
+                # environnements — environ 26 000 lignes par jour, dans le flux
+                # même où un vrai FATAL devrait se voir. Constaté le
+                # 2026-08-19 dans les journaux du cluster.
+                #
+                # Le `-d` corrige aussi ce que la sonde MESURE : un serveur dont
+                # la base applicative a disparu n'est pas prêt à servir, et il
+                # doit désormais sortir du service au lieu de rester `ready`.
+                # C'est ce que fait déjà la sonde équivalente de Previly.
                 - pg_isready
                 - -U
                 - "{{ .Values.postgresql.global.postgresql.auth.username }}"
+                - -d
+                - "{{ .Values.postgresql.global.postgresql.auth.database }}"
             initialDelaySeconds: 5
             timeoutSeconds: {{ .Values.postgres18.readinessTimeoutSeconds }}
           resources:
