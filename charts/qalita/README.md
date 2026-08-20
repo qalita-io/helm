@@ -135,6 +135,30 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 
 # Upgrading
 
+## To chart 3.0.4 — required to run analysis packs
+
+The worker image default moves to `cli` **2.18.3**. Earlier images cannot run
+packs at all:
+
+- `uv`, which every pack's `run.sh` needs to install its dependencies, was
+  missing from the image, and the fallback that bootstrapped it is refused
+  inside the image's virtualenv. Every job failed with `uv: not found`.
+- The image shipped only CPython 3.14, so packs that cap `requires-python`
+  below it found no interpreter, and dependencies with no 3.14 wheels could not
+  be installed — the runtime carries no compiler. 2.18.3 runs packs on 3.13 and
+  also ships 3.11 and 3.12.
+
+Upgrading the chart is enough unless you pin `worker.image` in your own
+`values.yaml`, in which case set the tag there too:
+
+```bash
+helm repo update
+helm upgrade qalita qalita/qalita -f values.yaml
+```
+
+Worker pods must be restarted to pick the new image up; the chart's rollout
+does that for you.
+
 ## To chart 2.18.0 — required if you are on 2.17.0 or older
 
 The worker image moved from the pre-rename package `qalita-cli` to `cli`:
@@ -248,7 +272,7 @@ upstream and can be restored to the client registry on request.
 | worker.mode | string | `worker` | Qalita Worker mode <job/worker> |
 | worker.token | string | `changeme` | Qalita Worker API Token |
 | worker.image.repository | string | `ghcr.io/qalita/cli` | QALITA Worker image (GitHub Container Registry) |
-| worker.image.tag | string | `2.18.0` | QALITA Worker Image Tag |
+| worker.image.tag | string | `2.18.3` | QALITA Worker Image Tag |
 | worker.image.pullPolicy | string | `IfNotPresent` | QALITA Worker Image Pull Policy |
 | worker.replicaCount | int | `1` | QALITA Worker Replica Count |
 | worker.deployment.extraEnv | list | `[]` | QALITA Worker Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
