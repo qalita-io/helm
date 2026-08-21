@@ -188,7 +188,7 @@ worker:
     # ghcr.io/qalita/cli (first one 2.16.4), which is also what the client
     # registry mirrors, so the default follows the current package.
     repository: ghcr.io/qalita/cli
-    tag: "2.18.3"
+    tag: "2.18.4"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
