@@ -50,6 +50,7 @@ spec:
           failureThreshold: {{ .Values.backend.livenessProbe.failureThreshold | default 3 }}
           timeoutSeconds: {{ .Values.backend.livenessProbe.timeoutSeconds | default 15 }}
         env:
+          {{- include "qalita.timezoneEnv" . | nindent 10 }}
           {{- /*
             La bascule PostgreSQL 15 -> 18 (phase 11c) est un REPOINTAGE, pas un
             redéploiement de base : `postgres18.serveApp: true` fait viser le

@@ -138,3 +138,32 @@ ce parc n'a jamais surchargée nulle part.
 {{- define "qalita.postgresPort" -}}
 {{- ((((.Values.postgresql).primary).service).ports).postgresql | default 5432 -}}
 {{- end -}}
+
+{{/*
+Fuseau horaire des conteneurs.
+
+Un conteneur partage l'horloge de son nœud — même noyau, même epoch — mais pas
+son fuseau. Sans TZ ni fichier de zone monté, la libc résout UTC : tous les
+horodatages qu'un humain lit (logs du backend, bandeau de démarrage du worker,
+sortie des packs) sont alors décalés par rapport à l'heure locale de
+l'exploitant, alors même que l'horloge est juste.
+
+Kubernetes n'a pas de « machine hôte » unique dont hériter. Monter le
+/etc/localtime des nœuds en hostPath lierait chaque pod à la configuration du
+nœud qui l'accueille, et se fait refuser par les politiques qui interdisent
+hostPath ; on nomme donc le fuseau explicitement. Les images embarquent déjà la
+base tzdata qui le résout (vérifié : cli sur debian-slim, backend sur alpine).
+
+Ne s'applique QU'AUX charges applicatives. PostgreSQL est délibérément laissé
+de côté : TZ y fixe le GUC TimeZone du serveur, ce qui change la façon dont les
+`timestamp without time zone` sont calculés depuis `now()` — un changement de
+sémantique de données, pas d'affichage.
+
+`timezone: ""` rétablit UTC partout.
+*/}}
+{{- define "qalita.timezoneEnv" -}}
+{{- with .Values.timezone }}
+- name: TZ
+  value: {{ . | quote }}
+{{- end }}
+{{- end -}}

@@ -44,6 +44,7 @@ spec:
           command: ["/bin/sh", "-c"]
           args: ["cat /etc/config/init.sh | /bin/sh; sleep infinity"]
           env:
+          {{- include "qalita.timezoneEnv" . | nindent 10 }}
           - name: QALITA_WORKER_NAME
             value: {{ .Values.worker.name }}
           - name: QALITA_WORKER_MODE
@@ -91,6 +92,7 @@ spec:
               fi
               exec qalita worker run
           env:
+          {{- include "qalita.timezoneEnv" . | nindent 10 }}
           - name: QALITA_WORKER_NAME
             value: {{ .Values.worker.name }}
           - name: QALITA_WORKER_MODE

@@ -30,6 +30,7 @@ spec:
           command:
             - sleep
           env:
+            {{- include "qalita.timezoneEnv" . | nindent 12 }}
             - name: KUBECONFIG
               value: /root/kubeconfig/kubeconfig.yaml
           image: {{ .Values.helmsync.image.repository }}

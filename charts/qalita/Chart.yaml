@@ -8,7 +8,7 @@ name: "qalita"
 # (décision propriétaire 2026-08-17 : couverture Longhorn, restauration
 # exercée). Le schéma de values et les notes de migration sont dans
 # values.schema.json et README.md.
-version: "3.0.5"
+version: "3.1.0"
 icon: https://avatars.githubusercontent.com/u/101010687?s=48&v=4
 appVersion: "2.18.0"
 home: https://qalita.io

@@ -52,6 +52,7 @@ spec:
           failureThreshold: 2
           timeoutSeconds: 5
         env:
+          {{- include "qalita.timezoneEnv" . | nindent 10 }}
           - name: NODE_ENV
             value: "{{ .Values.frontend.mode }}"
           - name: QALITA_API_URL

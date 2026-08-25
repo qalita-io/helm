@@ -34,8 +34,12 @@ spec:
       - name: "doc"
         image: "{{ .Values.doc.image.repository }}:{{ .Values.doc.image.tag }}"
         imagePullPolicy: {{ .Values.doc.image.pullPolicy }}
+{{- if or .Values.timezone .Values.doc.deployment.env }}
+        env:
 {{- if .Values.doc.deployment.env }}
 {{ toYaml .Values.doc.deployment.env | indent 10 }}
+{{- end }}
+          {{- include "qalita.timezoneEnv" . | nindent 10 }}
 {{- end }}
         ports:
         - containerPort: {{ .Values.doc.service.targetPort }}

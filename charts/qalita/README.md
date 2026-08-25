@@ -135,6 +135,34 @@ With `cluster.domain`=**example.com**  Creates the following endpoints:
 
 # Upgrading
 
+## To chart 3.1.0 — containers no longer read UTC
+
+A container inherits its node's clock but never its timezone: with no `TZ` set,
+the libc resolves UTC, so backend logs, the worker start banner and pack output
+were all offset from the operator's local time even though the clock itself was
+correct.
+
+The chart now injects a **`timezone`** value as `TZ` into the application
+containers — backend, frontend, doc, worker and helmsync. It defaults to
+`Europe/Paris`; set it to `""` to keep the previous UTC behaviour:
+
+```yaml
+timezone: "" # or any IANA zone, e.g. America/New_York
+```
+
+Two things this does **not** do:
+
+- **PostgreSQL is left alone on purpose.** `TZ` there sets the server's
+  `TimeZone` GUC, which changes how `timestamp without time zone` values are
+  derived from `now()` — a data-semantics change, not a display one.
+- **Stored timestamps do not move.** The backend writes timezone-aware values
+  (`timestamptz` columns, `datetime.now(timezone.utc)`), so they stay absolute
+  whatever `TZ` says; only the rendering changes.
+
+Upgrading adds an environment variable to the pod specs, so the workloads roll
+out once.
+
+
 ## To chart 3.0.4 — required to run analysis packs
 
 The worker image default moves to `cli` **2.18.3**. Earlier images cannot run
@@ -188,6 +216,7 @@ upstream and can be restored to the client registry on request.
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| timezone | string | `Europe/Paris` | IANA timezone injected as `TZ` into the application containers, so logs and other human-read timestamps follow local time instead of UTC. Set to `""` to keep UTC. |
 | cluster.issuer | string | `letsencrypt-prod` | Cluster Issuer for Cert-Manager, you can get your cluster issuer name by running `kubectl get clusterissuer` |
 | cluster.domain | string | `example.com` | DNS Domain or Sub domain for QALITA app and api endpoints |
 | cluster.name | string | `local` | Cluster name for QALITA app and api endpoints, it is concatenated with cluster.domain  |

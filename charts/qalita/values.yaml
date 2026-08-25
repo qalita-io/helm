@@ -11,6 +11,13 @@ cluster:
 
 # Adds a random rollme annotation to pods: every helm upgrade forces a rollout.
 # Enable only on environments tracking mutable image tags (e.g. :dev).
+# Fuseau horaire injecté dans les conteneurs applicatifs (TZ), pour que les
+# horodatages lus par un humain suivent l'heure locale au lieu d'UTC. Un
+# conteneur hérite de l'horloge de son nœud mais jamais de son fuseau : sans
+# cette valeur, la libc résout UTC. PostgreSQL en est exclu à dessein (voir
+# qalita.timezoneEnv dans _helpers.tpl). Mettre "" pour rester en UTC.
+timezone: "Europe/Paris"
+
 forceRedeploy: false
 
 dockerregistry:

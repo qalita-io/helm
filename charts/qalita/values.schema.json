@@ -19,6 +19,11 @@
       "default": "ghcr.io",
       "description": "Container registry hostname for imagePullSecret auth (e.g. ghcr.io)."
     },
+    "timezone": {
+      "type": "string",
+      "default": "Europe/Paris",
+      "description": "IANA timezone injected as TZ into the application containers (backend, frontend, doc, worker, helmsync) so human-read timestamps follow local time instead of UTC. PostgreSQL is deliberately excluded. Empty string keeps UTC."
+    },
     "cluster": {
       "type": "object",
       "additionalProperties": false,
