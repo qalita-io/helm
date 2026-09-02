@@ -27,7 +27,7 @@ dockerregistry:
 frontend:
   image:
     repository: ghcr.io/qalita/platform-frontend
-    tag: "2.18.0"
+    tag: "3.0.0"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -58,7 +58,7 @@ doc:
   enabled: true
   image:
     repository: ghcr.io/qalita/documentation
-    tag: "2.18.0"
+    tag: "3.0.0"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -82,7 +82,7 @@ doc:
 backend:
   image:
     repository: ghcr.io/qalita/platform-backend
-    tag: "2.18.0"
+    tag: "3.0.0"
     pullPolicy: IfNotPresent
 
   replicaCount: 1
@@ -201,7 +201,7 @@ worker:
     # ghcr.io/qalita/cli (first one 2.16.4), which is also what the client
     # registry mirrors, so the default follows the current package.
     repository: ghcr.io/qalita/cli
-    tag: "2.18.4"
+    tag: "3.0.1"
     pullPolicy: IfNotPresent
 
   replicaCount: 1

@@ -8,6 +8,22 @@ This chart deploys QALITA Platform on a Kubernetes cluster using the Helm packag
 
 # Quick Start
 
+## To chart 3.2.1 — platform 3.0.0
+
+The image defaults move to the 3.0.0 platform: `backend.image.tag`,
+`frontend.image.tag` and `doc.image.tag` to `3.0.0`, `worker.image.tag` to
+`cli` `3.0.1`; `appVersion` follows. If you pin the images in your own
+`values.yaml`, move the four tags there.
+
+A 3.x frontend bootstraps its session from `GET /api/v3/session`, a route the
+backend only serves in the `dual` API mode. `backend.apiMode` defaults to
+`dual` since chart 3.2.0 and backend 3.0.0 defaults to it as well, so a chart
+upgrade with your existing values is enough. There is no database migration:
+the backend still runs `alembic upgrade head` at start and finds the schema
+already at head. Backend and frontend must move together, and users sign in
+again once, sessions opened on 2.x are not carried over. Rolling back is
+pinning the 2.x tags on `backend.image`, `frontend.image` and `worker.image`.
+
 ## Upgrading to 3.0.0 — the path to PostgreSQL 18
 
 **This is a major version: the chart's public API changes.** Nothing is removed
@@ -232,7 +248,7 @@ upstream and can be restored to the client registry on request.
 | frontend.webPackPolling | bool | `false` | Prevent webpack to update its compiled content, used only in dev mode |
 | frontend.mode | string | `production` | The running mode of the platform, can be <DEV/PROD/DEMO> |
 | frontend.image.repository | string | `ghcr.io/qalita/platform-frontend` | QALITA Frontend Image Repository |
-| frontend.image.tag | string | `2.18.0` | QALITA Frontend Image Tag |
+| frontend.image.tag | string | `3.0.0` | QALITA Frontend Image Tag |
 | frontend.image.pullPolicy | string | `Always` | QALITA Frontend Image Pull Policy |
 | frontend.replicaCount | int | `1` | QALITA Frontend Replica Count |
 | frontend.service.type | string | `ClusterIP` | QALITA Frontend Service Type |
@@ -264,7 +280,7 @@ upstream and can be restored to the client registry on request.
 | backend.api.host | string | `0.0.0.0` | Ip address Backend is exposed to |
 | backend.api.worker | int | `4` | Number of process bootstrapped  |
 | backend.image.repository | string | `ghcr.io/qalita/platform-backend` | QALITA Backend Image Repository |
-| backend.image.tag | string | `2.18.0` | QALITA Backend Image Tag |
+| backend.image.tag | string | `3.0.0` | QALITA Backend Image Tag |
 | backend.image.pullPolicy | string | `Always` | QALITA Backend Image Pull Policy |
 | backend.replicaCount | int | `1` | QALITA Backend Replica Count |
 | backend.service.type | string | `ClusterIP` | QALITA Backend Service Type |
@@ -302,7 +318,7 @@ upstream and can be restored to the client registry on request.
 | worker.mode | string | `worker` | Qalita Worker mode <job/worker> |
 | worker.token | string | `changeme` | Qalita Worker API Token |
 | worker.image.repository | string | `ghcr.io/qalita/cli` | QALITA Worker image (GitHub Container Registry) |
-| worker.image.tag | string | `2.18.3` | QALITA Worker Image Tag |
+| worker.image.tag | string | `3.0.1` | QALITA Worker Image Tag |
 | worker.image.pullPolicy | string | `IfNotPresent` | QALITA Worker Image Pull Policy |
 | worker.replicaCount | int | `1` | QALITA Worker Replica Count |
 | worker.deployment.extraEnv | list | `[]` | QALITA Worker Deployment Environment Variables, format : `- name: QALITA_ENV value: "PROD"` |
@@ -317,7 +333,7 @@ upstream and can be restored to the client registry on request.
 |-----|------|---------|-------------|
 | doc.enabled | bool | `true` | Enabling doc deployment |
 | doc.image.repository | string | `ghcr.io/qalita/documentation` | QALITA Doc Image Repository |
-| doc.image.tag | string | `2.18.0` | QALITA Doc Image Tag |
+| doc.image.tag | string | `3.0.0` | QALITA Doc Image Tag |
 | doc.image.pullPolicy | string | `Always` | QALITA Doc Image Pull Policy |
 | doc.replicaCount | int | `1` | QALITA Doc Replica Count |
 | doc.service.type | string | `ClusterIP` | QALITA Doc Service Type |
