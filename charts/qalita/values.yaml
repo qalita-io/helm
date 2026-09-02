@@ -97,6 +97,12 @@ backend:
   iniSleep: "3"
 
   authMode: "table"
+  # API surfaces mounted by the backend: "dual" (v1/v2 for the workers + v3
+  # for the frontend, the only mode a 3.x frontend works with), "legacy"
+  # (v1/v2 only, 2.x behaviour) or "v3". Backend >= 3.0.0 already defaults to
+  # dual; the chart sets it explicitly so an image-tag bump never ends on a
+  # backend that cannot serve the frontend's /api/v3/session.
+  apiMode: "dual"
   adminUsername: "admin"
   adminPassword:
   secretKey:

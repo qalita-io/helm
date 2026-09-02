@@ -347,6 +347,15 @@
             "saml"
           ]
         },
+        "apiMode": {
+          "type": "string",
+          "default": "dual",
+          "enum": [
+            "legacy",
+            "dual",
+            "v3"
+          ]
+        },
         "adminUsername": {
           "type": "string",
           "default": "admin"

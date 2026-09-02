@@ -149,6 +149,8 @@ spec:
             value: "{{ .Values.backend.s3.url }}"
           - name: QALITA_AUTH_MODE
             value: "{{ .Values.backend.authMode }}"
+          - name: QALITA_API_MODE
+            value: "{{ .Values.backend.apiMode | default "dual" }}"
           - name: QALITA_S3_KEY_ID
             valueFrom:
               secretKeyRef:
